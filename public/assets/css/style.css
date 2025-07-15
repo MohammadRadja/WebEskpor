@@ -286,11 +286,11 @@ footer a:hover {
    🧭 NAVBAR & SIDEBAR
 ========================================= */
 .sb-topnav {
-    background: linear-gradient(135deg, var(--primary-black), var(--secondary-black)) !important;
+    background: #ffffff !important;
     border-bottom: 2px solid var(--primary-green) !important;
     box-shadow: 0 2px 10px rgba(0, 255, 136, 0.3) !important;
+    /* height: 80px; */
 }
-
 .navbar-brand {
     color: var(--primary-green) !important;
     font-weight: bold !important;

@@ -19,9 +19,8 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3 glow-effect" href="index.html">
-            <i class="fas fa-leaf me-2"></i>
-            Green Admin
+        <a class="navbar-brand ps-3 glow-effect" href="{{route('kepala.dashboard')}}">
+            <img src="{{asset('assets/img/log1.svg')}}" alt="AgriCulture" style="width: 200px; height: 60px;">
         </a>
 
         <!-- Sidebar Toggle-->
@@ -55,9 +54,9 @@
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="dropdown-item">
-                                <a class="dropdown-item" href="#!"><i class="fas fa-sign-out-alt me-2"></i>
+                                <p class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>
                                     Logout
-                                </a>
+                                </p>
                             </button>
                         </form>
                     </li>
@@ -153,8 +152,8 @@
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">
-                            <i class="fas fa-copyright me-1"></i>
-                            Copyright &copy; Green Admin Panel 2024
+                            <i class="fas fa-copyright me-1"></i> 
+                            Copyright &copy; PT RAJAWALI PRIMA ANDALAS.INDONESIA 2025
                         </div>
                         <div>
                             <a href="#"><i class="fas fa-shield-alt me-1"></i>Privacy Policy</a>

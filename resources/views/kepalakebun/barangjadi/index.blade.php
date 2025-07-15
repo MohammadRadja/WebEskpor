@@ -23,20 +23,6 @@
     <!-- Statistics Cards -->
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card bg-green-primary text-white stats-card">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <div class="fs-2 fw-bold">245</div>
-                        <div class="fw-bold">Total Bibit</div>
-                    </div>
-                    <div class="ms-3">
-                        <i class="fas fa-seedling fa-3x opacity-75"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-xl-3 col-md-6 mb-4">
             <div class="card text-white stats-card" style="background: linear-gradient(135deg, #28a745, #20c997);">
                 <div class="card-body d-flex align-items-center">
                     <div class="flex-grow-1">
@@ -83,7 +69,7 @@
     <div class="card card-dark mb-4">
         <div class="card-header card-header-dark">
             <i class="fas fa-plus-circle me-2"></i>
-            <strong>Tambah Bibit Baru</strong>
+            <strong>Tambah Barang Baru</strong>
         </div>
         <div class="card-body">
             <form id="seedlingForm">
@@ -148,7 +134,7 @@
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-green">
                         <i class="fas fa-save me-1"></i>
-                        Simpan Bibit
+                        Simpan Barang
                     </button>
                     <button type="reset" class="btn btn-outline-green">
                         <i class="fas fa-undo me-1"></i>
@@ -164,7 +150,7 @@
         <div class="card-header card-header-dark d-flex justify-content-between align-items-center">
             <div>
                 <i class="fas fa-table me-2"></i>
-                <strong>Daftar Bibit</strong>
+                <strong>Daftar Barang</strong>
             </div>
             <div class="d-flex gap-2">
                 <button class="btn btn-sm btn-outline-green" onclick="exportData()">
