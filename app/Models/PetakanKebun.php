@@ -1,5 +1,6 @@
-<?
+<?php
 namespace App\Models;
+use App\Models\Kebun;
 
 use Illuminate\Database\Eloquent\Model;
 

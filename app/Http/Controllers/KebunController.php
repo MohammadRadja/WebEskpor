@@ -5,16 +5,37 @@ namespace App\Http\Controllers;
 use App\Models\Kebun;
 use App\Models\PetakanKebun;
 use Illuminate\Http\Request;
+use Laravel\Prompts\Key;
 
 class KebunController extends Controller
 {
     // Tampilkan halaman kebun beserta petakan
-    public function show($id)
+    public function show()
     {
-        $kebun = Kebun::with('petakan')->findOrFail($id);
-        return view('kebun.show', compact('kebun'));
+        $kebun = Kebun::all();
+        return view('kepalakebun.kebun.show', compact('kebun'));
     }
 
+    public function storeKebun(Request $request){
+        $request->validate([
+            'nama' => 'required',
+            'lokasi' => 'required',
+        ]);
+
+        Kebun::create([
+            'nama' => $request->nama,
+            'lokasi' => $request->lokasi,
+        ]);
+
+        return back()->with('success', 'Data kebun berhasil diperbarui.');
+    }
+
+    public function showPetakan($id)
+    {
+        $kebun = Kebun::with('petakan')->findOrFail($id);
+
+        return view('kepalakebun.kebun.petakan', compact('kebun'));
+    }
     // Update data kebun
     public function updateKebun(Request $request, $id)
     {
@@ -31,7 +52,13 @@ class KebunController extends Controller
 
         return back()->with('success', 'Data kebun berhasil diperbarui.');
     }
+    public function destroyKebun($id)
+    {
+        $petakan = Kebun::findOrFail($id);
+        $petakan->delete();
 
+        return back()->with('success', 'Petakan berhasil dihapus.');
+    }
     // Tambah petakan baru ke kebun tertentu
     public function storePetakan(Request $request, $id)
     {

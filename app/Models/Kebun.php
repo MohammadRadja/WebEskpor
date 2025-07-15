@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+use App\Models\PetakanKebun;
 
 use Illuminate\Database\Eloquent\Model;
 

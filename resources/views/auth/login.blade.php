@@ -5,7 +5,7 @@
 @section('content')
 <div class="card shadow p-4 w-100">
   <h4 class="text-center mb-4">Login</h4>
-  <form method="POST" action="{{ url('/login') }}">
+  <form method="POST" action="{{ route('login.post') }}">
     @csrf
 
     <div class="mb-3">
