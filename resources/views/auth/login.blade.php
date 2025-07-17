@@ -5,9 +5,10 @@
 @section('auth', true)
 
 @section('content')
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
-        <div class="card shadow p-4 w-100" style="max-width: 400px;">
-            <h4 class="text-center mb-4">Login</h4>
+    <div class="card shadow p-4 w-100">
+        <h4 class="text-center mb-4">Login</h4>
+        <form method="POST" action="{{ route('login.post') }}">
+            @csrf
 
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
@@ -50,6 +51,6 @@
                     Belum punya akun? <a href="{{ route('register') }}">Daftar</a>
                 </p>
             </form>
-        </div>
+    </div>
     </div>
 @endsection

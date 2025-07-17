@@ -21,13 +21,37 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // Validasi input
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
         $credentials = $request->only('email', 'password');
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+
+            $user = Auth::user();
+
+            // Redirect berdasarkan role
+            switch ($user->role) {
+                case 'admin':
+                    return redirect()->route('admin.dashboard');
+                case 'kepala_kebun':
+                    return redirect()->route('kepala.dashboard');
+                case 'sales':
+                    return redirect()->route('sales.dashboard');
+                case 'pembeli':
+                    return redirect()->route('customer.kebun');
+                default:
+                    Auth::logout(); // kalau role tidak dikenali, paksa logout
+                    return redirect('/login')->withErrors(['email' => 'Role tidak dikenali.']);
+            }
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah.']);
+        // Jika gagal login
+        return back()->withErrors(['email' => 'Email atau password salah.'])->withInput();
     }
 
     public function register(Request $request)

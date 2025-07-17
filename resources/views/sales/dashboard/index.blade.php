@@ -96,7 +96,7 @@
 <div class=" min-vh-100 p-4">
     <h1 class="mt-4 dashboard-title">
         <i class="fas fa-tachometer-alt me-2"></i>
-        Admin Dashboard
+        Sales Dashboard
     </h1>
 
     <ol class="breadcrumb mb-4 breadcrumb-dark">
@@ -113,7 +113,7 @@
                 <div class="card-body d-flex align-items-center">
                     <div class="flex-grow-1">
                         <div class="stats-number">150</div>
-                        <div class="fw-bold">Total Users</div>
+                        <div class="fw-bold">Customer Info</div>
                     </div>
                     <div class="ms-3">
                         <i class="fas fa-users fa-3x opacity-75"></i>
@@ -181,8 +181,8 @@
             <div class="card bg-green-light text-white card-hover">
                 <div class="card-body d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <div class="stats-number">$12.5K</div>
-                        <div class="fw-bold">Revenue</div>
+                        <div class="stats-number">Rp. 12.5K</div>
+                        <div class="fw-bold">Sales Summary</div>
                     </div>
                     <div class="ms-3">
                         <i class="fas fa-dollar-sign fa-3x opacity-75"></i>

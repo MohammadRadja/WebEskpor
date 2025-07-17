@@ -22,6 +22,18 @@ class LandingController extends Controller
     {
         return view('user.service.index');
     }
+    public function blog()
+    {
+        return view('user.blog.index');
+    }
+    public function cart()
+    {
+        return view('user.cart.index');
+    }
+    public function messages()
+    {
+        return view('user.messages.index');
+    }
 
 
 }

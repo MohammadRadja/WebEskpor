@@ -9,4 +9,7 @@ class AdminController extends Controller
     public function index(){
         return view('admin.dashboard.index');
     }
+    public function sales(){
+        return view('sales.dashboard.index');
+    }
 }
