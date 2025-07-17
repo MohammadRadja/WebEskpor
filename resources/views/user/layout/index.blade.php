@@ -4,12 +4,12 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>pt</title>
+  <title>@yield('title', 'PT.RAJAWALI PRIMA ANDALAS')</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/logo-putih.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Fonts -->
@@ -28,7 +28,7 @@
   <link href="assets/css/main.css" rel="stylesheet">
 </head>
 
-<body class="index-page">
+<body class="index-page overflow-x-hidden">
 
   <header id="header" class="header d-flex align-items-center position-relative" style="padding: 5px 0; background-color: #ffffff00; z-index: 999;">
     <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
@@ -73,7 +73,7 @@
                   <i class="bi bi-person-circle fs-5"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="mobileProfileDropdown">
-                  <li><a class="dropdown-item" href="{{ url('/login') }}">Login</a></li>
+                  <li><a class="dropdown-item" href="{{ route('login') }}">Login</a></li>
                   <li>
                     <form method="POST" action="{{ route('logout') }}">
                       @csrf

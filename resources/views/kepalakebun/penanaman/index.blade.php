@@ -1,4 +1,4 @@
-@extends('kepalakebun.layout.index')
+@extends('layout.index')
 
 @section('content')
 <div class="min-vh-100 p-4">

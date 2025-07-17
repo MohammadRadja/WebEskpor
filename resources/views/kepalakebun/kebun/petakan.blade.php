@@ -1,4 +1,4 @@
-@extends('kepalakebun.layout.index')
+@extends('layout.index')
 @section('title', 'Kelola Kebun dan petakan')
 
 @section('content')

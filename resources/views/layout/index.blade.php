@@ -12,8 +12,10 @@
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="{{ asset('assets/admin/css/styles.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
+    <script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs5.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs5.min.js"></script>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-
 </head>
 
 <body class="sb-nav-fixed">
@@ -106,20 +108,20 @@
                             Laporan
                         </a>
                         @elseif(auth()->user()->role === 'sales')
+                        <a class="nav-link active" href="{{route('sales.dashboard')}}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
                         <!-- Sales Menu -->
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{{route('sales.produk')}}">
                             <div class="sb-nav-link-icon"><i class="fas fa-box-open"></i></div>
                             Kelola Produk
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{{route('sales.order')}}">
                             <div class="sb-nav-link-icon"><i class="fas fa-leaf"></i></div>
                             Kelola Orderan
                         </a>
-                        <a class="nav-link" href="#">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-download"></i></div>
-                            Stok Barang
-                        </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{{route('sales.berita')}}">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-download"></i></div>
                             Berita
                         </a>
@@ -152,7 +154,7 @@
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">
-                            <i class="fas fa-copyright me-1"></i> 
+                            <i class="fas fa-copyright me-1"></i>
                             Copyright &copy; PT RAJAWALI PRIMA ANDALAS.INDONESIA 2025
                         </div>
                         <div>
@@ -175,6 +177,11 @@
     <script src="{{ asset('assets/admin/js/datatables-simple-demo.js') }}"></script>
 
     <script>
+        $(document).ready(function() {
+            $('#konten').summernote({
+                height: 300,
+            });
+        });
         // Enhanced sidebar interactions
         document.addEventListener('DOMContentLoaded', function() {
             // Add click effects to nav links

@@ -1,5 +1,5 @@
 @extends('user.index')
-
+@section('title', 'ABOUT-PT.RAJAWALI PRIMA ANDALAS')
 @section('content')
 <!-- Hero Section -->
 <div class="page-title dark-background" data-aos="fade" data-aos-duration="1200" style="background-image: url(assets/img/page-title-bg.webp);">

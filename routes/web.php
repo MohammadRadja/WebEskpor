@@ -5,9 +5,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangJadiController;
+use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\BibitController;
 use App\Http\Controllers\KebunController;
 use App\Http\Controllers\PenanamanController;
+use App\Http\Controllers\PesananController;
+use App\Http\Controllers\ProdukController;
 use App\Models\BarangJadi;
 
 /*
@@ -20,6 +23,9 @@ Route::get('/', [LandingController::class, 'index'])->name('Home');
 Route::get('/tentang', [LandingController::class, 'tentang'])->name('About');
 Route::get('/contact', [LandingController::class, 'contact'])->name('contact');
 Route::get('/service', [LandingController::class, 'service'])->name('service');
+Route::get('/blog', [LandingController::class, 'blog'])->name('blog');
+Route::get('/cart', [LandingController::class, 'cart'])->name('cart');
+Route::get('/messages', [LandingController::class, 'messages'])->name('messages');
 
 /*
 |--------------------------------------------------------------------------
@@ -52,7 +58,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 */
 Route::middleware(['auth', 'role:kepala_kebun'])->prefix('kepala')->group(function () {
     // ✳️ Route baru: Halaman dashboard kepala kebun (opsional)
-    Route::get('/dashboard', fn() => view('kepalakebun.dashboard.index'))->name('kepala.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('kepala.dashboard');
 
     // Kelola Kebun
     Route::get('/kebun', [KebunController::class, 'show'])->name('kebun.show');
@@ -80,7 +86,16 @@ Route::middleware(['auth', 'role:kepala_kebun'])->prefix('kepala')->group(functi
 */
 Route::middleware(['auth', 'role:sales'])->prefix('sales')->group(function () {
     // ✳️ Route baru: Lihat daftar kebun (read-only)
-     Route::get('/dashboard', fn() => view('kepalakebun.dashboard.index'))->name('sales.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'sales'])->name('sales.dashboard');
+    // produk
+    Route::get('/sales/produk', [ProdukController::class, 'show'])->name('sales.produk');
+    // orderan
+    Route::get('/sales/order', [PesananController::class, 'show'])->name('sales.order');
+
+    // Berita
+    Route::get('/sales/berita', [BeritaController::class, 'show'])->name('sales.berita');
+    Route::get('/sales/berita/add-news', [BeritaController::class, 'addShow'])->name('sales.berita.add');
+    Route::get('/sales/berita/edit-news', [BeritaController::class, 'editShow'])->name('sales.berita.edit');
 });
 
 /*

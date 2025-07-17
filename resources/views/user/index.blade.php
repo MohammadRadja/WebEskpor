@@ -1,5 +1,5 @@
 @extends('user.layout.index')
-
+@section('title', 'PT.RAJAWALI PRIMA ANDALAS')
 @section('content')
 <section id="hero" class="hero section dark-background">
 
