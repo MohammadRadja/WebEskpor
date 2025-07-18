@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Farm;
 use App\Models\FarmPlot;
 use Illuminate\Http\Request;
 
 class FarmPlotController extends Controller
 {
-    public function index()
+    public function index($id)
     {
-        $farms = Farm::all();
-        return view('farm-manager.farm-plot.index', compact('farm-plots'));
+        $farmsPlots = Farm::findOrFail($id);    
+        $plots = FarmPlot::where('farm_id', $id)->get();   
+        return view('dashboard.farm-manager.farm-plot.index', compact('farmsPlots','plots'));
     }
 
     public function store(Request $request)

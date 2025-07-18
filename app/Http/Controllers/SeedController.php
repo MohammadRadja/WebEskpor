@@ -9,8 +9,8 @@ class SeedController extends Controller
 {
     public function index()
     {
-        $data = Bibit::all();
-        return view('kepalakebun.bibit.index', compact('data'));
+        $data = Seed::all();
+        return view('dashboard.farm-manager.bibit.index', compact('data'));
     }
 
     public function store(Request $request)
@@ -24,7 +24,7 @@ class SeedController extends Controller
 
         $validated['total_harga'] = $validated['harga_satuan'] * $validated['qty'];
 
-        Bibit::create($validated);
+        Seed::create($validated);
 
         return redirect()->back()->with('success', 'Bibit berhasil ditambahkan');
     }

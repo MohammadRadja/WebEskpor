@@ -8,6 +8,7 @@ use App\Http\Controllers\BarangJadiController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\SeedController;
 use App\Http\Controllers\FarmController;
+use App\Http\Controllers\FarmPlotController;
 use App\Http\Controllers\PenanamanController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\ProdukController;
@@ -60,14 +61,14 @@ Route::middleware(['auth', 'role:farm_manager'])->prefix('kepala')->group(functi
     Route::get('/dashboard', [AdminController::class, 'index'])->name('farm-manager.dashboard');
 
     // Kelola Kebun
-    Route::get('/kebun', [FarmController::class, 'show'])->name('kebun.show');
-    Route::post('/kebun', [FarmController::class, 'storeKebun'])->name('kebun.store');
-    Route::put('/kebun/{id}', [FarmController::class, 'updateKebun'])->name('kebun.update');
-    Route::delete('/kebun/{id}', [FarmController::class, 'destroyKebun'])->name('kebun.delete');
+    Route::get('/kebun', [FarmController::class, 'index'])->name('kebun.show');
+    Route::post('/kebun', [FarmController::class, 'store'])->name('kebun.store');
+    Route::put('/kebun/{id}', [FarmController::class, 'update'])->name('kebun.update');
+    Route::delete('/kebun/{id}', [FarmController::class, 'destroy'])->name('kebun.delete');
 
     // Kelola Petakan
-    Route::get('/kebun/{id}/petakan', [FarmController::class, 'showPetakan'])->name('petakan.show');
-    Route::post('/kebun/{id}/petakan', [FarmController::class, 'storePetakan'])->name('petakan.store');
+    Route::get('/kebun/{id}/petakan', [FarmPlotController::class, 'index'])->name('petakan.show');
+    Route::post('/kebun/{id}/petakan', [FarmController::class, 'store'])->name('petakan.store');
 
     // Kelola bibit
     Route::get('/bibit', [SeedController::class, 'index'])->name('bibit.show');

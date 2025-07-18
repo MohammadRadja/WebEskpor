@@ -2,8 +2,8 @@
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
         <div class="sb-sidenav-menu">
             <div class="nav">
-                @if (auth()->user()->role === 'kepala_kebun')
-                    <a class="nav-link active" href="{{ route('kepala.dashboard') }}">
+                @if (auth()->user()->role === 'farm_manager')
+                    <a class="nav-link active" href="{{ route('farm-manager.dashboard') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div> Dashboard
                     </a>
 
@@ -30,7 +30,7 @@
                     <a class="nav-link" href="{{ route('penanaman.show') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-leaf"></i></div>Penanaman
                     </a>
-                    <a class="nav-link" href="{{ route('kepala.dashboard') }}">
+                    <a class="nav-link" href="{{ route('farm-manager.dashboard') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-file-download"></i></div>Laporan
                     </a>
                 @elseif(auth()->user()->role === 'sales')

@@ -10,7 +10,7 @@ class FarmController extends Controller
     public function index()
     {
         $farms = Farm::all();
-        return view('farm-manager.farms.index', compact('farms'));
+        return view('dashboard.farm-manager.farm.index', compact('farms'));
     }
 
     public function store(Request $request)

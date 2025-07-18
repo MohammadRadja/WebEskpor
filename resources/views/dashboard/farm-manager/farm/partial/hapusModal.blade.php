@@ -1,5 +1,5 @@
 <!-- Modal Delete Per Item -->
-@foreach ($kebun as $item)
+@foreach ($farms as $item)
 <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">

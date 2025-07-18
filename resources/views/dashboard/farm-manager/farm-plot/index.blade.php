@@ -1,4 +1,4 @@
-@extends('layout.index')
+@extends('layouts.panel.index')
 @section('title', 'Kelola Kebun dan petakan')
 
 @section('content')
@@ -34,7 +34,7 @@
                     <div class="row align-items-center">
                         <div class="col-md-8">
                             <h3 class="text-success fw-bold mb-3">
-                                <i class="fas fa-leaf me-2"></i>{{ $kebun->nama }}
+                                <i class="fas fa-leaf me-2"></i>{{ $farmsPlots->name }}
                             </h3>
                             <div class="row">
                                 <div class="col-md-6">
@@ -44,7 +44,7 @@
                                         </div>
                                         <div>
                                             <small class="text-muted">Nama Kebun</small>
-                                            <div class="fw-semibold">{{ $kebun->nama }}</div>
+                                            <div class="fw-semibold">{{ $farmsPlots->name }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -55,7 +55,7 @@
                                         </div>
                                         <div>
                                             <small class="text-muted">Lokasi</small>
-                                            <div class="fw-semibold">{{ $kebun->lokasi }}</div>
+                                            <div class="fw-semibold">{{ $farmsPlots->location }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -105,12 +105,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($kebun->petakan as $petakan)
+                                @forelse($plots as $petakan)
                                 <tr class="border-bottom">
-                                    <td class="fw-semibold text-dark">{{ $petakan->nama }}</td>
+                                    <td class="fw-semibold text-dark">{{ $petakan->name }}</td>
                                     <td>
                                         <span class="badge bg-light text-dark border">
-                                            <i class="fas fa-ruler me-1"></i>{{ $petakan->ukuran }}
+                                            <i class="fas fa-ruler me-1"></i>{{ $petakan->size }}
                                         </span>
                                     </td>
                                     <td>
@@ -118,7 +118,7 @@
                                             <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
                                                 <i class="fas fa-user text-white small"></i>
                                             </div>
-                                            <span class="text-dark">{{ $petakan->penanggung_jawab }}</span>
+                                            <span class="text-dark">{{ $petakan->responsible_person }}</span>
                                         </div>
                                     </td>
                                     <td>
@@ -177,7 +177,7 @@
                     </h5>
                 </div>
                 <div class="card-body" style="background-color: #f8f9fa;">
-                    <form action="{{ route('petakan.store', $kebun->id) }}" method="POST">
+                    <form action="" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-dark">
@@ -234,7 +234,5 @@
         </div>
     </div>
 </div>
-
-{{-- Custom CSS untuk tema hitam dan hijau --}}
 
 @endsection

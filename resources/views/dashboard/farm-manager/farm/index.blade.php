@@ -1,4 +1,4 @@
-@extends('layout.index')
+@extends('layouts.panel.index')
 @section('title', 'Kelola Kebun')
 
 @section('content')
@@ -47,8 +47,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if($kebun->count() > 0)
-                                @foreach($kebun as $item)
+                                @if($farms->count() > 0)
+                                @foreach($farms as $item)
                                 <tr class="border-bottom">
                                     <td class="px-4 py-3 fw-semibold text-dark">
                                         <div class="d-flex align-items-center">
@@ -178,7 +178,7 @@
                         <div class="col-12 mb-3">
                             <div class="bg-success bg-opacity-10 rounded-3 p-3">
                                 <i class="fas fa-seedling fa-2x text-success mb-2"></i>
-                                <h4 class="text-success fw-bold mb-0">{{ $kebun->count() }}</h4>
+                                <h4 class="text-success fw-bold mb-0">{{ $farms->count() }}</h4>
                                 <small class="text-muted">Total Kebun</small>
                             </div>
                         </div>
@@ -186,7 +186,8 @@
                             <div class="bg-dark bg-opacity-10 rounded-3 p-3">
                                 <i class="fas fa-th-large fa-2x text-dark mb-2"></i>
                                 <h4 class="text-dark fw-bold mb-0">
-                                    {{ $kebun->sum(function($item) { return $item->petakan->count(); }) }}
+                                    {{ $farms->sum(fn($item) => $item->petakan?->count() ?? 0) }}
+
                                 </h4>
                                 <small class="text-muted">Total Petakan</small>
                             </div>
@@ -197,8 +198,8 @@
         </div>
     </div>
 </div>
-@include('kepalakebun.kebun.partial.editModal')
-@include('kepalakebun.kebun.partial.hapusModal')
+@include('dashboard.farm-manager.farm.partial.editModal')
+@include('dashboard.farm-manager.farm.partial.hapusModal')
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const tableBody = document.querySelector('#datatablesSimple tbody');
