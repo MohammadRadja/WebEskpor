@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -32,39 +33,65 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+                Log::info('Auth attempt success', ['user' => Auth::user()]);
             $user = Auth::user();
+
+            // Log aktivitas login berhasil
+            Log::info('Login berhasil', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'role' => $user->role,
+                'ip' => $request->ip(),
+                'agent' => $request->header('User-Agent'),
+            ]);
 
             // Redirect berdasarkan role
             switch ($user->role) {
-                case 'admin':
+                case 'administrator':
                     return redirect()->route('admin.dashboard');
-                case 'kepala_kebun':
-                    return redirect()->route('kepala.dashboard');
+                case 'farm_manager':
+                    return redirect()->route('farm-manager.dashboard');
                 case 'sales':
                     return redirect()->route('sales.dashboard');
-                case 'pembeli':
+                case 'customer':
                     return redirect()->route('customer.kebun');
                 default:
-                    Auth::logout(); // kalau role tidak dikenali, paksa logout
+                    Auth::logout();
+
+                    // Log error role tidak dikenali
+                    Log::warning('Login gagal - role tidak dikenali', [
+                        'user_id' => $user->id,
+                        'email' => $user->email,
+                        'role' => $user->role,
+                    ]);
+
                     return redirect('/login')->withErrors(['email' => 'Role tidak dikenali.']);
             }
         }
 
-        // Jika gagal login
-        return back()->withErrors(['email' => 'Email atau password salah.'])->withInput();
+        // Log login gagal
+        Log::warning('Login gagal - kredensial salah', [
+            'email' => $request->input('email'),
+            'ip' => $request->ip(),
+            'agent' => $request->header('User-Agent'),
+        ]);
+
+        return back()
+            ->withErrors(['email' => 'Email atau password salah.'])
+            ->withInput();
     }
 
     public function register(Request $request)
     {
         $request->validate([
             'username' => 'required|string|max:255',
-            'email'    => 'required|string|email|unique:users',
+            'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         User::create([
             'username' => $request->username,
-            'email'    => $request->email,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 

@@ -2,12 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangJadiController;
 use App\Http\Controllers\BeritaController;
-use App\Http\Controllers\BibitController;
-use App\Http\Controllers\KebunController;
+use App\Http\Controllers\SeedController;
+use App\Http\Controllers\FarmController;
 use App\Http\Controllers\PenanamanController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\ProdukController;
@@ -15,17 +15,17 @@ use App\Models\BarangJadi;
 
 /*
 |--------------------------------------------------------------------------
-| Halaman Publik
+| Halaman Publik - Guest
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [LandingController::class, 'index'])->name('Home');
-Route::get('/tentang', [LandingController::class, 'tentang'])->name('About');
-Route::get('/contact', [LandingController::class, 'contact'])->name('contact');
-Route::get('/service', [LandingController::class, 'service'])->name('service');
-Route::get('/blog', [LandingController::class, 'blog'])->name('blog');
-Route::get('/cart', [LandingController::class, 'cart'])->name('cart');
-Route::get('/messages', [LandingController::class, 'messages'])->name('messages');
+Route::get('/', [PageController::class, 'index'])->name('Home');
+Route::get('/about', [PageController::class, 'about'])->name('About');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::get('/product', [PageController::class, 'product'])->name('product');
+Route::get('/blog', [PageController::class, 'blog'])->name('blog');
+Route::get('/cart', [PageController::class, 'cart'])->name('cart');
+Route::get('/message', [PageController::class, 'message'])->name('message');
 
 /*
 |--------------------------------------------------------------------------
@@ -42,13 +42,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| Halaman Admin - role: admin
+| Halaman Admin
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:administrator'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    // ✳️ Route baru: Admin dapat melihat semua kebun & user
-    Route::get('/kebun', [KebunController::class, 'show'])->name('admin.kebun.index');
+    Route::get('/kebun', [FarmController::class, 'show'])->name('admin.kebun.index');
 });
 
 /*
@@ -56,23 +55,23 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 | Kepala Kebun - role: kepala
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:kepala_kebun'])->prefix('kepala')->group(function () {
+Route::middleware(['auth', 'role:farm_manager'])->prefix('kepala')->group(function () {
     // ✳️ Route baru: Halaman dashboard kepala kebun (opsional)
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('kepala.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('farm-manager.dashboard');
 
     // Kelola Kebun
-    Route::get('/kebun', [KebunController::class, 'show'])->name('kebun.show');
-    Route::post('/kebun', [KebunController::class, 'storeKebun'])->name('kebun.store');
-    Route::put('/kebun/{id}', [KebunController::class, 'updateKebun'])->name('kebun.update');
-    Route::delete('/kebun/{id}', [KebunController::class, 'destroyKebun'])->name('kebun.delete');
+    Route::get('/kebun', [FarmController::class, 'show'])->name('kebun.show');
+    Route::post('/kebun', [FarmController::class, 'storeKebun'])->name('kebun.store');
+    Route::put('/kebun/{id}', [FarmController::class, 'updateKebun'])->name('kebun.update');
+    Route::delete('/kebun/{id}', [FarmController::class, 'destroyKebun'])->name('kebun.delete');
 
     // Kelola Petakan
-    Route::get('/kebun/{id}/petakan', [KebunController::class, 'showPetakan'])->name('petakan.show');
-    Route::post('/kebun/{id}/petakan', [KebunController::class, 'storePetakan'])->name('petakan.store');
-    
+    Route::get('/kebun/{id}/petakan', [FarmController::class, 'showPetakan'])->name('petakan.show');
+    Route::post('/kebun/{id}/petakan', [FarmController::class, 'storePetakan'])->name('petakan.store');
+
     // Kelola bibit
-    Route::get('/bibit', [BibitController::class, 'index'])->name('bibit.show');
-    Route::post('/kebun/{id}/petakan', [KebunController::class, 'storePetakan'])->name('petakan.store');
+    Route::get('/bibit', [SeedController::class, 'index'])->name('bibit.show');
+    Route::post('/kebun/{id}/petakan', [FarmController::class, 'storePetakan'])->name('petakan.store');
     // Kelola Barang Jadi
     Route::get('/barang-jadi', [BarangJadiController::class, 'show'])->name('barang.show');
     // Kelola penanaman
@@ -105,5 +104,5 @@ Route::middleware(['auth', 'role:sales'])->prefix('sales')->group(function () {
 */
 Route::middleware(['auth', 'role:pembeli'])->prefix('pembeli')->group(function () {
     // ✳️ Route baru: Lihat info kebun atau produk (read-only)
-    Route::get('/kebun', [KebunController::class, 'indexForCustomer'])->name('customer.kebun');
+    Route::get('/kebun', [FarmController::class, 'indexForCustomer'])->name('customer.kebun');
 });

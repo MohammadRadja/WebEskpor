@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     public function index(){
-        return view('admin.dashboard.index');
+        return view('dashboard.admin.index');
     }
     public function sales(){
-        return view('sales.dashboard.index');
+        return view('dashboard.sales.index');
     }
 }

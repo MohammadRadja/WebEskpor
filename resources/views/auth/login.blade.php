@@ -1,36 +1,33 @@
-@extends('layouts.app')
+@extends('layouts.guest.index')
 
 @section('title', 'Login')
-@section('body_class', 'auth-layout')
-@section('auth', true)
 
 @section('content')
-    <div class="card shadow p-4 w-100">
-        <h4 class="text-center mb-4">Login</h4>
-        <form method="POST" action="{{ route('login.post') }}">
-            @csrf
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="card shadow-sm p-4" style="max-width: 420px; width: 100%;">
+            <h4 class="text-center mb-4">Masuk ke Akun Anda</h4>
 
             @if (session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
+                <div class="alert alert-danger text-center">{{ session('error') }}</div>
             @endif
 
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login.post') }}">
                 @csrf
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" name="email" id="email"
                         class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required
-                        autofocus>
+                        autofocus placeholder="you@example.com">
                     @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">Kata Sandi</label>
                     <input type="password" name="password" id="password"
-                        class="form-control @error('password') is-invalid @enderror" required>
+                        class="form-control @error('password') is-invalid @enderror" required placeholder="********">
                     @error('password')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -43,14 +40,15 @@
                             Ingat saya
                         </label>
                     </div>
+                    <a href="#" class="text-decoration-none small">Lupa Password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-success w-100">Login</button>
 
-                <p class="text-center mt-3 mb-0">
-                    Belum punya akun? <a href="{{ route('register') }}">Daftar</a>
+                <p class="text-center mt-4 mb-0 text-muted">
+                    Belum punya akun? <a href="{{ route('register') }}" class="text-success">Daftar di sini</a>
                 </p>
             </form>
-    </div>
+        </div>
     </div>
 @endsection
