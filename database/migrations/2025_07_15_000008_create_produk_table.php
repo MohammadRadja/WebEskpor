@@ -7,26 +7,26 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Jalankan migrasi.
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('produk', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('plant_id');
-            $table->text('description');
-            $table->string('image');
+            $table->uuid('id_tanaman');
+            $table->text('deskripsi');
+            $table->string('gambar');
             $table->timestamps();
 
-            $table->foreign('plant_id')->references('id')->on('plants')->cascadeOnDelete();
+            $table->foreign('id_tanaman')->references('id')->on('tanaman')->cascadeOnDelete();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Balikkan migrasi.
      */
     public function down(): void
     {
-        Schema::dropIfExists('barang_jadis');
+        Schema::dropIfExists('produk');
     }
 };

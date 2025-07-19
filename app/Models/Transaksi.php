@@ -5,14 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Transaction extends Model
+class Transaksi extends Model
 {
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $table = 'transaksi';
 
     protected $fillable = [
-        'buyer_name', 'phone', 'address', 'country', 'shipping_cost',
-        'qty', 'total_price', 'payment_proof', 'status', 'subtotal', 'user_id'
+        'nama_pembeli', 'telepon', 'alamat', 'negara', 'biaya_pengiriman',
+        'jumlah', 'total_harga', 'bukti_pembayaran', 'status', 'subtotal', 'user_id'
     ];
 
     protected static function boot()
@@ -21,13 +22,13 @@ class Transaction extends Model
         static::creating(fn ($model) => $model->id = (string) Str::uuid());
     }
 
-    public function user()
+    public function pengguna()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function items()
+    public function detailTransaksi()
     {
-        return $this->hasMany(TransactionItem::class);
+        return $this->hasMany(detailTransaksi::class);
     }
 }

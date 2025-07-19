@@ -22,24 +22,24 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'username' => 'kepala kebun',
+            'username' => 'Kepala Kebun',
             'email' => 'kebun@example.com',
             'password' => Hash::make('kebun123'),
-            'role' => 'farm_manager',
+            'role' => 'manajer_kebun',
         ]);
 
         User::create([
-            'username' => 'sales',
+            'username' => 'Penjual',
             'email' => 'sales@example.com',
             'password' => Hash::make('sales123'),
-            'role' => 'sales',
+            'role' => 'penjual',
         ]);
 
         User::create([
             'username' => 'pembeli',
             'email' => 'pembeli@example.com',
             'password' => Hash::make('pembeli123'),
-            'role' => 'customer',
+            'role' => 'pelanggan',
         ]);
     }
 }

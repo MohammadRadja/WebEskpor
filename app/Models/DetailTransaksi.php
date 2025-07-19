@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class FarmPlot extends Model
+class DetailTransaksi extends Model
 {
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $table = 'detail_transaksi';
 
     protected $fillable = [
-        'name', 'size', 'responsible_person', 'status',
-        'farm_id', 'plant_id', 'planting_date', 'plant_quantity', 'harvest_quantity'
+        'id_transaksi', 'id_produk', 'jumlah', 'harga_satuan', 'subtotal'
     ];
 
     protected static function boot()
@@ -21,13 +21,13 @@ class FarmPlot extends Model
         static::creating(fn ($model) => $model->id = (string) Str::uuid());
     }
 
-    public function farm()
+    public function transaksi()
     {
-        return $this->belongsTo(Farm::class);
+        return $this->belongsTo(Transaksi::class);
     }
 
-    public function plant()
+    public function produk()
     {
-        return $this->belongsTo(Plant::class);
+        return $this->belongsTo(Produk::class);
     }
 }

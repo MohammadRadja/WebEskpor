@@ -4,18 +4,18 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Farm;
+use App\Models\Kebun;
 
-class FarmSeeder extends Seeder
+class KebunSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Farm::create([
-            'name' => 'Kebun Sayur Subur',
-            'location' => 'Bogor, Jawa Barat',
+        Kebun::create([
+            'nama' => 'Kebun Sayur Subur',
+            'lokasi' => 'Bogor, Jawa Barat',
         ]);
     }
 }

@@ -3,15 +3,15 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\News;
+use App\Models\Berita;
 use Illuminate\Database\Seeder;
 
-class NewsSeeder extends Seeder
+class BeritaSeeder extends Seeder
 {
     public function run(): void
     {
-        News::create([
-            'title' => 'Panen Raya Bayam Organik',
+        Berita::create([
+            'judul' => 'Panen Raya Bayam Organik',
             'slug' => 'panen-raya-bayam-organik',
             'image_url' => 'panen.jpg',
         ]);
