@@ -1,18 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BarangJadiController;
-use App\Http\Controllers\BeritaController;
-use App\Http\Controllers\SeedController;
-use App\Http\Controllers\FarmController;
-use App\Http\Controllers\FarmPlotController;
-use App\Http\Controllers\PenanamanController;
-use App\Http\Controllers\PesananController;
-use App\Http\Controllers\ProdukController;
-use App\Models\BarangJadi;
+use App\Http\Controllers\Shared\KebunController;
+use App\Http\Controllers\Shared\PetakKebunController;
+use App\Http\Controllers\Shared\BibitController;
+use App\Http\Controllers\Shared\TanamanController;
+use App\Http\Controllers\Shared\ProdukController;
+use App\Http\Controllers\Shared\ProdukEksternalController;
+use App\Http\Controllers\Shared\TransaksiController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Penjual\KontenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,62 +40,62 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 /*
 |--------------------------------------------------------------------------
-| Halaman Admin
+| Halaman Shared, Dashboard, Administrator, Penjual, Manajer Kebun, Pembeli
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:administrator'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('/kebun', [FarmController::class, 'show'])->name('admin.kebun.index');
-});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-/*
-|--------------------------------------------------------------------------
-| Kepala Kebun - role: kepala
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'role:farm_manager'])->prefix('kepala')->group(function () {
-    // ✳️ Route baru: Halaman dashboard kepala kebun (opsional)
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('farm-manager.dashboard');
+    // Profile
+    Route::get('/dashboard/profile', [AuthController::class, 'showProfile'])->name('profile.show');
+    Route::post('/dashboard/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
 
-    // Kelola Kebun
-    Route::get('/kebun', [FarmController::class, 'index'])->name('kebun.show');
-    Route::post('/kebun', [FarmController::class, 'store'])->name('kebun.store');
-    Route::put('/kebun/{id}', [FarmController::class, 'update'])->name('kebun.update');
-    Route::delete('/kebun/{id}', [FarmController::class, 'destroy'])->name('kebun.delete');
+    // Produk
+    Route::resource('produk', ProdukController::class);
+    Route::get('/produk-export', [ProdukController::class, 'exportExcel'])->name('produk.export.excel');
 
-    // Kelola Petakan
-    Route::get('/kebun/{id}/petakan', [FarmPlotController::class, 'index'])->name('petakan.show');
-    Route::post('/kebun/{id}/petakan', [FarmController::class, 'store'])->name('petakan.store');
+    // Produk Eksternal
+    Route::resource('produk-eksternal', ProdukEksternalController::class);
 
-    // Kelola bibit
-    Route::get('/bibit', [SeedController::class, 'index'])->name('bibit.show');
-    Route::post('/kebun/{id}/petakan', [FarmController::class, 'storePetakan'])->name('petakan.store');
-    // Kelola Barang Jadi
-    Route::get('/barang-jadi', [BarangJadiController::class, 'show'])->name('barang.show');
-    // Kelola penanaman
-    Route::get('/penanaman', [PenanamanController::class, 'index'])->name('penanaman.show');
-});
+    // Bibit
+    Route::resource('/bibit', BibitController::class);
+    Route::get('/bibit-export', [BibitController::class, 'exportExcel'])->name('bibit.export.excel');
 
-/*
-|--------------------------------------------------------------------------
-| Sales - role: sales
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'role:sales'])->prefix('sales')->group(function () {
-    // ✳️ Route baru: Lihat daftar kebun (read-only)
-    Route::get('/dashboard', [AdminController::class, 'sales'])->name('sales.dashboard');
-    // produk
-    Route::get('/sales/produk', [ProdukController::class, 'show'])->name('sales.produk');
-    // orderan
-    Route::get('/sales/order', [PesananController::class, 'show'])->name('sales.order');
+    // Kebun
+    Route::resource('/kebun', KebunController::class);
+    Route::get('/kebun-export', [KebunController::class, 'exportExcel'])->name('kebun.export.excel');
 
-    // Berita
-    Route::get('/sales/berita', [BeritaController::class, 'show'])->name('sales.berita');
-    Route::get('/sales/berita/add-news', [BeritaController::class, 'addShow'])->name('sales.berita.add');
-    Route::get('/sales/berita/edit-news', [BeritaController::class, 'editShow'])->name('sales.berita.edit');
+    // Tanaman
+    Route::resource('/tanaman', TanamanController::class);
+    Route::get('/tanaman-export', [TanamanController::class, 'exportExcel'])->name('tanaman.export.excel');
+
+    // Petak Kebun
+    Route::get('/petak-kebun', [PetakKebunController::class, 'index'])->name('petak.kebun');
+    Route::get('/petak-kebun', [PetakKebunController::class, 'index'])->name('petak.kebun');
+    Route::get('/petak-kebun/create/{kebunId}', [PetakKebunController::class, 'create'])->name('petakan.create');
+    Route::post('/petak-kebun', [PetakKebunController::class, 'store'])->name('petakan.store');
+    Route::get('/petak-kebun/{id}/edit', [PetakKebunController::class, 'edit'])->name('petakan.edit');
+    Route::put('/petak-kebun/{id}', [PetakKebunController::class, 'update'])->name('petakan.update');
+    Route::delete('/petak-kebun/{id}', [PetakKebunController::class, 'destroy'])->name('petakan.destroy');
+    Route::get('/petak-kebun/export/excel', [PetakKebunController::class, 'exportExcel'])->name('petak.kebun.export.excel');
+
+    // Transaksi
+    Route::resource('/transaksi', TransaksiController::class);
+
+    Route::get('/konten', [DashboardController::class, 'konten'])->name('konten');
+
+    // User Management
+    Route::middleware('role:administrator')->group(function () {
+        Route::resource('/user', UserController::class);
+        Route::get('/user/export', [UserController::class, 'exportExcel'])->name('user.export.excel');
+    });
+
+    // Konten
+    Route::middleware('role:administrator,penjual')->group(function () {
+        Route::resource('konten', KontenController::class);
+    });
 });
 
 /*
@@ -103,7 +103,9 @@ Route::middleware(['auth', 'role:sales'])->prefix('sales')->group(function () {
 | Pembeli - role: pembeli
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:pembeli'])->prefix('pembeli')->group(function () {
-    // ✳️ Route baru: Lihat info kebun atau produk (read-only)
-    Route::get('/kebun', [FarmController::class, 'indexForCustomer'])->name('customer.kebun');
-});
+Route::middleware(['auth', 'role:pelanggan'])
+    ->prefix('pembeli')
+    ->group(function () {
+        // ✳️ Route baru: Lihat info kebun atau produk (read-only)
+        Route::get('/home', [PageController::class, 'index'])->name('pelanggan.index');
+    });

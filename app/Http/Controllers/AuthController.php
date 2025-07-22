@@ -20,61 +20,31 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
+    private function handleUnknownRole()
+    {
+        Auth::logout();
+        return redirect('/login')->withErrors(['email' => 'Role tidak dikenali.']);
+    }
+
     public function login(Request $request)
     {
         // Validasi input
-        $request->validate([
+        $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        $credentials = $request->only('email', 'password');
-
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
-                Log::info('Auth attempt success', ['user' => Auth::user()]);
             $user = Auth::user();
 
-            // Log aktivitas login berhasil
-            Log::info('Login berhasil', [
-                'user_id' => $user->id,
-                'email' => $user->email,
-                'role' => $user->role,
-                'ip' => $request->ip(),
-                'agent' => $request->header('User-Agent'),
-            ]);
-
             // Redirect berdasarkan role
-            switch ($user->role) {
-                case 'administrator':
-                    return redirect()->route('admin.dashboard');
-                case 'farm_manager':
-                    return redirect()->route('farm-manager.dashboard');
-                case 'sales':
-                    return redirect()->route('sales.dashboard');
-                case 'customer':
-                    return redirect()->route('customer.kebun');
-                default:
-                    Auth::logout();
-
-                    // Log error role tidak dikenali
-                    Log::warning('Login gagal - role tidak dikenali', [
-                        'user_id' => $user->id,
-                        'email' => $user->email,
-                        'role' => $user->role,
-                    ]);
-
-                    return redirect('/login')->withErrors(['email' => 'Role tidak dikenali.']);
-            }
+            return match ($user->role) {
+                'administrator', 'manajer_kebun', 'penjual' => redirect()->route('dashboard'),
+                'pelanggan' => redirect()->route('pages.index'),
+                default => $this->handleUnknownRole(),
+            };
         }
-
-        // Log login gagal
-        Log::warning('Login gagal - kredensial salah', [
-            'email' => $request->input('email'),
-            'ip' => $request->ip(),
-            'agent' => $request->header('User-Agent'),
-        ]);
 
         return back()
             ->withErrors(['email' => 'Email atau password salah.'])
@@ -105,5 +75,38 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/login');
+    }
+
+    public function showProfile()
+    {
+        $user = Auth::user();
+        return view('dashboard.shared.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
+
+        try {
+            $user->username = $request->username;
+            $user->email = $request->email;
+
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+
+            $user->save();
+
+            return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+        } catch (\Exception $e) {
+            Log::error('Gagal memperbarui profil:', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui profil.');
+        }
     }
 }

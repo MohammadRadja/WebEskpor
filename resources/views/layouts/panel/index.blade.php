@@ -6,7 +6,7 @@
 <body class="sb-nav-fixed">
     @include('layouts.panel.navbar')
 
-    <div id="layoutSidenav">
+    <div class="display-0" id="layoutSidenav">
         @include('layouts.panel.sidebar')
 
         <div id="layoutSidenav_content">
@@ -22,6 +22,9 @@
 
     @include('layouts.panel.scripts')
     @stack('scripts')
+
+    {{-- Modal Form --}}
+    <x-modal-form />
 </body>
 
 </html>

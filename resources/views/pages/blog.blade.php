@@ -1,8 +1,8 @@
-@extends('user.index')
+@extends('layouts.guest.index')
 @section('title', 'Blog - PT.RAJAWALI PRIMA ANDALAS')
 @section('content')
     {{-- Hero Section --}}
-    <x-hero-section title="Blog" background="assets/img/page-title-bg.webp" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'Blog']]" />
+    <x-hero-section title="Blog" background="{{ asset('assets/img/page-title-bg.webp') }}" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'Blog']]" />
 
     <!-- Blog Section -->
     <div class="container mt-5">

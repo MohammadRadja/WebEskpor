@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Jalankan migrasi.
      */
@@ -18,7 +17,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('ukuran');
             $table->string('penanggung_jawab');
-            $table->string('status');
+            $table->enum('status', ['aktif', 'non-aktif'])->default('aktif');
             $table->date('tanggal_tanam')->nullable();
             $table->integer('jumlah_tanaman')->default(0);
             $table->integer('jumlah_panen')->default(0);

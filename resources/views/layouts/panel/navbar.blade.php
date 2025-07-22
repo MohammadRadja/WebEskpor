@@ -1,49 +1,40 @@
-<nav class="sb-topnav navbar navbar-expand navbar-dark">
-    <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3 glow-effect" href="{{ route('farm-manager.dashboard') }}">
-        <img src="{{ asset('assets/img/log1.svg') }}" alt="AgriCulture" style="width: 200px; height: 60px;">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-success shadow-sm border-bottom border-light">
+    <!-- Logo Kiri -->
+    <a class="navbar-brand ps-3 d-flex align-items-center" href="{{ route('dashboard') }}">
+        <img src="{{ asset('assets/img/log1.svg') }}" alt="AgriCulture" class="img-fluid" style="max-height: 50px;">
     </a>
 
-    <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
+    <!-- Sidebar Toggle (Mobile) -->
+    <button class="btn btn-link btn-sm me-3 d-lg-none text-white" id="sidebarToggle">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Navbar Search-->
-    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        <div class="input-group">
-            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
-                aria-describedby="btnNavbarSearch" />
-            <button class="btn btn-primary" id="btnNavbarSearch" type="button">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-    </form>
-
-    <!-- Navbar-->
-    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+    <!-- Navbar Right -->
+    <ul class="navbar-nav ms-auto me-3">
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-user fa-fw" style="color: var(--primary-green);"></i>
+                <i class="fas fa-user fa-fw"></i>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#!"><i class="fas fa-cog me-2"></i>Settings</a></li>
-                <li><a class="dropdown-item" href="#!"><i class="fas fa-list me-2"></i>Activity Log</a></li>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
                 <li>
-                    <hr class="dropdown-divider" />
+                    <a class="dropdown-item" href="{{ route('profile.show') }}">
+                        <i class="fas fa-user me-2 text-secondary"></i> Profile
+                    </a>
                 </li>
-                <li>
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="dropdown-item">
-                            <p class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>
-                                Logout
-                            </p>
-                        </button>
-                    </form>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2 text-secondary"></i>Settings</a>
                 </li>
-            </ul>
+                <hr class="dropdown-divider" />
         </li>
+        <li>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="dropdown-item">
+                    <i class="fas fa-sign-out-alt me-2 text-danger"></i>Logout
+                </button>
+            </form>
+        </li>
+    </ul>
+    </li>
     </ul>
 </nav>

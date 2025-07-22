@@ -1,15 +1,18 @@
-@extends('user.index')
-@section('title', 'ABOUT-PT.RAJAWALI PRIMA ANDALAS')
+@extends('layouts.guest.index')
+
+@section('title', 'About - PT. RAJAWALI PRIMA ANDALAS')
+
 @section('content')
     {{-- Hero Section --}}
-    <x-hero-section title="About Us" background="assets/img/page-title-bg.webp" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'About Us']]" />
+    <x-hero-section title="About Us" background="{{ asset('assets/img/page-title-bg.webp') }}" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'About Us']]" />
 
     <!-- Company Profile -->
-    <section id="company-profile" class="section py-5 bg-white">
+    <section class="section py-5 bg-white">
         <div class="container">
             <div class="row gy-4 justify-content-between align-items-center">
                 <div class="col-lg-6 order-lg-2" data-aos="zoom-out" data-aos-delay="100">
-                    <img src="assets/img/logo1.jpg" alt="Profil Perusahaan" class="img-fluid rounded shadow-sm" />
+                    <img src="{{ asset('assets/img/logo1.jpg') }}" alt="Profil Perusahaan"
+                        class="img-fluid rounded shadow-sm" />
                 </div>
                 <div class="col-lg-5 order-lg-1" data-aos="fade-right" data-aos-delay="200">
                     <h2 class="content-title mb-4">Profil Perusahaan</h2>
@@ -28,7 +31,7 @@
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="section py-5 bg-light">
+    <section class="section py-5 bg-light">
         <div class="container">
             <div class="text-center mb-5" data-aos="fade-up">
                 <h2 class="content-title">Layanan Kami</h2>
@@ -37,39 +40,45 @@
             </div>
 
             <div class="row gy-4 justify-content-center">
-                <div class="col-lg-5 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
-                    <div class="service-box w-100 text-center bg-white shadow-sm p-4 border rounded">
-                        <h4 class="mb-3">Pengadaan Hasil Pertanian</h4>
-                        <p>Menyediakan komoditas unggulan seperti kopi, rempah-rempah, kelapa, dan hasil bumi lainnya dari
-                            petani lokal.</p>
+                @php
+                    $services = [
+                        [
+                            'title' => 'Pengadaan Hasil Pertanian',
+                            'desc' =>
+                                'Menyediakan komoditas unggulan seperti kopi, rempah-rempah, kelapa, dan hasil bumi lainnya dari petani lokal.',
+                        ],
+                        [
+                            'title' => 'Prosesing & Quality Control',
+                            'desc' =>
+                                'Memastikan kualitas produk sesuai standar ekspor internasional melalui pemrosesan dan kontrol mutu ketat.',
+                        ],
+                        [
+                            'title' => 'Manajemen Ekspor',
+                            'desc' =>
+                                'Mengelola logistik dan dokumentasi ekspor hingga produk tiba di tangan buyer internasional.',
+                        ],
+                        [
+                            'title' => 'Konsultasi & Kemitraan',
+                            'desc' =>
+                                'Membuka peluang kolaborasi ekspor dan membangun kemitraan strategis dengan pelaku pertanian dan distributor global.',
+                        ],
+                    ];
+                @endphp
+
+                @foreach ($services as $i => $service)
+                    <div class="col-lg-5 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="{{ 100 + $i * 100 }}">
+                        <div class="service-box w-100 text-center bg-white shadow-sm p-4 border rounded">
+                            <h4 class="mb-3">{{ $service['title'] }}</h4>
+                            <p>{{ $service['desc'] }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-5 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="200">
-                    <div class="service-box w-100 text-center bg-white shadow-sm p-4 border rounded">
-                        <h4 class="mb-3">Prosesing & Quality Control</h4>
-                        <p>Memastikan kualitas produk sesuai standar ekspor internasional melalui pemrosesan dan kontrol
-                            mutu ketat.</p>
-                    </div>
-                </div>
-                <div class="col-lg-5 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
-                    <div class="service-box w-100 text-center bg-white shadow-sm p-4 border rounded">
-                        <h4 class="mb-3">Manajemen Ekspor</h4>
-                        <p>Mengelola logistik dan dokumentasi ekspor hingga produk tiba di tangan buyer internasional.</p>
-                    </div>
-                </div>
-                <div class="col-lg-5 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="400">
-                    <div class="service-box w-100 text-center bg-white shadow-sm p-4 border rounded">
-                        <h4 class="mb-3">Konsultasi & Kemitraan</h4>
-                        <p>Membuka peluang kolaborasi ekspor dan membangun kemitraan strategis dengan pelaku pertanian dan
-                            distributor global.</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
 
     <!-- Visi Misi -->
-    <section id="visi-misi" class="section py-5 bg-white">
+    <section class="section py-5 bg-white">
         <div class="container" data-aos="fade-up">
             <div class="text-center mb-5">
                 <h2 class="fw-bold">Visi & Misi Kami</h2>
@@ -112,7 +121,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 @endsection

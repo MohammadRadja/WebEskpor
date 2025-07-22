@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('transaksi', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('id_pelanggan');
-            $table->string('nama_pembeli');
             $table->string('telepon');
             $table->text('alamat');
             $table->string('negara');

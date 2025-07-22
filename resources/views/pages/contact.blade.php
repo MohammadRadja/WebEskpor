@@ -1,6 +1,5 @@
-@extends('user.index')
-@section('title', 'Contact - PT. Rajawali Prima Andalas')
-
+@extends('layouts.guest.index')
+@section('title', 'Kontak - PT. Rajawali Prima Andalas')
 @section('content')
 
     {{-- Hero Section --}}

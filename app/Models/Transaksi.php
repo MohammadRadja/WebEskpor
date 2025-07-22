@@ -12,8 +12,8 @@ class Transaksi extends Model
     protected $table = 'transaksi';
 
     protected $fillable = [
-        'nama_pembeli', 'telepon', 'alamat', 'negara', 'biaya_pengiriman',
-        'jumlah', 'total_harga', 'bukti_pembayaran', 'status', 'subtotal', 'user_id'
+        'telepon', 'alamat', 'negara', 'biaya_pengiriman',
+        'jumlah', 'total_harga', 'bukti_pembayaran', 'status', 'id_pelanggan'
     ];
 
     protected static function boot()
@@ -22,13 +22,13 @@ class Transaksi extends Model
         static::creating(fn ($model) => $model->id = (string) Str::uuid());
     }
 
-    public function pengguna()
+    public function pelanggan()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id_pelanggan');
     }
 
     public function detailTransaksi()
     {
-        return $this->hasMany(detailTransaksi::class);
+        return $this->hasMany(DetailTransaksi::class, 'id_transaksi');
     }
 }

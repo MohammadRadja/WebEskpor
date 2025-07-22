@@ -30,4 +30,14 @@ class User extends Authenticatable
         parent::boot();
         static::creating(fn($model) => ($model->id = (string) Str::uuid()));
     }
+
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'id_pelanggan');
+    }
+
+    public function konten()
+    {
+        return $this->hasMany(Konten::class, 'id_penulis');
+    }
 }

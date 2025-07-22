@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Jalankan migrasi.
      */
@@ -13,9 +12,12 @@ return new class extends Migration
     {
         Schema::create('produk', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('nama');
             $table->uuid('id_tanaman');
-            $table->text('deskripsi');
-            $table->string('gambar');
+            $table->integer('stok');
+            $table->decimal('harga', 12, 2);
+            $table->text('deskripsi')->nullable();
+            $table->string('gambar')->nullable();
             $table->timestamps();
 
             $table->foreign('id_tanaman')->references('id')->on('tanaman')->cascadeOnDelete();

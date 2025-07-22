@@ -21,11 +21,11 @@ class PetakKebun extends Model
 
     public function kebun()
     {
-        return $this->belongsTo(Kebun::class);
+        return $this->belongsTo(Kebun::class, 'id_kebun');
     }
 
     public function tanaman()
     {
-        return $this->belongsTo(Tanaman::class);
+        return $this->belongsTo(Tanaman::class, 'id_tanaman');
     }
 }

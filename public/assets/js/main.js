@@ -1,167 +1,458 @@
-/**
-* Template Name: AgriCulture
-* Template URL: https://bootstrapmade.com/agriculture-bootstrap-website-template/
-* Updated: Aug 07 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
+(function () {
+    "use strict";
 
-(function() {
-  "use strict";
+    /** === SCROLL EFFECTS === */
+    function toggleScrolled() {
+        const body = document.body;
+        const header = document.querySelector("#header");
+        if (
+            !header?.classList.contains("scroll-up-sticky") &&
+            !header?.classList.contains("sticky-top") &&
+            !header?.classList.contains("fixed-top")
+        )
+            return;
 
-  /**
-   * Apply .scrolled class to the body as the page is scrolled down
-   */
-  function toggleScrolled() {
-    const selectBody = document.querySelector('body');
-    const selectHeader = document.querySelector('#header');
-    if (!selectHeader.classList.contains('scroll-up-sticky') && !selectHeader.classList.contains('sticky-top') && !selectHeader.classList.contains('fixed-top')) return;
-    window.scrollY > 100 ? selectBody.classList.add('scrolled') : selectBody.classList.remove('scrolled');
-  }
-
-  document.addEventListener('scroll', toggleScrolled);
-  window.addEventListener('load', toggleScrolled);
-
-  /**
-   * Scroll up sticky header to headers with .scroll-up-sticky class
-   */
-  let lastScrollTop = 0;
-  window.addEventListener('scroll', function() {
-    const selectHeader = document.querySelector('#header');
-    if (!selectHeader.classList.contains('scroll-up-sticky')) return;
-
-    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-    if (scrollTop > lastScrollTop && scrollTop > selectHeader.offsetHeight) {
-      selectHeader.style.setProperty('position', 'sticky', 'important');
-      selectHeader.style.top = `-${header.offsetHeight + 50}px`;
-    } else if (scrollTop > selectHeader.offsetHeight) {
-      selectHeader.style.setProperty('position', 'sticky', 'important');
-      selectHeader.style.top = "0";
-    } else {
-      selectHeader.style.removeProperty('top');
-      selectHeader.style.removeProperty('position');
+        window.scrollY > 100
+            ? body.classList.add("scrolled")
+            : body.classList.remove("scrolled");
     }
-    lastScrollTop = scrollTop;
-  });
 
-  /**
-   * Mobile nav toggle
-   */
-  const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
+    /** === STICKY HEADER === */
+    function handleStickyHeader() {
+        const header = document.querySelector("#header");
+        if (!header?.classList.contains("scroll-up-sticky")) return;
 
-  function mobileNavToogle() {
-    document.querySelector('body').classList.toggle('mobile-nav-active');
-    mobileNavToggleBtn.classList.toggle('bi-list');
-    mobileNavToggleBtn.classList.toggle('bi-x');
-  }
-  mobileNavToggleBtn.addEventListener('click', mobileNavToogle);
+        let lastScrollTop = 0;
 
-  /**
-   * Hide mobile nav on same-page/hash links
-   */
-  document.querySelectorAll('#navmenu a').forEach(navmenu => {
-    navmenu.addEventListener('click', () => {
-      if (document.querySelector('.mobile-nav-active')) {
-        mobileNavToogle();
-      }
-    });
+        window.addEventListener("scroll", () => {
+            const scrollTop =
+                window.pageYOffset || document.documentElement.scrollTop;
 
-  });
+            if (scrollTop > lastScrollTop && scrollTop > header.offsetHeight) {
+                header.style.top = `-${header.offsetHeight + 50}px`;
+                header.style.position = "sticky";
+            } else if (scrollTop > header.offsetHeight) {
+                header.style.top = "0";
+                header.style.position = "sticky";
+            } else {
+                header.style.removeProperty("top");
+                header.style.removeProperty("position");
+            }
 
-  /**
-   * Toggle mobile nav dropdowns
-   */
-  document.querySelectorAll('.navmenu .toggle-dropdown').forEach(navmenu => {
-    navmenu.addEventListener('click', function(e) {
-      e.preventDefault();
-      this.parentNode.classList.toggle('active');
-      this.parentNode.nextElementSibling.classList.toggle('dropdown-active');
-      e.stopImmediatePropagation();
-    });
-  });
-
-  /**
-   * Preloader
-   */
-  const preloader = document.querySelector('#preloader');
-  if (preloader) {
-    window.addEventListener('load', () => {
-      preloader.remove();
-    });
-  }
-
-  /**
-   * Scroll top button
-   */
-  let scrollTop = document.querySelector('.scroll-top');
-
-  function toggleScrollTop() {
-    if (scrollTop) {
-      window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');
+            lastScrollTop = scrollTop;
+        });
     }
-  }
-  scrollTop.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+
+    /** === MOBILE NAV TOGGLE === */
+    function initMobileNavToggle() {
+        const toggleBtn = document.querySelector(".mobile-nav-toggle");
+        if (!toggleBtn) return;
+
+        toggleBtn.addEventListener("click", () => {
+            document.body.classList.toggle("mobile-nav-active");
+            toggleBtn.classList.toggle("bi-list");
+            toggleBtn.classList.toggle("bi-x");
+        });
+
+        document.querySelectorAll("#navmenu a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (document.body.classList.contains("mobile-nav-active")) {
+                    document.body.classList.remove("mobile-nav-active");
+                    toggleBtn.classList.add("bi-list");
+                    toggleBtn.classList.remove("bi-x");
+                }
+            });
+        });
+
+        document
+            .querySelectorAll(".navmenu .toggle-dropdown")
+            .forEach((toggle) => {
+                toggle.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const parent = toggle.parentNode;
+                    parent.classList.toggle("active");
+                    parent.nextElementSibling?.classList.toggle(
+                        "dropdown-active"
+                    );
+                });
+            });
+    }
+
+    /** === PRELOADER === */
+    function removePreloader() {
+        const preloader = document.querySelector("#preloader");
+        if (preloader) {
+            window.addEventListener("load", () => preloader.remove());
+        }
+    }
+
+    /** === SCROLL TO TOP === */
+    function setupScrollTopButton() {
+        const scrollTopBtn = document.querySelector(".scroll-top");
+
+        function toggleScrollTop() {
+            if (scrollTopBtn) {
+                scrollTopBtn.classList.toggle("active", window.scrollY > 100);
+            }
+        }
+
+        if (scrollTopBtn) {
+            scrollTopBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+        }
+
+        document.addEventListener("scroll", toggleScrollTop);
+        window.addEventListener("load", toggleScrollTop);
+    }
+
+    /** === AOS === */
+    function initAOS() {
+        $(document).ready(function () {
+            AOS.init({
+                duration: 600,
+                easing: "ease-in-out",
+                once: true,
+                mirror: false,
+            });
+
+            setTimeout(() => {
+                AOS.refresh();
+            }, 500);
+        });
+    }
+
+    /** === GLIGHTBOX === */
+    function initLightbox() {
+        if (typeof GLightbox !== "undefined") {
+            GLightbox({ selector: ".glightbox" });
+        }
+    }
+
+    /** === SWIPER === */
+    function initSwiper() {
+        document.querySelectorAll(".init-swiper").forEach((swiperEl) => {
+            const configEl = swiperEl.querySelector(".swiper-config");
+            if (!configEl) return;
+            const config = JSON.parse(configEl.textContent.trim());
+            new Swiper(swiperEl, config);
+        });
+    }
+
+    /** === CAROUSEL INDICATORS AUTO === */
+    function autoCarouselIndicators() {
+        document
+            .querySelectorAll(".carousel-indicators")
+            .forEach((indicators) => {
+                const carousel = indicators.closest(".carousel");
+                carousel
+                    ?.querySelectorAll(".carousel-item")
+                    .forEach((item, index) => {
+                        indicators.innerHTML += `
+                    <li data-bs-target="#${
+                        carousel.id
+                    }" data-bs-slide-to="${index}" ${
+                            index === 0 ? 'class="active"' : ""
+                        }></li>
+                `;
+                    });
+            });
+    }
+
+    /** === UNIVERSAL MODAL CRUD === */
+    function initUniversalModal() {
+        const modalEl = document.getElementById("universalModal");
+        const modalForm = document.getElementById("universalForm");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalBody = document.getElementById("modalBody");
+
+        if (!modalEl || !modalForm || !modalTitle || !modalBody) {
+            console.warn("[initUniversalModal] Modal element not found.");
+            return;
+        }
+
+        let currentUrl = "";
+        let currentMethod = "POST";
+        const modal = new bootstrap.Modal(modalEl);
+
+        document.body.addEventListener("click", (e) => {
+            const btn = e.target.closest("[data-crud]");
+            if (!btn) return;
+
+            const action = btn.dataset.crud;
+            const url = btn.dataset.url;
+            const title = btn.dataset.title || "Form";
+            const method = btn.dataset.method || "POST";
+            const fieldsRaw = btn.dataset.fields;
+
+            console.log(
+                `[Modal Trigger] Action: ${action}, URL: ${url}, Method: ${method}`
+            );
+
+            if (action === "add" || action === "edit") {
+                modalTitle.textContent = title;
+                modalBody.innerHTML = "";
+                currentUrl = url;
+                currentMethod = method;
+
+                let fields = {};
+                try {
+                    fields = JSON.parse(fieldsRaw);
+                    console.log("[Parsed Fields]", fields);
+                } catch (err) {
+                    console.error(
+                        "[initUniversalModal] Failed to parse fields JSON:",
+                        fieldsRaw,
+                        err
+                    );
+                    return;
+                }
+
+                Object.entries(fields).forEach(([name, config]) => {
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "mb-3";
+
+                    const label = document.createElement("label");
+                    label.className = "form-label";
+                    label.textContent = config.label;
+
+                    let input;
+                    if (config.type === "select" && config.options) {
+                        input = document.createElement("select");
+                        input.className = "form-control";
+                        input.name = name;
+
+                        let optionList = [];
+
+                        if (Array.isArray(config.options)) {
+                            optionList = config.options;
+                        } else if (
+                            typeof config.options === "string" &&
+                            window[config.options]
+                        ) {
+                            optionList = window[config.options];
+                        }
+
+                        optionList.forEach((opt) => {
+                            const option = document.createElement("option");
+                            const val = opt.value ?? opt;
+                            const label = opt.label ?? opt;
+
+                            option.value = val;
+                            option.textContent = label;
+
+                            if (val == config.value) {
+                                option.selected = true;
+                            }
+
+                            input.appendChild(option);
+                        });
+                    } else if (config.type === "textarea") {
+                        input = document.createElement("textarea");
+                        input.className = "form-control";
+                        input.name = name;
+                        input.textContent = config.value || "";
+                    } else {
+                        input = document.createElement("input");
+                        input.type = config.type || "text";
+                        input.className = "form-control";
+                        input.name = name;
+                        input.value = config.value || "";
+                    }
+
+                    wrapper.append(label, input);
+                    modalBody.appendChild(wrapper);
+                });
+
+                const submitBtn = modalForm.querySelector(
+                    "button[type='submit']"
+                );
+                submitBtn.textContent = "Simpan";
+                submitBtn.classList.remove("btn-danger");
+                submitBtn.classList.add("btn-success");
+
+                console.log("[Modal Opened] Ready for form submission.");
+                modal.show();
+            }
+
+            if (action === "delete") {
+                Swal.fire({
+                    title: "Yakin ingin menghapus?",
+                    text: "Data yang dihapus tidak dapat dikembalikan.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#6c757d",
+                    confirmButtonText: "Ya, hapus",
+                    cancelButtonText: "Batal",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log("[Delete Request] Sending DELETE to", url);
+                        fetch(url, {
+                            method: "POST",
+                            headers: {
+                                "X-CSRF-TOKEN": document.querySelector(
+                                    'meta[name="csrf-token"]'
+                                ).content,
+                                "Content-Type": "application/json",
+                                "X-Requested-With": "XMLHttpRequest",
+                            },
+                            body: JSON.stringify({ _method: "DELETE" }),
+                        })
+                            .then((res) => {
+                                if (!res.ok) throw res;
+                                return res.text();
+                            })
+                            .then(() => {
+                                console.log("[Delete Success]");
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Berhasil",
+                                    text: "Data berhasil dihapus.",
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                });
+                                setTimeout(() => location.reload(), 500);
+                            })
+                            .catch((err) => {
+                                console.error("[Delete Error]", err);
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Gagal",
+                                    text: "Terjadi kesalahan saat menghapus data.",
+                                });
+                            });
+                    }
+                });
+            }
+        });
+
+        modalForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(modalForm);
+            if (currentMethod !== "POST") {
+                formData.append("_method", currentMethod);
+            }
+
+            console.log(
+                `[Form Submit] URL: ${currentUrl}, Method: ${currentMethod}`
+            );
+            for (let [key, value] of formData.entries()) {
+                console.log(` - ${key}:`, value);
+            }
+
+            try {
+                const res = await fetch(currentUrl, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector(
+                            'meta[name="csrf-token"]'
+                        ).content,
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    body: formData,
+                });
+
+                const contentType = res.headers.get("Content-Type") || "";
+
+                if (!res.ok) {
+                    if (
+                        res.status === 422 &&
+                        contentType.includes("application/json")
+                    ) {
+                        const errorData = await res.json();
+                        const errorMessages = Object.values(errorData.errors)
+                            .flat()
+                            .join("<br>");
+                        console.warn("[Validation Failed]", errorData.errors);
+                        throw { type: "validation", message: errorMessages };
+                    } else {
+                        const errorText = await res.text();
+                        console.error("[Server Error]", errorText);
+                        throw { type: "server", message: errorText };
+                    }
+                }
+
+                console.log("[Form Success]");
+                modal.hide();
+                Swal.fire({
+                    icon: "success",
+                    title: "Berhasil",
+                    text:
+                        currentMethod === "POST"
+                            ? "Data berhasil ditambahkan."
+                            : "Data berhasil diperbarui.",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+                setTimeout(() => location.reload(), 500);
+            } catch (err) {
+                if (err.type === "validation") {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Validasi Gagal",
+                        html: err.message,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Gagal",
+                        text: err.message,
+                    });
+                }
+            }
+        });
+    }
+
+    /** === SUMMERNOTE INIT === */
+    function initSummernote() {
+        if (typeof $ !== "undefined" && $.fn.summernote) {
+            $(".summernote").summernote({ height: 200 });
+        }
+    }
+
+    /** === SIDEBAR TOGGLE === */
+    function initSidebarToggle() {
+        const toggleButton = document.getElementById("sidebarToggle");
+        const body = document.body;
+
+        if (toggleButton) {
+            toggleButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                body.classList.toggle("sb-sidenav-toggled");
+
+                // Simpan preferensi di localStorage
+                if (body.classList.contains("sb-sidenav-toggled")) {
+                    localStorage.setItem("sb|sidebar-toggle", "toggled");
+                } else {
+                    localStorage.removeItem("sb|sidebar-toggle");
+                }
+            });
+        }
+
+        // Saat halaman dimuat, cek preferensi
+        if (localStorage.getItem("sb|sidebar-toggle") === "toggled") {
+            document.body.classList.toggle("sb-sidenav-toggled");
+        }
+    }
+
+    /** === INIT ALL === */
+    window.addEventListener("load", () => {
+        toggleScrolled();
+        handleStickyHeader();
+        initMobileNavToggle();
+        removePreloader();
+        setupScrollTopButton();
+        initAOS();
+        initLightbox();
+        initSwiper();
+        autoCarouselIndicators();
+        initUniversalModal();
+        initSummernote();
+        initSidebarToggle();
     });
-  });
 
-  window.addEventListener('load', toggleScrollTop);
-  document.addEventListener('scroll', toggleScrollTop);
-
-  /**
-   * Animation on scroll function and init
-   */
-  function aosInit() {
-    AOS.init({
-      duration: 600,
-      easing: 'ease-in-out',
-      once: true,
-      mirror: false
-    });
-  }
-  window.addEventListener('load', aosInit);
-
-  /**
-   * Auto generate the carousel indicators
-   */
-  document.querySelectorAll('.carousel-indicators').forEach((carouselIndicator) => {
-    carouselIndicator.closest('.carousel').querySelectorAll('.carousel-item').forEach((carouselItem, index) => {
-      if (index === 0) {
-        carouselIndicator.innerHTML += `<li data-bs-target="#${carouselIndicator.closest('.carousel').id}" data-bs-slide-to="${index}" class="active"></li>`;
-      } else {
-        carouselIndicator.innerHTML += `<li data-bs-target="#${carouselIndicator.closest('.carousel').id}" data-bs-slide-to="${index}"></li>`;
-      }
-    });
-  });
-
-  /**
-   * Init swiper sliders
-   */
-  function initSwiper() {
-    document.querySelectorAll(".init-swiper").forEach(function(swiperElement) {
-      let config = JSON.parse(
-        swiperElement.querySelector(".swiper-config").innerHTML.trim()
-      );
-
-      if (swiperElement.classList.contains("swiper-tab")) {
-        initSwiperWithCustomPagination(swiperElement, config);
-      } else {
-        new Swiper(swiperElement, config);
-      }
-    });
-  }
-
-  window.addEventListener("load", initSwiper);
-
-  /**
-   * Initiate glightbox
-   */
-  const glightbox = GLightbox({
-    selector: '.glightbox'
-  });
-
+    document.addEventListener("scroll", toggleScrolled);
 })();

@@ -11,7 +11,6 @@ class TransaksiSeeder extends Seeder
     public function run(): void
     {
         Transaksi::create([
-            'nama_pembeli' => 'Budi Santoso',
             'telepon' => '08123456789',
             'alamat' => 'Jl. Kebun Raya No.10, Jakarta',
             'negara' => 'Indonesia',

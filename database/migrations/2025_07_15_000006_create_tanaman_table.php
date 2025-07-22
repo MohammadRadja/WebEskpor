@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('nama');
             $table->enum('jenis', ['sayur', 'buah', 'rempah', 'lainnya']);
             $table->integer('stok_panen')->default(0);
-            $table->uuid('id_benih');
+            $table->uuid('id_bibit');
             $table->enum('sumber', ['internal', 'eksternal']);
             $table->string('sumber_eksternal')->nullable();
             $table->timestamps();
 
-            $table->foreign('id_benih')->references('id')->on('benih')->cascadeOnDelete();
+            $table->foreign('id_bibit')->references('id')->on('bibit')->cascadeOnDelete();
         });
     }
 

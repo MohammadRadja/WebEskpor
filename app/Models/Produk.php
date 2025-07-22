@@ -11,7 +11,7 @@ class Produk extends Model
     protected $keyType = 'string';
     protected $table = 'produk';
 
-    protected $fillable = ['deskripsi', 'gambar', 'tanaman_id'];
+    protected $fillable = ['nama', 'id_tanaman','stok', 'harga', 'deskripsi', 'gambar'];
 
     protected static function boot()
     {
@@ -21,16 +21,16 @@ class Produk extends Model
 
     public function tanaman()
     {
-        return $this->belongsTo(Tanaman::class);
+        return $this->belongsTo(Tanaman::class, 'id_tanaman');
     }
 
     public function detailTransaksi()
     {
-        return $this->hasMany(detailTransaksi::class);
+        return $this->hasMany(DetailTransaksi::class, 'id_produk');
     }
 
     public function produkEksternal()
     {
-        return $this->hasMany(ProdukEksternal::class);
+        return $this->hasMany(ProdukEksternal::class, 'id_produk');
     }
 }

@@ -6,7 +6,7 @@
         <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
 
             <div class="carousel-item active">
-                <img src="assets/img/perkebunan1.jpg" alt="">
+                <img src="{{ asset('assets/img/perkebunan1.jpg') }}" alt="">
                 <div class="carousel-container">
                     <h2>Hasil Ladang Terpilih, Menjawab Kebutuhan Pasar Dunia</h2>
                     <p>PT Prima Andalas — Pilar Kepercayaan dalam Menyediakan Hasil
@@ -25,7 +25,7 @@
             </div><!-- End Carousel Item -->
 
             <div class="carousel-item">
-                <img src="assets/img/hero_3.jpg" alt="">
+                <img src="{{ asset('assets/img/hero_3.jpg') }}" alt="">
                 <div class="carousel-container">
                     <h2>Menyediakan Hasil Panen Segar Setiap Hari</h2>
                     <p>Kesegaran hasil panen setiap hari, untuk kebutuhan pasar yang terpercaya.</p>
@@ -93,8 +93,7 @@
                             <div class="service-item-content">
                                 <h3 class="service-heading">Pembersihan Lahan</h3>
                                 <p>
-                                    Gravida sodales condimentum pellen tesq accumsan orci quam
-                                    sagittis sapie
+                                   Kami membersihkan lahan dengan teknik ramah lingkungan untuk memastikan kesiapan sebelum penanaman.
                                 </p>
                             </div>
                         </div>
@@ -245,7 +244,7 @@
                                         <h2 class="service-item-title">Menanam</h2>
                                     </a>
                                 </div>
-                                <img src="assets/img/img_sq_1.jpg" alt="Gambar" class="img-fluid">
+                                <img src="{{ asset('assets/img/img_sq_1.jpg') }}" alt="Gambar" class="img-fluid">
                             </div>
                         </div>
 
@@ -257,7 +256,7 @@
                                         <h2 class="service-item-title">Menutup Tanah (Mulching)</h2>
                                     </a>
                                 </div>
-                                <img src="assets/img/img_sq_3.jpg" alt="Gambar" class="img-fluid">
+                                <img src="{{ asset('assets/img/img_sq_3.jpg') }}" alt="Gambar" class="img-fluid">
                             </div>
                         </div>
 
@@ -269,7 +268,7 @@
                                         <h2 class="service-item-title">Menyiram</h2>
                                     </a>
                                 </div>
-                                <img src="assets/img/img_sq_8.jpg" alt="Gambar" class="img-fluid">
+                                <img src="{{ asset('assets/img/img_sq_8.jpg') }}" alt="Gambar" class="img-fluid">
                             </div>
                         </div>
 
@@ -281,7 +280,7 @@
                                         <h2 class="service-item-title">Pemupukan</h2>
                                     </a>
                                 </div>
-                                <img src="assets/img/img_sq_4.jpg" alt="Gambar" class="img-fluid">
+                                <img src="{{ asset('assets/img/img_sq_4.jpg') }}" alt="Gambar" class="img-fluid">
                             </div>
                         </div>
 
@@ -293,7 +292,7 @@
                                         <h2 class="service-item-title">Panen</h2>
                                     </a>
                                 </div>
-                                <img src="assets/img/img_sq_5.jpg" alt="Gambar" class="img-fluid">
+                                <img src="{{ asset('assets/img/img_sq_5.jpg') }}" alt="Gambar" class="img-fluid">
                             </div>
                         </div>
 
@@ -305,7 +304,7 @@
                                         <h2 class="service-item-title">Memotong Rumput</h2>
                                     </a>
                                 </div>
-                                <img src="assets/img/img_sq_6.jpg" alt="Gambar" class="img-fluid">
+                                <img src="{{ asset('assets/img/img_sq_6.jpg') }}" alt="Gambar" class="img-fluid">
                             </div>
                         </div>
 
@@ -317,7 +316,7 @@
                                         <h2 class="service-item-title">Menyemai Tanaman</h2>
                                     </a>
                                 </div>
-                                <img src="assets/img/img_sq_8.jpg" alt="Gambar" class="img-fluid">
+                                <img src="{{ asset('assets/img/img_sq_8.jpg') }}" alt="Gambar" class="img-fluid">
                             </div>
                         </div>
                     </div>

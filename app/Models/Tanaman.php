@@ -12,7 +12,7 @@ class Tanaman extends Model
     protected $table = 'tanaman';
 
     protected $fillable = [
-        'nama', 'jenis', 'stok_panen', 'id_benih', 'asal', 'asal_eksternal'
+        'nama', 'jenis', 'stok_panen', 'id_bibit', 'asal', 'asal_eksternal'
     ];
 
     protected static function boot()
@@ -21,9 +21,9 @@ class Tanaman extends Model
         static::creating(fn ($model) => $model->id = (string) Str::uuid());
     }
 
-    public function benih()
+    public function bibit()
     {
-        return $this->belongsTo(Benih::class);
+        return $this->belongsTo(Bibit::class, 'id_bibit');
     }
 
     public function petakLahan()
