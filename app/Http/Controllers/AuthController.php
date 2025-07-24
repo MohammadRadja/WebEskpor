@@ -41,7 +41,7 @@ class AuthController extends Controller
             // Redirect berdasarkan role
             return match ($user->role) {
                 'administrator', 'manajer_kebun', 'penjual' => redirect()->route('dashboard'),
-                'pelanggan' => redirect()->route('pages.index'),
+                'pelanggan' => redirect()->route('pelanggan.index'),
                 default => $this->handleUnknownRole(),
             };
         }

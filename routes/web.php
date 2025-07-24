@@ -104,7 +104,7 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:pelanggan'])
-    ->prefix('pembeli')
+    ->prefix('pelanggan')
     ->group(function () {
         // ✳️ Route baru: Lihat info kebun atau produk (read-only)
         Route::get('/home', [PageController::class, 'index'])->name('pelanggan.index');
