@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('telepon');
             $table->text('alamat');
             $table->string('negara');
-            $table->decimal('biaya_pengiriman', 10, 2);
+            $table->decimal('biaya_pengiriman', 12, 2)->default(0);
             $table->integer('jumlah');
-            $table->decimal('total_harga', 12, 2);
+            $table->decimal('total_harga', 15, 2);
             $table->string('bukti_pembayaran')->nullable();
             $table->enum('status', ['menunggu', 'dibayar', 'dikirim', 'selesai'])->default('menunggu');
             $table->timestamps();

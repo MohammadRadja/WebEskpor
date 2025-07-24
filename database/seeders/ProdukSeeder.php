@@ -13,7 +13,7 @@ class ProdukSeeder extends Seeder
     {
         Produk::create([
             'nama' => 'Bayam Organik',
-            'stok' => 150,
+            'stok' => 500,
             'harga' => 12000,
             'deskripsi' => 'Bayam segar hasil panen organik langsung dari kebun kami.',
             'gambar' => 'produk/bayam.jpg',

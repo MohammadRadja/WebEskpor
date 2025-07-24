@@ -16,19 +16,18 @@
                 <button class="btn btn-success" data-crud="add" data-method="POST" data-title="Tambah Transaksi"
                     data-url="{{ route('transaksi.store') }}"
                     data-fields='{
-        "id_pelanggan": {"label": "Nama Pembeli", "type": "select", "options": "pelangganOptions"},
-        "telepon": {"label": "Telepon"},
-        "alamat": {"label": "Alamat"},
-        "negara": {"label": "Negara"},
-        "jumlah": {"label": "Jumlah"},
-        "total_harga": {"label": "Total Harga"},
-        "biaya_pengiriman": {"label": "Biaya Pengiriman"},
-        "status": {"label": "Status", "type": "select", "options": ["menunggu", "dibayar", "dikirim", "selesai"]},
-        "bukti_pembayaran": {"label": "Bukti Pembayaran", "type": "file"}
-    }'>
+                        "id_pelanggan": {"label": "Nama Pembeli", "type": "select", "options": "pelangganOptions"},
+                        "telepon": {"label": "Telepon"},
+                        "alamat": {"label": "Alamat"},
+                        "negara": {"label": "Negara"},
+                        "jumlah": {"label": "Jumlah"},
+                        "total_harga": {"label": "Total Harga"},
+                        "biaya_pengiriman": {"label": "Biaya Pengiriman"},
+                        "status": {"label": "Status", "type": "select", "options": ["menunggu", "dibayar", "dikirim", "selesai"]},
+                        "bukti_pembayaran": {"label": "Bukti Pembayaran", "type": "file"}
+                    }'>
                     <i class="fas fa-plus me-1"></i> Tambah Transaksi
                 </button>
-
             </div>
         </div>
 
@@ -64,20 +63,14 @@
                                     <td>{{ $t->jumlah }}</td>
                                     <td>Rp {{ number_format($t->total_harga, 0, ',', '.') }}</td>
                                     <td>Rp {{ number_format($t->biaya_pengiriman, 0, ',', '.') }}</td>
-                                    <td>
-                                        <span class="badge bg-success">{{ ucfirst($t->status) }}</span>
-                                    </td>
+                                    <td><span class="badge bg-success">{{ ucfirst($t->status) }}</span></td>
                                     <td>
                                         @if ($t->bukti_pembayaran)
-                                            <a href="{{ url($t->bukti_pembayaran) }}"
-                                                class="btn btn-sm btn-outline-primary">
-                                                Lihat
-                                            </a>
+                                            <a href="{{ url($t->bukti_pembayaran) }}" class="btn btn-sm btn-outline-primary">Lihat</a>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
-
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-outline-success me-1" data-crud="edit"
                                             data-title="Edit Transaksi" data-method="PATCH"
@@ -91,7 +84,8 @@
                                                 "total_harga": {"label": "Total Harga", "value": "{{ $t->total_harga }}"},
                                                 "biaya_pengiriman": {"label": "Biaya Pengiriman", "value": "{{ $t->biaya_pengiriman }}"},
                                                 "bukti_pembayaran": {"label": "Bukti Pembayaran", "type": "file"},
-                                                "status": {"label": "Status", "value": "{{ $t->status }}", "type": "select", "options": ["menunggu", "dibayar", "dikirim", "selesai"]}                                            }'>
+                                                "status": {"label": "Status", "value": "{{ $t->status }}", "type": "select", "options": ["menunggu", "dibayar", "dikirim", "selesai"]}
+                                            }'>
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger" data-crud="delete"
@@ -103,9 +97,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center py-4 text-muted">
-                                        Belum ada data transaksi.
-                                    </td>
+                                    <td colspan="10" class="text-center py-4 text-muted">Belum ada data transaksi.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -113,8 +105,54 @@
                 </div>
             </div>
         </div>
+
+        <!-- Tabel Detail Transaksi -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0 text-success"><i class="fas fa-info-circle me-2"></i>Detail Transaksi</h5>
+            </div>
+            <div class="card-body p-3">
+                @forelse($transaksi as $t)
+                    <div class="mb-4">
+                        <h6 class="text-success fw-bold">
+                            <i class="fas fa-user me-2"></i>{{ $t->pelanggan->username }} - {{ ucfirst($t->status) }}
+                        </h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm mb-2">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Produk</th>
+                                        <th>Jumlah</th>
+                                        <th>Harga Satuan</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($t->detailTransaksi as $detail)
+                                        <tr>
+                                            <td>{{ $detail->produk->nama ?? 'Produk tidak ditemukan' }}</td>
+                                            <td>{{ $detail->jumlah }}</td>
+                                            <td>Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
+                                            <td>Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="4" class="text-muted text-center">Tidak ada detail transaksi.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-muted">Belum ada data transaksi.</p>
+                @endforelse
+            </div>
+        </div>
+
     </div>
 @endsection
+
 @push('scripts')
     <script>
         window.pelangganOptions = @json($pelangganList);

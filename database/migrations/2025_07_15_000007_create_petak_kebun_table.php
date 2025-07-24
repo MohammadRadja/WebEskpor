@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('ukuran');
             $table->string('penanggung_jawab');
             $table->enum('status', ['aktif', 'non-aktif'])->default('aktif');
-            $table->date('tanggal_tanam')->nullable();
+            $table->date('tanggal_tanam');
             $table->integer('jumlah_tanaman')->default(0);
             $table->integer('jumlah_panen')->default(0);
             $table->timestamps();

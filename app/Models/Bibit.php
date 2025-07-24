@@ -30,6 +30,6 @@ class Bibit extends Model
     // Relasi ke tanaman
     public function tanaman()
     {
-        return $this->hasMany(Tanaman::class);
+        return $this->hasOne(Tanaman::class);
     }
 }

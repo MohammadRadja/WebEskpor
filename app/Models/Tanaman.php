@@ -26,13 +26,13 @@ class Tanaman extends Model
         return $this->belongsTo(Bibit::class, 'id_bibit');
     }
 
-    public function petakLahan()
+    public function petakKebun()
     {
-        return $this->hasMany(PetakLahan::class);
+        return $this->hasOne(PetakKebun::class);
     }
 
     public function produk()
     {
-        return $this->hasMany(Produk::class);
+        return $this->hasOne(Produk::class);
     }
 }

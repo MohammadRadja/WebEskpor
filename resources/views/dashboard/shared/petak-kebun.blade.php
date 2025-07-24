@@ -77,7 +77,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-outline-success me-1" data-crud="edit"
-                                            data-title="Edit Petakan" data-method="PATCH"
+                                            data-title="Edit Petakan" data-method="PUT"
                                             data-url="{{ route('petakan.update', $p->id) }}"
                                             data-fields='{
         "nama": {"label": "Nama Petakan", "value": "{{ $p->nama }}"},

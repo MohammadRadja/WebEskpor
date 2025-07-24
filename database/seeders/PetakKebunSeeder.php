@@ -19,8 +19,8 @@ class PetakKebunSeeder extends Seeder
             'id_kebun' => Kebun::first()->id,
             'id_tanaman' => Tanaman::first()->id,
             'tanggal_tanam' => now()->subDays(7),
-            'jumlah_tanaman' => 80,
-            'jumlah_panen' => 0,
+            'jumlah_tanaman' => 100,
+            'jumlah_panen' => 500,
         ]);
     }
 }

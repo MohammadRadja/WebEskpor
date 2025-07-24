@@ -14,7 +14,7 @@ class TransaksiController extends Controller
     public function index()
     {
         try {
-            $transaksi = Transaksi::all();
+            $transaksi = Transaksi::with(['pelanggan', 'detailTransaksi.produk'])->get();
             $pelangganList = User::where('role', 'pelanggan')
                 ->get()
                 ->map(function ($user) {

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('nama_supplier');
             $table->string('kontak');
             $table->enum('jenis_perjanjian', ['konsinyasi', 'pembelian-putus']);
-            $table->decimal('komisi', 5, 2);
+            $table->decimal('komisi', 5, 2)->nullable();
             $table->decimal('harga_satuan', 12, 2);
             $table->integer('jumlah');
             $table->date('tanggal_pembelian');

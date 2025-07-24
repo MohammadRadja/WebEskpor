@@ -14,7 +14,6 @@ class TanamanSeeder extends Seeder
         Tanaman::create([
             'nama' => 'Bayam Hijau',
             'jenis' => 'sayur',
-            'stok_panen' => 0,
             'id_bibit' => Bibit::first()->id,
             'sumber' => 'internal',
             'sumber_eksternal' => null,

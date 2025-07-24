@@ -14,7 +14,7 @@
                 data-url="{{ route('tanaman.store') }}"
                 data-fields='{
         "nama": {"label": "Nama Tanaman"},
-        "jenis": {"label": "Jenis", "type": "select", "options": ["sayur", "buah", "rempah", "lainnya"]},
+        "jenis": {"label": "Jenis", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]},
         "stok_panen": {"label": "Stok Panen"},
         "sumber": {"label": "Sumber", "type": "select", "options": ["internal", "eksternal"]},
         "id_bibit": {"label": "Asal Bibit", "type": "select", "options": "bibitOptions"}
@@ -54,7 +54,7 @@
                                             data-url="{{ route('tanaman.update', $t->id) }}"
                                             data-fields='{
         "nama": {"label": "Nama Tanaman", "value": "{{ $t->nama }}"},
-        "jenis": {"label": "Jenis", "value": "{{ $t->jenis }}", "type": "select", "options": ["sayur", "buah", "rempah", "lainnya"]},
+        "jenis": {"label": "Jenis", "value": "{{ $t->jenis }}", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]},
         "stok_panen": {"label": "Stok Panen", "value": "{{ $t->stok_panen }}"},
         "sumber": {"label": "Sumber", "value": "{{ $t->sumber }}", "type": "select", "options": ["internal", "eksternal"]},
         "id_bibit": {"label": "Asal Bibit", "value": "{{ $t->id_bibit }}", "type": "select", "options": "bibitOptions"}

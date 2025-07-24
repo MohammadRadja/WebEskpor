@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->string('nama');
             $table->uuid('id_tanaman');
-            $table->integer('stok');
+            $table->integer('stok')->default(0);
             $table->decimal('harga', 12, 2);
             $table->text('deskripsi')->nullable();
             $table->string('gambar')->nullable();
