@@ -2,22 +2,32 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 use App\Models\Tanaman;
 use App\Models\Produk;
-use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class ProdukSeeder extends Seeder
 {
     public function run(): void
     {
-        Produk::create([
-            'nama' => 'Bayam Organik',
-            'stok' => 500,
-            'harga' => 12000,
-            'deskripsi' => 'Bayam segar hasil panen organik langsung dari kebun kami.',
-            'gambar' => 'produk/bayam.jpg',
-            'id_tanaman' => Tanaman::first()->id,
-        ]);
+        $deskripsi = [
+            'Segar dan sehat, langsung dari kebun organik kami.',
+            'Ditanam tanpa pestisida, cocok untuk konsumsi harian.',
+            'Kualitas terbaik dari panen lokal.',
+            'Dipanen dengan hati-hati untuk menjaga kesegaran.',
+            'Produk pertanian lokal berkualitas ekspor.'
+        ];
+
+        foreach (Tanaman::all() as $tanaman) {
+            Produk::create([
+                'nama' => Str::title($tanaman->nama) . ' Organik',
+                'stok' => rand(100, 1000),
+                'harga' => rand(10000, 25000),
+                'deskripsi' => $deskripsi[array_rand($deskripsi)],
+                'gambar' => 'produk/' . Str::slug($tanaman->nama) . '.jpg',
+                'id_tanaman' => $tanaman->id,
+            ]);
+        }
     }
 }

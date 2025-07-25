@@ -6,21 +6,34 @@ use Illuminate\Database\Seeder;
 use App\Models\PetakKebun;
 use App\Models\Kebun;
 use App\Models\Tanaman;
+use Illuminate\Support\Str;
 
 class PetakKebunSeeder extends Seeder
 {
     public function run(): void
     {
-        PetakKebun::create([
-            'nama' => 'Petakan A1',
-            'ukuran' => '10x10 m',
-            'penanggung_jawab' => 'Pak Darto',
-            'status' => 'Aktif',
-            'id_kebun' => Kebun::first()->id,
-            'id_tanaman' => Tanaman::first()->id,
-            'tanggal_tanam' => now()->subDays(7),
-            'jumlah_tanaman' => 100,
-            'jumlah_panen' => 500,
-        ]);
+        $penanggungJawab = ['Pak Darto', 'Bu Sari', 'Pak Joni', 'Bu Ani', 'Pak Bambang'];
+        $statuses = ['aktif', 'non-aktif'];
+
+        $tanamanList = Tanaman::all();
+        $kebunList = Kebun::all();
+        $count = 1;
+
+        foreach ($kebunList as $kebun) {
+            foreach ($tanamanList->random(min(2, $tanamanList->count())) as $tanaman) {
+                PetakKebun::create([
+                    'nama' => 'Petakan ' . Str::upper(chr(64 + $count)) . $count,
+                    'ukuran' => rand(5, 20) . 'x' . rand(5, 20) . ' m',
+                    'penanggung_jawab' => $penanggungJawab[array_rand($penanggungJawab)],
+                    'status' => $statuses[array_rand($statuses)],
+                    'id_kebun' => $kebun->id,
+                    'id_tanaman' => $tanaman->id,
+                    'tanggal_tanam' => now()->subDays(rand(5, 30)),
+                    'jumlah_tanaman' => rand(50, 150),
+                    'jumlah_panen' => rand(200, 800),
+                ]);
+                $count++;
+            }
+        }
     }
 }

@@ -132,11 +132,106 @@
 
     /** === SWIPER === */
     function initSwiper() {
-        document.querySelectorAll(".init-swiper").forEach((swiperEl) => {
-            const configEl = swiperEl.querySelector(".swiper-config");
-            if (!configEl) return;
-            const config = JSON.parse(configEl.textContent.trim());
-            new Swiper(swiperEl, config);
+        const wrappers = document.querySelectorAll(".swipper");
+
+        wrappers.forEach(function (wrapper) {
+            const sliderId = wrapper.dataset.sliderId;
+            const swiperElement = wrapper.querySelector(".swiper");
+            const baseId = sliderId?.replace("-slider", "");
+            const prevButton = document.getElementById(`${baseId}-prev`);
+            const nextButton = document.getElementById(`${baseId}-next`);
+            const perPage = parseInt(wrapper.dataset.perPage) || 3;
+            const rows = parseInt(wrapper.dataset.rows) || 2;
+
+            if (!swiperElement) return;
+
+            try {
+                const swiper = new Swiper(swiperElement, {
+                    slidesPerView: perPage,
+                    slidesPerGroup: perPage * rows,
+                    spaceBetween: 16,
+                    loop: false,
+                    grid: {
+                        rows: rows,
+                        fill: "row",
+                    },
+                    navigation: {
+                        nextEl: nextButton,
+                        prevEl: prevButton,
+                    },
+                    pagination: false,
+                    breakpoints: {
+                        992: {
+                            slidesPerView: perPage,
+                            grid: { rows: rows },
+                            slidesPerGroup: perPage * rows,
+                        },
+                        768: {
+                            slidesPerView: 1,
+                            grid: { rows: rows },
+                            slidesPerGroup: rows,
+                        },
+                        576: {
+                            slidesPerView: 1,
+                            grid: { rows: rows },
+                            slidesPerGroup: rows,
+                        },
+                    },
+                });
+
+                const indicatorsContainer = wrapper.querySelector(
+                    ".carousel-indicators-banner"
+                );
+
+                if (indicatorsContainer) {
+                    indicatorsContainer.innerHTML = "";
+
+                    const totalItems =
+                        swiperElement.querySelectorAll(".swiper-slide").length;
+                    const itemsPerPage = perPage * rows;
+                    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+                    for (let i = 0; i < totalPages; i++) {
+                        const li = document.createElement("li");
+                        li.classList.add("page-item");
+
+                        const btn = document.createElement("button");
+                        btn.classList.add("page-link");
+                        btn.textContent = i + 1;
+
+                        btn.addEventListener("click", () => {
+                            swiper.slideTo(i * swiper.params.slidesPerGroup);
+                            updateIndicators(
+                                i,
+                                indicatorsContainer.querySelectorAll("button")
+                            );
+                        });
+
+                        li.appendChild(btn);
+                        indicatorsContainer.appendChild(li);
+                    }
+
+                    const indicators =
+                        indicatorsContainer.querySelectorAll("button");
+
+                    swiper.on("slideChangeTransitionEnd", () => {
+                        const activePage = Math.floor(
+                            swiper.realIndex / swiper.params.slidesPerGroup
+                        );
+                        updateIndicators(activePage, indicators);
+                    });
+
+                    updateIndicators(0, indicators);
+                }
+
+                function updateIndicators(activeIndex, indicators) {
+                    indicators.forEach((btn, idx) => {
+                        btn.classList.toggle("active", idx === activeIndex);
+                    });
+                }
+            } catch (err) {
+                console.error(`[Swiper Error]`, err);
+            }
         });
     }
 

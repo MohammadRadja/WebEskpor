@@ -3,7 +3,7 @@
 @section('content')
 
     {{-- Hero Section --}}
-    <x-hero-section title="Contact Us" background="assets/img/page-title-bg.webp" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'Contact Us']]" />
+    <x-hero-section title="Kontak" background="assets/img/page-title-bg.webp" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'Kontak']]" />
 
     <!-- Contact Section -->
     <section id="contact" class="contact py-5">
@@ -11,10 +11,9 @@
 
             <!-- Map -->
             <div class="mb-5 rounded overflow-hidden shadow-sm">
-                <iframe class="w-100 border-0" height="400"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3982.037232410178!2d100.36196731416502!3d-0.9500474352572055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e2d62c273a5c23b%3A0x6e3d66c96a99b212!2sJalan%20Ripan%203%20No.11%2C%20Padang%2C%20Sumatera%20Barat!5e0!3m2!1sid!2sid!4v1685298123456"
-                    allowfullscreen loading="lazy">
-                </iframe>
+                <div class="mb-5 rounded overflow-hidden shadow-sm">
+                    {!! meta($contact, 'iframe_map', '') !!}
+                </div>
             </div>
 
             <!-- Contact Info + Form -->
@@ -29,21 +28,21 @@
                                 <i class="bi bi-geo-alt me-3 fs-5 text-success"></i>
                                 <div>
                                     <strong>Address:</strong>
-                                    <p class="mb-0">Jl. Ripan 3 No.11, Padang, Sumatera Barat</p>
+                                    <p class="mb-0">{{ meta($contact, 'alamat') }}</p>
                                 </div>
                             </li>
                             <li class="mb-3 d-flex align-items-start">
                                 <i class="bi bi-envelope me-3 fs-5 text-success"></i>
                                 <div>
                                     <strong>Email:</strong>
-                                    <p class="mb-0">info@rajawaliprima.co.id</p>
+                                    <p class="mb-0">{{ meta($contact, 'email') }}</p>
                                 </div>
                             </li>
                             <li class="d-flex align-items-start">
                                 <i class="bi bi-phone me-3 fs-5 text-success"></i>
                                 <div>
                                     <strong>Phone:</strong>
-                                    <p class="mb-0">+62 812 3456 7890</p>
+                                    <p class="mb-0">{{ meta($contact, 'telepon') }}</p>
                                 </div>
                             </li>
                         </ul>

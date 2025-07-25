@@ -283,3 +283,27 @@
         padding-left: 0 !important;
     }
 }
+
+/* Swipper */
+.carousel-indicators-banner .page-link {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    color: #000;
+    transition: 0.3s;
+}
+
+.carousel-indicators-banner .page-link.active,
+.carousel-indicators-banner .page-link:hover {
+    background-color: #3f417e;
+    color: #fff;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}

@@ -124,43 +124,47 @@
                                                             data-method="PATCH"
                                                             data-url="{{ route('konten.update', $k->id) }}"
                                                             data-fields='{
-                                                    "judul": {"label": "Judul", "value": "{{ $k->judul }}"},
-                                                    "konten": {"label": "Konten", "type": "textarea", "value": "{{ $k->konten }}"},
-                                                    "jenis": {
-  "label": "Jenis",
-  "type": "select",
-  "options": ["halaman", "artikel", "spanduk", "komponen"],
-  "value": "{{ $k->jenis }}"
-},
-                                                    "meta": {
-    "label": "Meta",
-    "type": "json",
-    "value": {!! json_encode(is_array(json_decode($k->meta, true)) ? json_decode($k->meta, true) : []) !!}
-},
-"media": {
-    "label": "Media",
-    "type": "json",
-    "value": {!! json_encode(is_array(json_decode($k->media, true)) ? json_decode($k->media, true) : []) !!}
-},
-                                                    "kutipan": {"label": "Kutipan", "value": "{{ $k->kutipan }}"},
-                                                    "tautan": {"label": "Tautan", "value": "{{ $k->tautan }}"},
-                                                    "gambar": {"label": "Gambar", "type": "file"},
-                                                    "status": {"label": "Status", "value": "{{ $k->status }}", "type": "select", "options": ["terbit", "draf"]},
-                                                    "id_penulis": {
+        "judul": {"label": "Judul", "value": "{{ addslashes($k->judul) }}"},
+        "konten": {"label": "Konten", "type": "textarea", "value": "{{ addslashes($k->konten) }}"},
+        "jenis": {
+            "label": "Jenis",
+            "type": "select",
+            "options": ["halaman", "artikel", "spanduk", "komponen"],
+            "value": "{{ $k->jenis }}"
+        },
+        "meta": {
+            "label": "Meta",
+            "type": "json",
+            "value": {!! json_encode(json_decode($k->meta, true) ?? []) !!}
+        },
+        "media": {
+            "label": "Media",
+            "type": "json",
+            "value": {!! json_encode(json_decode($k->media, true) ?? []) !!}
+        },
+        "kutipan": {"label": "Kutipan", "value": "{{ addslashes($k->kutipan) }}"},
+        "tautan": {"label": "Tautan", "value": "{{ addslashes($k->tautan) }}"},
+        "gambar": {"label": "Gambar", "type": "file"},
+        "status": {
+            "label": "Status",
+            "type": "select",
+            "options": ["terbit", "draf"],
+            "value": "{{ $k->status }}"
+        },
+        "id_penulis": {
             "label": "Penulis",
             "type": "select",
             "options": {!! json_encode($penulisList) !!},
             "value": "{{ $k->id_penulis }}"
         },
-                                                    "diterbitkan_pada": {
-  "label": "Diterbitkan Pada",
-  "value": "{{ $k->diterbitkan_pada ? \Carbon\Carbon::parse($k->diterbitkan_pada)->format('Y-m-d') : '' }}",
-  "type": "date"
-}
-                                                }'>
+        "diterbitkan_pada": {
+            "label": "Diterbitkan Pada",
+            "type": "date",
+            "value": "{{ $k->diterbitkan_pada ? format_tanggal($k->diterbitkan_pada, 'Y-m-d') : '' }}"
+        }
+    }'>
                                                             <i class="fas fa-edit"></i> Edit
                                                         </button>
-
                                                         <button class="btn btn-outline-danger btn-sm" data-crud="delete"
                                                             data-title="Hapus Konten {{ ucfirst($jenis) }}"
                                                             data-method="DELETE"

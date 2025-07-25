@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Konten;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PageController extends Controller
 {
@@ -15,11 +16,20 @@ class PageController extends Controller
 
     public function about()
     {
-        return view('pages.about');
+        $konten = Konten::where('jenis', 'komponen')->get()->keyBy('judul');
+        log::info('Konten Komponen:', $konten->toArray());
+
+        return view('pages.about', [
+            'profil' => $konten->get('Profil Perusahaan'),
+            'layanan' => $konten->get('Layanan Kami'),
+            'visiMisi' => $konten->get('Visi & Misi'),
+        ]);
     }
+
     public function contact()
     {
-        return view('pages.contact');
+        $contact = Konten::where('slug', 'kontak')->first();
+        return view('pages.contact', compact('contact'));
     }
     public function product()
     {
@@ -28,7 +38,7 @@ class PageController extends Controller
     }
     public function blog()
     {
-        $blog = Konten::where('jenis', 'artikel')->get();
+        $blog = Konten::where('slug', 'berita')->get();
         return view('pages.blog', compact('blog'));
     }
     public function cart()

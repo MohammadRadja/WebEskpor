@@ -1,22 +1,30 @@
- <footer id="footer" class="footer dark-background">
-     <div class="copyright text-center">
-         <div
-             class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
-             <div class="d-flex flex-column align-items-center align-items-lg-start">
-                 <div>
-                     &copy; {{ date('Y') }} <strong><span>PT RAJAWALI PRIMA ANDALAS</span></strong>.INDONESIA
-                 </div>
-                 <div class="credits">
-                     Seluruh hak cipta dilindungi.
-                 </div>
-             </div>
-             <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
-                 <a href=""><i class="bi bi-twitter-x"></i></a>
-                 <a href=""><i class="bi bi-facebook"></i></a>
-                 <a href=""><i class="bi bi-instagram"></i></a>
-                 <a href=""><i class="bi bi-linkedin"></i></a>
-             </div>
+<footer id="footer" class="footer dark-background">
+    <div class="copyright text-center py-4">
+        <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center gap-3">
 
-         </div>
-     </div>
- </footer>
+            {{-- Info Website --}}
+            <div class="text-center text-lg-start">
+                <div class="fw-bold">
+                    &copy; {{ date('Y') }} <span>{{ $footer->kutipan ?? 'Website' }}</span>
+                </div>
+                <div class="small text-white">
+                    {!! $footer->konten ?? '' !!}<br>
+                    {{ meta($footer, 'alamat') }}
+                </div>
+            </div>
+
+            {{-- Sosial Media --}}
+            @php $sosial = meta($footer, 'sosial', []); @endphp
+            <div class="social-links d-flex gap-3">
+                @foreach (['facebook', 'instagram'] as $platform)
+                    @if (!empty($sosial[$platform]))
+                        <a href="{{ $sosial[$platform] }}" target="_blank" class="text-white">
+                            <i class="bi bi-{{ $platform }}"></i>
+                        </a>
+                    @endif
+                @endforeach
+            </div>
+
+        </div>
+    </div>
+</footer>

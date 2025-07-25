@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->enum('jenis', ['halaman', 'artikel', 'spanduk', 'komponen'])->default('halaman');
             $table->text('kutipan');
-            $table->longText('konten');
+            $table->longText('konten')->nullable();
             $table->string('gambar')->nullable();
             $table->string('tautan')->nullable();
             $table->json('meta')->nullable();

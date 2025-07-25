@@ -34,16 +34,61 @@ class KontenSeeder extends Seeder
         ]);
 
         // 2. Tentang Kami
+        // Profil Perusahaan
         Konten::create([
-            'judul' => 'Tentang Kami',
-            'slug' => Str::slug('Tentang Kami'),
-            'jenis' => 'halaman',
+            'judul' => 'Profil Perusahaan',
+            'slug' => Str::slug('profil-perusahaan'),
+            'jenis' => 'komponen',
             'kutipan' => 'Pelopor pertanian berkelanjutan sejak 2005.',
-            'konten' => 'Kami adalah komunitas petani yang berfokus pada pertanian ramah lingkungan dan berkelanjutan.',
-            'gambar' => 'tentang-kami.jpg',
-            'tautan' => '/tentang-kami',
+            'konten' => 'PT Rajawali Prima Andalas adalah perusahaan ekspor hasil pertanian yang berlokasi di Kota Padang, Sumatera Barat. Didirikan oleh Zulhendra Putra, perusahaan ini bertujuan membantu petani lokal memasarkan produknya ke pasar internasional. Kami fokus pada kualitas produk, kemitraan jangka panjang, dan efisiensi proses ekspor.',
+            'gambar' => 'logo1.jpg',
+            'tautan' => '/about',
             'status' => 'terbit',
             'diterbitkan_pada' => Carbon::now(),
+            'id_penulis' => $penulis->id,
+        ]);
+        // Layanan Kami
+        Konten::create([
+            'judul' => 'Layanan Kami',
+            'slug' => Str::slug('layanan-kami'),
+            'jenis' => 'komponen',
+            'kutipan' => 'Beragam layanan kami untuk ekspor dan kemitraan.',
+            'konten' => 'Berisi daftar layanan yang kami tawarkan.',
+            'meta' => json_encode([
+                [
+                    'judul' => 'Ekspor Sayuran',
+                    'deskripsi' => 'Layanan ekspor berbagai jenis sayuran segar dan organik.',
+                ],
+                [
+                    'judul' => 'Kemitraan Petani',
+                    'deskripsi' => 'Kemitraan jangka panjang dengan petani lokal.',
+                ],
+                [
+                    'judul' => 'Distribusi Global',
+                    'deskripsi' => 'Jaringan distribusi ke berbagai negara.',
+                ],
+                [
+                    'judul' => 'Konsultasi Pertanian',
+                    'deskripsi' => 'Konsultasi untuk meningkatkan hasil pertanian.',
+                ],
+            ]),
+            'status' => 'terbit',
+            'diterbitkan_pada' => now(),
+            'id_penulis' => $penulis->id,
+        ]);
+        // Visi Misi
+        Konten::create([
+            'judul' => 'Visi & Misi',
+            'slug' => Str::slug('visi-misi'),
+            'jenis' => 'komponen',
+            'kutipan' => 'Tujuan dan komitmen kami.',
+            'konten' => 'Berisi visi dan misi perusahaan.',
+            'meta' => json_encode([
+                'visi' => 'Menjadi perusahaan ekspor hasil pertanian terpercaya di Asia Tenggara.',
+                'misi' => ['Meningkatkan daya saing produk pertanian Indonesia.', 'Membuka akses pasar global bagi petani lokal.', 'Menjaga kualitas dan keberlanjutan produk ekspor.'],
+            ]),
+            'status' => 'terbit',
+            'diterbitkan_pada' => now(),
             'id_penulis' => $penulis->id,
         ]);
 
@@ -62,18 +107,83 @@ class KontenSeeder extends Seeder
         ]);
 
         // 4. Berita
-        Konten::create([
-            'judul' => 'Berita',
-            'slug' => Str::slug('Berita'),
-            'jenis' => 'artikel',
-            'kutipan' => 'Informasi dan berita terbaru dari kebun kami.',
-            'konten' => 'Temukan kabar terbaru tentang pertanian organik, kegiatan komunitas, dan panen musim ini.',
-            'gambar' => 'berita.jpg',
-            'tautan' => '/berita',
-            'status' => 'terbit',
-            'diterbitkan_pada' => Carbon::now(),
-            'id_penulis' => $penulis->id,
-        ]);
+        $beritaList = [
+            [
+                'judul' => 'Panen Organik Meningkat',
+                'kutipan' => 'Produksi panen organik meningkat signifikan tahun ini.',
+                'konten' => 'Para petani lokal berhasil meningkatkan hasil panen berkat metode pertanian alami tanpa bahan kimia.',
+                'gambar' => 'berita1.jpg',
+            ],
+            [
+                'judul' => 'Kerja Sama dengan Lembaga Internasional',
+                'kutipan' => 'Kebun organik menjalin kemitraan internasional.',
+                'konten' => 'Kami bekerja sama dengan organisasi global untuk meningkatkan mutu dan jangkauan produk organik kami.',
+                'gambar' => 'berita2.jpg',
+            ],
+            [
+                'judul' => 'Pelatihan Pertanian Berkelanjutan',
+                'kutipan' => 'Petani mendapat pelatihan tentang teknik pertanian berkelanjutan.',
+                'konten' => 'Pelatihan ini meliputi penggunaan pupuk alami, rotasi tanaman, dan pengendalian hama ramah lingkungan.',
+                'gambar' => 'berita3.jpg',
+            ],
+            [
+                'judul' => 'Pameran Produk Organik Nasional',
+                'kutipan' => 'Kami ikut serta dalam pameran produk organik tingkat nasional.',
+                'konten' => 'Dalam pameran ini kami memperkenalkan berbagai produk unggulan dan inovasi di bidang pertanian organik.',
+                'gambar' => 'berita4.jpg',
+            ],
+            [
+                'judul' => 'Kunjungan Menteri Pertanian',
+                'kutipan' => 'Menteri Pertanian mengapresiasi kegiatan petani organik.',
+                'konten' => 'Kunjungan ini menunjukkan dukungan pemerintah terhadap pertanian berkelanjutan dan mandiri.',
+                'gambar' => 'berita5.jpg',
+            ],
+            [
+                'judul' => 'Program Edukasi Sekolah Alam',
+                'kutipan' => 'Anak-anak belajar langsung tentang pertanian organik.',
+                'konten' => 'Program ini bertujuan menanamkan kesadaran lingkungan dan cinta alam sejak dini.',
+                'gambar' => 'berita6.jpg',
+            ],
+            [
+                'judul' => 'Distribusi Produk ke Supermarket Nasional',
+                'kutipan' => 'Produk kami kini tersedia di berbagai supermarket besar.',
+                'konten' => 'Kerja sama dengan jaringan ritel ini memperluas akses masyarakat terhadap produk sehat.',
+                'gambar' => 'berita7.jpg',
+            ],
+            [
+                'judul' => 'Panen Perdana di Lahan Baru',
+                'kutipan' => 'Panen pertama di lahan baru berjalan sukses.',
+                'konten' => 'Lahan ini merupakan hasil kerja sama dengan koperasi petani desa untuk memperluas kapasitas produksi.',
+                'gambar' => 'berita8.jpg',
+            ],
+            [
+                'judul' => 'Workshop Kompos dan Pupuk Organik',
+                'kutipan' => 'Warga diajarkan cara membuat kompos dari limbah rumah tangga.',
+                'konten' => 'Workshop ini mendorong kemandirian pangan dan pengurangan sampah organik.',
+                'gambar' => 'berita9.jpg',
+            ],
+            [
+                'judul' => 'Program Subsidi Benih Organik',
+                'kutipan' => 'Pemerintah daerah memberikan bantuan benih organik.',
+                'konten' => 'Bantuan ini bertujuan meningkatkan produksi petani kecil dengan bibit berkualitas.',
+                'gambar' => 'berita10.jpg',
+            ],
+        ];
+
+        foreach ($beritaList as $data) {
+            Konten::create([
+                'judul' => $data['judul'],
+                'slug' => Str::slug('berita/' . $data['judul']),
+                'jenis' => 'artikel',
+                'kutipan' => $data['kutipan'],
+                'konten' => $data['konten'],
+                'gambar' => $data['gambar'],
+                'tautan' => '/berita/' . Str::slug($data['judul']),
+                'status' => 'terbit',
+                'diterbitkan_pada' => Carbon::now(),
+                'id_penulis' => $penulis->id,
+            ]);
+        }
 
         // 5. Kontak
         Konten::create([
@@ -98,18 +208,19 @@ class KontenSeeder extends Seeder
             'id_penulis' => $penulis->id,
         ]);
 
+        // 6. Footer
         Konten::create([
             'judul' => 'Footer',
             'slug' => 'footer',
             'jenis' => 'komponen',
-            'kutipan' => '© 2025 Kebun Organik',
-            'konten' => 'Hak cipta dan informasi footer lainnya.',
+            'kutipan' => 'PT. Rajawali Prima Andalas Indonesia',
+            'konten' => 'Hak cipta dilindungi.',
             'meta' => json_encode([
                 'sosial' => [
                     'facebook' => 'https://facebook.com/kebunorganik',
                     'instagram' => 'https://instagram.com/kebunorganik',
                 ],
-                'alamat' => 'Jl. Pertanian No.123, Jakarta',
+                'alamat' => 'Jl. Ripan III No.11, RT.05/RW.19, Lubuk Buaya, Kec. Koto Tangah, Kota Padang, Sumatera Barat 25173',
             ]),
             'status' => 'terbit',
             'diterbitkan_pada' => now(),
