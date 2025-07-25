@@ -1,11 +1,11 @@
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-success shadow-sm border-bottom border-light">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-success shadow-sm border-bottom border-light position-fixed w-100" style="z-index: 1030;">
     <!-- Logo Kiri -->
     <a class="navbar-brand ps-3 d-flex align-items-center" href="{{ route('dashboard') }}">
         <img src="{{ asset('assets/img/log1.svg') }}" alt="AgriCulture" class="img-fluid" style="max-height: 50px;">
     </a>
 
     <!-- Sidebar Toggle (Mobile) -->
-    <button class="btn btn-link btn-sm me-3 d-lg-none text-white" id="sidebarToggle">
+    <button class="btn btn-link btn-sm me-3  text-white" id="sidebarToggle">
         <i class="fas fa-bars"></i>
     </button>
 

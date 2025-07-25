@@ -12,6 +12,7 @@ use App\Http\Controllers\Shared\ProdukController;
 use App\Http\Controllers\Shared\ProdukEksternalController;
 use App\Http\Controllers\Shared\TransaksiController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\Penjual\KontenController;
 
 /*
@@ -47,6 +48,15 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 */
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // routes/web.php
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/add-to-cart', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+
+    Route::get('/checkout', [CartController::class, 'checkoutForm'])->name('checkout.form');
+
 
     // Profile
     Route::get('/dashboard/profile', [AuthController::class, 'showProfile'])->name('profile.show');

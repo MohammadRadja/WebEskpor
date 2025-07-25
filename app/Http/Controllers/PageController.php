@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Konten;
+use App\Models\Produk;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -21,11 +23,13 @@ class PageController extends Controller
     }
     public function product()
     {
-        return view('pages.product');
+        $product = Produk::all();
+        return view('pages.product', compact('product'));
     }
     public function blog()
     {
-        return view('pages.blog');
+        $blog = Konten::where('jenis', 'artikel')->get();
+        return view('pages.blog', compact('blog'));
     }
     public function cart()
     {

@@ -17,7 +17,7 @@
                 </li>
 
                 <li>
-                    <a href="{{ url('/about') }}"
+                    <a href="{{ route('About') }}"
                         class="{{ request()->is('about') ? 'text-success fw-bold' : 'text-dark' }}">Tentang Kami</a>
                 </li>
                 <li>

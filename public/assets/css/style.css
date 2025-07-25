@@ -27,7 +27,6 @@
 /* 📦 SIDENAV LAYOUT */
 .sb-nav-fixed #layoutSidenav {
     display: flex;
-    height: 100vh;
     overflow: hidden;
 }
 #layoutSidenav_nav {
