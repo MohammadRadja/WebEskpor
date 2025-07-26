@@ -135,12 +135,12 @@
         "meta": {
             "label": "Meta",
             "type": "json",
-            "value": {!! json_encode(json_decode($k->meta, true) ?? []) !!}
+            "value": "{{ addslashes(json_encode(json_decode($k->meta, true) ?? [])) }}"
         },
         "media": {
             "label": "Media",
             "type": "json",
-            "value": {!! json_encode(json_decode($k->media, true) ?? []) !!}
+            "value": "{{ addslashes(json_encode(json_decode($k->media, true) ?? [])) }}"
         },
         "kutipan": {"label": "Kutipan", "value": "{{ addslashes($k->kutipan) }}"},
         "tautan": {"label": "Tautan", "value": "{{ addslashes($k->tautan) }}"},
