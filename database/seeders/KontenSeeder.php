@@ -226,5 +226,93 @@ class KontenSeeder extends Seeder
             'diterbitkan_pada' => now(),
             'id_penulis' => $penulis->id,
         ]);
+        // hasil perkebunan
+        Konten::create([
+            'id' => '73c5bc8e-69f6-11f0-8606-544810de48fd',
+            'judul' => 'Hasil Perkebunan',
+            'slug' => 'Hasil Perkebunan Kami',
+            'jenis' => 'komponen',
+            'kutipan' => 'KAMI MELAKUKAN',
+            'konten' => '-',
+            'gambar' => 'gambar.jpg',
+            'tautan' => 'https://contoh.com',
+            'meta' => json_encode([
+                ['deskripsi' => 'Menutup Tanah (Mulching)'],
+                ['deskripsi' => 'Pemupukan'],
+                ['deskripsi' => 'Panen'],
+                ["deskripsi" => " Menyemai Tanaman"],
+                ["deskripsi" => "Memotong Rumput"],
+                ["deskripsi" => "Menyiram"],
+            ]),
+            'media' => json_encode([
+                'img_sq_1.jpg',
+                'gambar2.jpg'
+            ]),
+            'status' => 'terbit',
+            'diterbitkan_pada' => now(),
+            'id_penulis' => '0be7a036-d7f3-4998-944a-dbcd357dfe78',
+        ]);
+
+        // carousel
+        Konten::create([
+            'id' => 'ac1726e6-69d0-11f0-8606-544810de48fd',
+            'judul' => 'Carousel',
+            'slug' => 'carausel',
+            'jenis' => 'komponen',
+            'kutipan' => 'Ini adalah kutipan singkat.',
+            'konten' => 'Konten lengkap artikel di sini.',
+            'gambar' => 'gambar.jpg',
+            'tautan' => 'https://contoh.com',
+            'meta' => json_encode([
+                [
+                    "judul" => "Hasil Ladang Terpilih, Menjawab Kebutuhan Pasar Dunia",
+                    "deskripsi" => "PT Prima Andalas — Pilar Kepercayaan dalam Menyediakan Hasil Perkebunan Premium, Siap Melayani Pasar Ekspor dengan Standar Mutu Tinggi dan Komitmen Tanpa Kompromi."
+                ],
+                [
+                    "judul" => "Sayuran organik baik untuk kesehatan",
+                    "deskripsi" => "Dengan Dedikasi pada Keaslian dan Kesegaran, Kami Menyediakan Sayuran Organik yang Menyehatkan, Mendukung Anda dalam Menjalani Hidup Berkualitas dan Harmonis dengan Alam."
+                ],
+                [
+                    "judul" => "Menyediakan Hasil Panen Segar Setiap Hari",
+                    "deskripsi" => "Kesegaran hasil panen setiap hari, untuk kebutuhan pasar yang terpercaya."
+                ],
+                [
+                    "judul" => "Bertani sebagai Sebuah Passion",
+                    "deskripsi" => "Kami percaya bahwa bertani bukan sekadar pekerjaan, tapi panggilan hati. Dengan penuh dedikasi dan cinta terhadap tanah serta tanaman, kami berkomitmen menghadirkan hasil panen terbaik yang alami dan berkualitas tinggi, sebagai wujud nyata dari passion kami di dunia pertanian."
+                ]
+            ]),
+            'media' => json_encode([
+                "perkebunan1.jpg",
+                "perkebunan2.jpg",
+                "hero_3.jpg"
+            ]),
+            'status' => 'terbit',
+            'diterbitkan_pada' => now(),
+            'id_penulis' => '0be7a036-d7f3-4998-944a-dbcd357dfe78',
+        ]);
+
+        // service
+        Konten::create([
+            'id' => '46506e48-69e4-11f0-8606-544810de48fd',
+            'judul' => 'SERVICES',
+            'slug' => 'SERVICE YANG KAMI LAKUKAN SETIAP HARI DI PERKEBUNAN',
+            'jenis' => 'komponen',
+            'konten' => 'SERVICE YANG KAMI LAKUKAN SETIAP HARI DI PERKEBUNAN',
+            'gambar' => 'gambar.jpg',
+            'tautan' => 'https://contoh.com',
+            'meta' => json_encode([
+                ["judul" => "Pembersihan Lahan", "deskripsi" => "Kami membersihkan lahan dengan teknik ramah lingkungan untuk memastikan kesiapan sebelum penanaman."],
+                ["judul" => "Penanaman", "deskripsi" => "Layanan penanaman tanaman dengan metode yang tepat untuk hasil yang subur dan tahan lama."],
+                ["judul" => "Penyiraman", "deskripsi" => "Gravida sodales condimentum pellen tesq accumsan orci quam sagittis sapie"],
+                ["judul" => "Konsultasi Pertanian", "deskripsi" => "Gravida sodales condimentum pellen tesq accumsan orci quam sagittis sapie"]
+            ]),
+            'media' => json_encode([
+                "gambar1.jpg",
+                "gambar2.jpg"
+            ]),
+            'status' => 'terbit',
+            'diterbitkan_pada' => now(),
+            'id_penulis' => '0be7a036-d7f3-4998-944a-dbcd357dfe78',
+        ]);
     }
 }
