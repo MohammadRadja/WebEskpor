@@ -18,8 +18,8 @@ class TransaksiSeeder extends Seeder
             'biaya_pengiriman' => 10000,
             'jumlah' => 5,
             'total_harga' => 55000,
-            'bukti_pembayaran' => 'bukti_transfer.jpg',
-            'status' => 'dibayar',
+            'bukti_pembayaran' => 'invoice1.png',
+            'status' => 'proses',
             'id_pelanggan' => User::where('role', 'pelanggan')->first()->id,
         ]);
 
@@ -31,8 +31,8 @@ class TransaksiSeeder extends Seeder
             'biaya_pengiriman' => 75000,
             'jumlah' => 3,
             'total_harga' => 111000, // 3 produk x 12000 + ongkir
-            'bukti_pembayaran' => 'payment_proof_us.jpg',
-            'status' => 'dibayar',
+            'bukti_pembayaran' => 'invoice2.png',
+            'status' => 'proses',
             'id_pelanggan' => User::where('role', 'pelanggan')->inRandomOrder()->first()->id,
         ]);
     }

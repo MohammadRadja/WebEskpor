@@ -12,9 +12,10 @@ class UserController extends Controller
     // Tampilkan semua user
     public function index()
     {
-        $users = User::all();
+        $users = User::where('id', '!=', auth()->id())->get();
         return view('dashboard.admin.user', compact('users'));
     }
+
 
     // Simpan user baru ke database
     public function store(Request $request)

@@ -67,9 +67,9 @@
                                     <td>{{ $p->kebun->nama ?? '-' }}</td>
                                     <td>{{ $p->tanaman->nama ?? '-' }}</td>
                                     <td>{{ $p->penanggung_jawab }}</td>
-                                    <td>{{ $p->tanggal_tanam }}</td>
-                                    <td>{{ $p->jumlah_tanaman }}</td>
-                                    <td>{{ $p->jumlah_panen }}</td>
+                                    <td>{{ format_tanggal($p->tanggal_tanam) }}</td>
+                                    <td>{{ format_jumlah_tanam($p->jumlah_tanaman) }}</td>
+                                    <td>{{ format_stok($p->jumlah_panen) }}</td>
                                     <td>
                                         <span class="badge bg-{{ $p->status == 'aktif' ? 'success' : 'secondary' }}">
                                             {{ ucwords(str_replace('-', ' ', $p->status)) }}

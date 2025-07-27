@@ -31,6 +31,7 @@ class TransaksiController extends Controller
         }
     }
 
+<<<<<<< HEAD
     public function store(Request $request)
     {
         try {
@@ -138,6 +139,31 @@ class TransaksiController extends Controller
             }
 
             return redirect()->back()->with('error', 'Gagal menghapus transaksi.');
+=======
+    public function approve($id)
+    {
+        try {
+            $transaksi = Transaksi::findOrFail($id);
+            $transaksi->status = 'diterima';
+            $transaksi->save();
+
+            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil di-approve.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal meng-approve transaksi.');
+        }
+    }
+
+    public function reject($id)
+    {
+        try {
+            $transaksi = Transaksi::findOrFail($id);
+            $transaksi->status = 'ditolak';
+            $transaksi->save();
+
+            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditolak.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menolak transaksi.');
+>>>>>>> 6e3bd2e (feat(UI): Add Update)
         }
     }
 }

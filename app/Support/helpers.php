@@ -46,3 +46,33 @@ if (!function_exists('meta')) {
         return $key ? ($data[$key] ?? $default) : $data;
     }
 }
+
+if (!function_exists('format_stok')) {
+    function format_stok($jumlah): string
+    {
+        if ($jumlah >= 1000) {
+            // Konversi ke ton (1 ton = 1000 kg)
+            $nilai = $jumlah / 1000;
+            return number_format($nilai, 0, ',', '.') . ' ton';
+        }
+
+        return number_format($jumlah, 0, ',', '.') . ' kg';
+    }
+}
+
+if (!function_exists('format_jumlah_tanam')) {
+    function format_jumlah_tanam($jumlah): string
+    {
+        // Pastikan jumlah tidak null
+        if (is_null($jumlah)) {
+            return '-';
+        }
+
+        // Format dengan ribuan
+        $formatted = number_format($jumlah, 0, ',', '.');
+
+        // Tambahkan satuan
+        return $formatted . ' tanaman';
+    }
+}
+

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->decimal('total_harga', 15, 2);
             $table->string('bukti_pembayaran')->nullable();
-            $table->enum('status', ['menunggu', 'dibayar', 'dikirim', 'selesai'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'proses', 'diterima', 'ditolak'])->default('menunggu');
             $table->timestamps();
 
             $table->foreign('id_pelanggan')->references('id')->on('users')->cascadeOnDelete();

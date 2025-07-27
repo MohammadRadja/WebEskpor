@@ -109,4 +109,24 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui profil.');
         }
     }
+    public function showForgotForm()
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|min:6|confirmed',
+        ], [
+            'email.exists' => 'Email tidak ditemukan di sistem.'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('login')->with('success', 'Password berhasil direset. Silakan login.');
+    }
 }

@@ -40,7 +40,7 @@
                             Ingat saya
                         </label>
                     </div>
-                    <a href="#" class="text-decoration-none small">Lupa Password?</a>
+                    <a href="{{ route('forgot.password') }}" class="text-decoration-none small">Lupa Password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-success w-100">Login</button>

@@ -50,8 +50,8 @@
                                 <tr>
                                     <td>{{ $p->nama }}</td>
                                     <td>{{ $p->tanaman->nama ?? '-' }}</td>
-                                    <td>{{ $p->stok }}</td>
-                                    <td>Rp {{ number_format($p->harga, 0, ',', '.') }}</td>
+                                    <td>{{ format_stok($p->stok) }}</td>
+                                    <td>{{ rupiah($p->harga) }}</td>
                                     <td>{{ $p->deskripsi }}</td>
                                     <td>
                                         @if ($p->gambar)

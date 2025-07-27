@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('bibit', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('nama');
             $table->date('tanggal_pembelian');
             $table->string('nama_penjual');
             $table->decimal('harga_satuan', 10, 2);

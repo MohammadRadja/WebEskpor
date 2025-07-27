@@ -61,10 +61,10 @@
                                     <td>{{ $pe->produk->nama ?? '-' }}</td>
                                     <td>{{ ucwords(str_replace('-', ' ', $pe->jenis_perjanjian)) }}</td>
                                     <td>{{ $pe->komisi }}%</td>
-                                    <td>Rp {{ number_format($pe->harga_satuan, 0, ',', '.') }}</td>
-                                    <td>{{ $pe->jumlah }}</td>
-                                    <td>Rp {{ number_format($pe->total_harga, 0, ',', '.') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($pe->tanggal_pembelian)->translatedFormat('d M Y') }}</td>
+                                    <td>{{ rupiah($pe->harga_satuan) }}</td>
+                                    <td>{{ format_stok($pe->jumlah) }}</td>
+                                    <td>{{ rupiah($pe->total_harga) }}</td>
+                                    <td>{{ format_tanggal($pe->tanggal_pembelian) }}</td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-outline-success me-1" data-crud="edit"
                                             data-title="Edit Produk Eksternal" data-method="PATCH"

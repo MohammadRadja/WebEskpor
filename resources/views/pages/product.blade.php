@@ -22,8 +22,8 @@
                             <h5 class="card-title">{{ $item->nama }}</h5>
                             <p class="card-text text-muted small mb-2">{{ $item->deskripsi ?? 'Deskripsi tidak tersedia.' }}</p>
                             <ul class="list-unstyled small mb-3">
-                                <li><strong>Harga:</strong> Rp{{ number_format($item->harga, 0, ',', '.') }}</li>
-                                <li><strong>Stok:</strong> {{ $item->stok }} unit</li>
+                                <li><strong>Harga:</strong> {{ rupiah($item->harga) }}</li>
+                                <li><strong>Stok:</strong> {{ format_stok($item->stok) }}</li>
                             </ul>
                             <form action="{{ route('cart.add') }}" method="POST" class="mt-auto">
                                 @csrf
