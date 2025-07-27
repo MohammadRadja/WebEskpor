@@ -8,20 +8,11 @@ use Carbon\Carbon;
 
 class BibitSeeder extends Seeder
 {
-<<<<<<< HEAD
-    /**
-     * Jalankan seed data ke database.
-     */
-=======
->>>>>>> 6e3bd2e (feat(UI): Add Update)
     public function run(): void
     {
         $data = [
             [
-<<<<<<< HEAD
-=======
                 'nama' => 'Bayam Hijau',
->>>>>>> 6e3bd2e (feat(UI): Add Update)
                 'tanggal_pembelian' => Carbon::now()->subDays(10),
                 'nama_penjual' => 'Toko Tani Makmur',
                 'harga_satuan' => 1000,

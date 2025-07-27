@@ -40,4 +40,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Konten::class, 'id_penulis');
     }
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
 }

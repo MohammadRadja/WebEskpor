@@ -12,7 +12,7 @@ class DetailTransaksi extends Model
     protected $table = 'detail_transaksi';
 
     protected $fillable = [
-        'id_transaksi', 'id_produk', 'jumlah', 'harga_satuan', 'subtotal'
+        'id_transaksi', 'id_produk', 'jumlah', 'harga_satuan', 'sub_total'
     ];
 
     protected static function boot()

@@ -28,9 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Bibit::observe(BibitObserver::class);
         PetakKebun::observe(PetakKebunObserver::class);
-<<<<<<< HEAD
-=======
         Transaksi::observe(TransaksiObserver::class);
->>>>>>> 6e3bd2e (feat(UI): Add Update)
     }
 }

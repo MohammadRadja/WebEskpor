@@ -45,7 +45,6 @@
                                     <td>{{ $t->telepon }}</td>
                                     <td>{{ $t->alamat }}</td>
                                     <td>{{ $t->negara }}</td>
-<<<<<<< HEAD
                                     <td>{{ $t->jumlah }}</td>
                                     <td>Rp {{ number_format($t->total_harga, 0, ',', '.') }}</td>
                                     <td>Rp {{ number_format($t->biaya_pengiriman, 0, ',', '.') }}</td>
@@ -79,54 +78,6 @@
                                             data-url="{{ route('transaksi.destroy', $t->id) }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
-=======
-                                    <td>{{ format_stok($t->jumlah) }}</td>
-                                    <td>{{ rupiah($t->total_harga) }}</td>
-                                    <td>{{ rupiah($t->biaya_pengiriman) }}</td>
-                                    <td><span class="badge bg-success">{{ ucfirst($t->status) }}</span></td>
-                                    <td>
-                                        @if ($t->bukti_pembayaran)
-                                            <a href="{{ asset_or_default('uploads/bukti_pembayaran/' . $t->bukti_pembayaran) }}"
-                                                class="btn btn-sm btn-outline-primary" target="">Lihat</a>
-                                        @else
-                                            <img src="{{ asset('assets/img/default.png') }}" alt="No Bukti" width="40">
-                                        @endif
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex flex-wrap justify-content-center gap-1">
-                                            <!-- Tombol Detail -->
-                                            <button class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                                data-bs-target="#detailModal{{ $t->id }}" title="Lihat Detail">
-                                                <i class="fas fa-info-circle"></i>
-                                            </button>
-
-                                            @if ($t->status === 'proses')
-                                                <!-- Tombol Approve -->
-                                                <form action="{{ route('transaksi.approve', $t->id) }}" method="POST"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-sm btn-success"
-                                                        title="Setujui Transaksi">
-                                                        <i class="fas fa-check"></i>
-                                                    </button>
-                                                </form>
-
-                                                <!-- Tombol Reject -->
-                                                <form action="{{ route('transaksi.reject', $t->id) }}" method="POST"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-sm btn-danger"
-                                                        title="Tolak Transaksi">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </form>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </div>
->>>>>>> 6e3bd2e (feat(UI): Add Update)
                                     </td>
                                 </tr>
                             @empty
@@ -139,7 +90,6 @@
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
 
         <!-- Tabel Detail Transaksi -->
         <div class="card shadow-sm mb-4">
@@ -154,25 +104,6 @@
                         </h6>
                         <div class="table-responsive">
                             <table class="table table-bordered table-sm mb-2">
-=======
-    </div>
-
-    <!-- Modal Detail Transaksi -->
-    @foreach ($transaksi as $t)
-        <div class="modal fade" id="detailModal{{ $t->id }}" tabindex="-1"
-            aria-labelledby="detailModalLabel{{ $t->id }}" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header bg-dark text-white">
-                        <h5 class="modal-title text-success">
-                            <i class="fas fa-info-circle me-2"></i>Detail Transaksi - {{ $t->pelanggan->username }}
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-sm">
->>>>>>> 6e3bd2e (feat(UI): Add Update)
                                 <thead class="table-light">
                                     <tr>
                                         <th>Produk</th>
@@ -182,20 +113,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-<<<<<<< HEAD
-                                    @forelse($t->detailTransaksi as $detail)
-                                        <tr>
-                                            <td>{{ $detail->produk->nama ?? 'Produk tidak ditemukan' }}</td>
-                                            <td>{{ $detail->jumlah }}</td>
-                                            <td>Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
-                                            <td>Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="4" class="text-muted text-center">Tidak ada detail transaksi.</td>
-                                        </tr>
-                                    @endforelse
-=======
                                     @foreach ($t->detailTransaksi as $d)
                                         <tr>
                                             <td>{{ $d->produk->nama }}</td>
@@ -204,12 +121,10 @@
                                             <td>{{ rupiah($d->subtotal) }}</td>
                                         </tr>
                                     @endforeach
->>>>>>> 6e3bd2e (feat(UI): Add Update)
                                 </tbody>
                             </table>
                         </div>
                     </div>
-<<<<<<< HEAD
                 @empty
                     <p class="text-muted">Belum ada data transaksi.</p>
                 @endforelse
@@ -224,14 +139,3 @@
         window.pelangganOptions = @json($pelangganList);
     </script>
 @endpush
-=======
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endforeach
-
-@endsection
->>>>>>> 6e3bd2e (feat(UI): Add Update)

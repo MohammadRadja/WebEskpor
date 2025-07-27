@@ -3,6 +3,16 @@
 @section('content')
 <div class="container py-4">
     <div class="row justify-content-center">
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         <div class="col-md-8">
             <h2 class="mb-4 text-succes">Form Pemesanan</h2>
 
@@ -10,6 +20,17 @@
                 <div class="card-body">
                     <form action="{{ route('transaksi.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        <h5>Daftar Produk:</h5>
+                        <ul>
+                            @foreach ($cartItems as $item)
+                            <li>
+                                {{ $item->produk->nama }} ({{ $item->quantity }}) - Rp{{ number_format($item->produk->harga, 0, ',', '.') }}
+                            </li>
+
+                            <!-- Kirim ID cart item agar bisa diproses di TransaksiController -->
+                            <input type="hidden" name="checkout_items[]" value="{{ $item->id }}">
+                            @endforeach
+                        </ul>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Nomor Telepon</label>

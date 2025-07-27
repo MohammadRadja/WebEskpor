@@ -39,11 +39,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
-<<<<<<< HEAD
-=======
     Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('forgot.password');
     Route::post('/forgot-password', [AuthController::class, 'updatePassword'])->name('forgot.password.update');
->>>>>>> 6e3bd2e (feat(UI): Add Update)
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 /*
@@ -58,9 +55,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/add-to-cart', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
-    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
-
+    Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update-qty', [CartController::class, 'updateQuantity'])->name('cart.updateQty');
     Route::get('/checkout', [CartController::class, 'checkoutForm'])->name('checkout.form');
+
+
 
 
     // Profile
@@ -100,6 +99,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
     Route::patch('/transaksi/{id}/approve', [TransaksiController::class, 'approve'])->name('transaksi.approve');
     Route::patch('/transaksi/{id}/reject', [TransaksiController::class, 'reject'])->name('transaksi.reject');
+    Route::resource('/transaksi', TransaksiController::class);
 
     Route::get('/konten', [DashboardController::class, 'konten'])->name('konten');
 

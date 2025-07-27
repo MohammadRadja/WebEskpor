@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
+use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use App\Models\Transaksi;
@@ -31,49 +32,54 @@ class TransaksiController extends Controller
         }
     }
 
-<<<<<<< HEAD
     public function store(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'telepon' => 'required|string',
-                'alamat' => 'required|string',
-                'negara' => 'required|string',
-                'biaya_pengiriman' => 'required|numeric|min:0',
-                'jumlah' => 'required|integer|min:1',
-                'total_harga' => 'required|numeric|min:0',
-                'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-                'status' => 'required|in:menunggu,dibayar,dikirim,selesai',
-                'id_pelanggan' => 'required|exists:users,id',
+        $validated = $request->validate([
+            'telepon' => 'required|string',
+            'alamat' => 'required|string',
+            'negara' => 'required|string',
+            'biaya_pengiriman' => 'required|numeric|min:0',
+            'jumlah' => 'required|integer|min:1',
+            'total_harga' => 'required|numeric|min:0',
+            'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'status' => 'required|in:menunggu,dibayar,dikirim,selesai',
+            'id_pelanggan' => 'required|exists:users,id',
+            'checkout_items' => 'required',
+            'checkout_items.*' => 'required'
+        ]);
+
+        // Simpan bukti pembayaran
+        if ($request->hasFile('bukti_pembayaran') && $request->file('bukti_pembayaran')->isValid()) {
+            $file = $request->file('bukti_pembayaran');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/bukti_pembayaran'), $filename);
+            $validated['bukti_pembayaran'] = 'uploads/bukti_pembayaran/' . $filename;
+        }
+
+        // Simpan transaksi utama
+        $transaksi = Transaksi::create($validated);
+
+        // Ambil item dari cart_items yang dipilih
+        $selectedItems = CartItem::with('produk')
+            ->whereIn('id', $validated['checkout_items'])
+            ->get();
+
+        foreach ($selectedItems as $item) {
+            $subtotal = $item->produk->harga * $item->quantity;
+            // Simpan detail transaksi
+            $transaksi->detailTransaksi()->create([
+                'id_produk' => $item->produk_id,
+                'jumlah' => $item->quantity,
+                'harga_satuan' => $item->produk->harga,
+                'sub_total' => $subtotal,
+                
             ]);
 
-            if ($request->hasFile('bukti_pembayaran') && $request->file('bukti_pembayaran')->isValid()) {
-    $file = $request->file('bukti_pembayaran');
-    $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-    $file->move(public_path('uploads/bukti_pembayaran'), $filename);
-    $validated['bukti_pembayaran'] = 'uploads/bukti_pembayaran/' . $filename;
-}
-
-            Transaksi::create($validated);
-
-            if ($request->ajax()) {
-                return response()->json(['message' => 'Berhasil ditambahkan']);
-            }
-
-            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
-        } catch (ValidationException $e) {
-            if ($request->ajax()) {
-                return response()->json(['errors' => $e->errors()], 422);
-            }
-
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json(['error' => 'Terjadi kesalahan saat menambahkan transaksi.'], 500);
-            }
-
-            return redirect()->back()->with('error', 'Gagal menambahkan transaksi.');
+            // Hapus item dari keranjang
+            $item->delete();
         }
+
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
     }
 
     public function update(Request $request, $id)
@@ -92,13 +98,13 @@ class TransaksiController extends Controller
             ]);
 
             $transaksi = Transaksi::findOrFail($id);
-
+            
             if ($request->hasFile('bukti_pembayaran') && $request->file('bukti_pembayaran')->isValid()) {
-    $file = $request->file('bukti_pembayaran');
-    $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-    $file->move(public_path('uploads/bukti_pembayaran'), $filename);
-    $validated['bukti_pembayaran'] = 'uploads/bukti_pembayaran/' . $filename;
-}
+                $file = $request->file('bukti_pembayaran');
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/bukti_pembayaran'), $filename);
+                $validated['bukti_pembayaran'] = 'uploads/bukti_pembayaran/' . $filename;
+            }
 
             $transaksi->update($validated);
 
@@ -139,31 +145,6 @@ class TransaksiController extends Controller
             }
 
             return redirect()->back()->with('error', 'Gagal menghapus transaksi.');
-=======
-    public function approve($id)
-    {
-        try {
-            $transaksi = Transaksi::findOrFail($id);
-            $transaksi->status = 'diterima';
-            $transaksi->save();
-
-            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil di-approve.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal meng-approve transaksi.');
-        }
-    }
-
-    public function reject($id)
-    {
-        try {
-            $transaksi = Transaksi::findOrFail($id);
-            $transaksi->status = 'ditolak';
-            $transaksi->save();
-
-            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditolak.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menolak transaksi.');
->>>>>>> 6e3bd2e (feat(UI): Add Update)
         }
     }
 }
