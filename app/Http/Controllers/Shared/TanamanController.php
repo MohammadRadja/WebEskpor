@@ -19,7 +19,7 @@ class TanamanController extends Controller
                 ->map(function ($b) {
                     return [
                         'value' => $b->id,
-                        'label' => $b->nama_penjual,
+                        'label' => $b->nama,
                     ];
                 })
                 ->values();
@@ -35,19 +35,24 @@ class TanamanController extends Controller
     public function store(Request $request)
     {
         try {
+            Log::info('Request data untuk tambah tanaman:', $request->all());
+
             $request->validate([
                 'nama' => 'required|string',
                 'jenis' => 'required|in:sayur,buah,rempah,lainnya',
                 'stok_panen' => 'nullable|integer',
                 'id_bibit' => 'required|exists:bibit,id',
-                'sumber' => 'required|in:internal,eksternal',
                 'sumber_eksternal' => 'nullable|string|required_if:sumber,eksternal',
             ]);
 
-            Tanaman::create($request->all());
+            $tanaman = Tanaman::create($request->only(['nama', 'jenis', 'stok_panen', 'id_bibit', 'sumber', 'sumber_eksternal']));
+
+            Log::info('Data tanaman berhasil dibuat:', $tanaman->toArray());
 
             return redirect()->route('tanaman.index')->with('success', 'Tanaman berhasil ditambahkan.');
         } catch (Exception $e) {
+            Log::error('Gagal menambahkan tanaman: ' . $e->getMessage());
+
             return redirect()
                 ->back()
                 ->withInput()
@@ -91,5 +96,10 @@ class TanamanController extends Controller
                 ->back()
                 ->with('error', 'Gagal menghapus tanaman: ' . $e->getMessage());
         }
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new TanamanExport(), 'data-tanaman.xlsx');
     }
 }

@@ -1,5 +1,5 @@
 @extends('layouts.guest.index')
-@section('title', 'Blog - PT.RAJAWALI PRIMA ANDALAS')
+@section('title', 'Berita - PT.RAJAWALI PRIMA ANDALAS')
 @section('content')
 
     {{-- Hero Section --}}
@@ -11,18 +11,27 @@
             <div class="swiper">
                 <div class="swiper-wrapper">
                     @forelse ($blog as $item)
+                        @php
+                            // Cek apakah tautan eksternal atau internal
+                            $isExternal = Str::startsWith($item->tautan, ['http://', 'https://']);
+                        @endphp
+
                         <div class="swiper-slide">
-                            <div class="card h-100 shadow-sm border-0">
-                                <img src="{{ asset_or_default('assets/img/blog/' . $item->gambar) }}"
-                                    class="card-img-top object-fit-cover" style="height: 200px;" alt="{{ $item->slug }}">
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">{{ $item->kutipan }}</h5>
-                                    <p class="text-muted mb-2">
-                                        <i class="bi bi-calendar"></i> {{ format_tanggal($item->diterbitkan_pada) }}
-                                    </p>
-                                    <p class="card-text flex-grow-1">{{ $item->konten }}</p>
+                            {{-- Bungkus seluruh card dengan <a> --}}
+                            <a href="{{ $item->tautan }}" class="text-decoration-none text-dark"
+                               @if($isExternal) target="_blank" rel="noopener noreferrer" @endif>
+                                <div class="card h-100 shadow-sm border-0">
+                                    <img src="{{ asset_or_default('assets/img/blog/' . $item->gambar) }}"
+                                         class="card-img-top object-fit-cover" style="height: 200px;" alt="{{ $item->slug }}">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">{{ $item->kutipan }}</h5>
+                                        <p class="text-muted mb-2">
+                                            <i class="bi bi-calendar"></i> {{ format_tanggal($item->diterbitkan_pada) }}
+                                        </p>
+                                        <p class="card-text flex-grow-1">{{ $item->konten }}</p>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     @empty
                         <p class="text-center">Tidak ada berita saat ini.</p>

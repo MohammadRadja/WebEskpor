@@ -37,7 +37,6 @@ class PetakKebunController extends Controller
                 'penanggung_jawab' => 'required|string',
                 'status' => 'required|in:aktif,non-aktif',
                 'tanggal_tanam' => 'required|date',
-                'jumlah_tanaman' => 'required|integer',
                 'jumlah_panen' => 'nullable|integer',
             ]);
 
@@ -74,7 +73,6 @@ class PetakKebunController extends Controller
                 'penanggung_jawab' => 'required|string',
                 'status' => 'required|in:aktif,non-aktif',
                 'tanggal_tanam' => 'required|date',
-                'jumlah_tanaman' => 'required|integer',
                 'jumlah_panen' => 'nullable|integer',
             ]);
 

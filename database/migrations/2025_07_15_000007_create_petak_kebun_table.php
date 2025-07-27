@@ -19,8 +19,8 @@ return new class extends Migration {
             $table->string('penanggung_jawab');
             $table->enum('status', ['aktif', 'non-aktif'])->default('aktif');
             $table->date('tanggal_tanam');
-            $table->integer('jumlah_tanaman')->default(0);
-            $table->integer('jumlah_panen')->default(0);
+            $table->integer('jumlah_tanaman')->nullable();
+            $table->integer('jumlah_panen')->nullable();
             $table->timestamps();
 
             $table->foreign('id_kebun')->references('id')->on('kebun')->cascadeOnDelete();

@@ -14,32 +14,26 @@ class TanamanSeeder extends Seeder
             [
                 'nama' => 'Bayam Hijau',
                 'jenis' => 'sayur',
-                'sumber' => 'internal',
             ],
             [
                 'nama' => 'Kangkung Darat',
                 'jenis' => 'sayur',
-                'sumber' => 'internal',
             ],
             [
                 'nama' => 'Tomat Merah',
                 'jenis' => 'buah',
-                'sumber' => 'internal',
             ],
             [
                 'nama' => 'Cabe Rawit',
                 'jenis' => 'buah',
-                'sumber' => 'internal',
             ],
             [
                 'nama' => 'Terong Ungu',
                 'jenis' => 'sayur',
-                'sumber' => 'internal',
             ],
             [
                 'nama' => 'Selada Hijau',
                 'jenis' => 'sayur',
-                'sumber' => 'internal',
             ],
         ];
 
@@ -51,7 +45,6 @@ class TanamanSeeder extends Seeder
                     'nama' => $item['nama'],
                     'jenis' => $item['jenis'],
                     'id_bibit' => $bibits[$index]->id,
-                    'sumber' => $item['sumber'],
                     'sumber_eksternal' => null,
                 ]);
             }

@@ -30,7 +30,7 @@ class ProdukController extends Controller
             $request->validate([
                 'nama' => 'required|string',
                 'id_tanaman' => 'required|exists:tanaman,id',
-                'stok' => 'required|integer',
+                'stok' => 'nullable|integer',
                 'harga' => 'required|numeric',
                 'deskripsi' => 'nullable|string',
                 'gambar' => 'nullable|image|max:2048',
@@ -74,7 +74,7 @@ class ProdukController extends Controller
             $request->validate([
                 'nama' => 'required|string',
                 'id_tanaman' => 'required|exists:tanaman,id',
-                'stok' => 'required|integer',
+                'stok' => 'nullable|integer',
                 'harga' => 'required|numeric',
                 'deskripsi' => 'nullable|string',
                 'gambar' => 'nullable|image|max:2048',

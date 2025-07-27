@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('nama');
             $table->enum('jenis', ['sayur', 'buah', 'rempah', 'herbal', 'biji', 'kacang', 'umbi', 'hias']);
             $table->uuid('id_bibit');
-            $table->enum('sumber', ['internal', 'eksternal']);
             $table->string('sumber_eksternal')->nullable();
             $table->timestamps();
 

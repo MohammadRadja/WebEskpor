@@ -75,7 +75,7 @@
                         <div class="mb-4">
                             <label class="form-label">Bukti Pembayaran</label>
                             <input type="file" name="bukti_pembayaran" class="form-control"
-                                accept=".jpg,.jpeg,.png,.pdf" required>
+                                accept=".jpg,.jpeg,.png,.pdf">
                             <div class="form-text">Format: JPG, PNG, PDF</div>
                         </div>
 

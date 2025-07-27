@@ -12,7 +12,7 @@ class Tanaman extends Model
     protected $table = 'tanaman';
 
     protected $fillable = [
-        'nama', 'jenis', 'stok_panen', 'id_bibit', 'asal', 'asal_eksternal'
+        'nama', 'jenis', 'id_bibit', 'sumber', 'sumber_eksternal'
     ];
 
     protected static function boot()
@@ -28,7 +28,7 @@ class Tanaman extends Model
 
     public function petakKebun()
     {
-        return $this->hasOne(PetakKebun::class);
+        return $this->hasMany(PetakKebun::class, 'id_tanaman');
     }
 
     public function produk()

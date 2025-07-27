@@ -54,7 +54,6 @@
                                 <th>Penanggung Jawab</th>
                                 <th>Tanggal Tanam</th>
                                 <th>Jumlah Tanam</th>
-                                <th>Sisa Bibit</th>
                                 <th>Jumlah Panen</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -70,7 +69,6 @@
                                     <td>{{ $p->penanggung_jawab }}</td>
                                     <td>{{ format_tanggal($p->tanggal_tanam) }}</td>
                                     <td>{{ format_jumlah_tanam($p->jumlah_tanaman) }}</td>
-                                    <td>{{ format_jumlah_tanam($p->tanaman->bibit->jumlah - $p->jumlah_tanaman) }}</td>
                                     <td>{{ format_stok($p->jumlah_panen) }}</td>
                                     <td>
                                         <span class="badge bg-{{ $p->status == 'aktif' ? 'success' : 'secondary' }}">

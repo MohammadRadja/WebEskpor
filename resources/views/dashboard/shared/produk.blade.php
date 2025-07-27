@@ -17,7 +17,6 @@
                     data-fields='{
                         "nama": {"label": "Nama Produk"},
                         "id_tanaman": {"label": "Tanaman", "type": "select", "options": "tanamanOptions"},
-                        "stok": {"label": "Stok"},
                         "harga": {"label": "Harga"},
                         "deskripsi": {"label": "Deskripsi"},
                         "gambar": {"label": "Gambar", "type": "file"}
@@ -36,7 +35,7 @@
                     <table class="table table-hover mb-0">
                         <thead class="bg-light">
                             <tr>
-                                <th>Nama</th>
+                                <th>Nama Produk</th>
                                 <th>Tanaman</th>
                                 <th>Stok</th>
                                 <th>Harga</th>
@@ -67,7 +66,6 @@
                                             data-fields='{
                                                 "nama": {"label": "Nama Produk", "value": "{{ $p->nama }}"},
                                                         "id_tanaman": {"label": "Tanaman", "value": "{{ $p->id_tanaman }}", "type": "select", "options": "tanamanOptions"},
-                                                "stok": {"label": "Stok", "value": "{{ $p->stok }}"},
                                                 "harga": {"label": "Harga", "value": "{{ $p->harga }}"},
                                                 "deskripsi": {"label": "Deskripsi", "value": "{{ $p->deskripsi }}"},
                                                 "gambar": {"label": "Gambar", "type": "file"}

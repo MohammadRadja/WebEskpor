@@ -10,17 +10,20 @@
                 </h2>
                 <p class="text-muted">Tambah dan kelola data tanaman</p>
             </div>
-            <button class="btn btn-success" data-crud="add" data-method="POST" data-title="Tambah Tanaman"
-                data-url="{{ route('tanaman.store') }}"
-                data-fields='{
+            <div>
+                <a href="{{ route('tanaman.export.excel') }}" class="btn btn-outline-success me-2">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
+                <button class="btn btn-success" data-crud="add" data-method="POST" data-title="Tambah Tanaman"
+                    data-url="{{ route('tanaman.store') }}"
+                    data-fields='{
         "nama": {"label": "Nama Tanaman"},
-        "jenis": {"label": "Jenis", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]},
-        "stok_panen": {"label": "Stok Panen", "type": "number"},
-        "sumber": {"label": "Sumber", "type": "select", "options": ["internal", "eksternal"]},
-        "id_bibit": {"label": "Asal Bibit", "type": "select", "options": "bibitOptions"}
+        "id_bibit": {"label": "Nama Bibit", "type": "select", "options": "bibitOptions"},
+        "jenis": {"label": "Jenis", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]}
     }'>
-                <i class="fas fa-plus me-1"></i> Tambah Tanaman
-            </button>
+                    <i class="fas fa-plus me-1"></i> Tambah Tanaman
+                </button>
+            </div>
         </div>
 
         <div class="card shadow-sm">
@@ -32,10 +35,8 @@
                     <table class="table table-hover mb-0">
                         <thead class="bg-light">
                             <tr>
-                                <th>Nama</th>
+                                <th>Nama Tanaman</th>
                                 <th>Jenis</th>
-                                <th>Stok Panen</th>
-                                <th>Sumber</th>
                                 <th>Asal Bibit</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
@@ -45,8 +46,6 @@
                                 <tr>
                                     <td>{{ $t->nama }}</td>
                                     <td>{{ ucfirst($t->jenis) }}</td>
-                                    <td>{{ format_stok($t->stok_panen) }}</td>
-                                    <td>{{ ucfirst($t->sumber) }}</td>
                                     <td>{{ $t->bibit->nama_penjual ?? '-' }}</td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-outline-success me-1" data-crud="edit"
@@ -56,7 +55,6 @@
                                                 "nama": {"label": "Nama Tanaman", "value": "{{ $t->nama }}"},
                                                 "jenis": {"label": "Jenis", "value": "{{ $t->jenis }}", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]},
                                                 "stok_panen": {"label": "Stok Panen", "value": "{{ $t->stok_panen }}", "type": "number"},
-                                                "sumber": {"label": "Sumber", "value": "{{ $t->sumber }}", "type": "select", "options": ["internal", "eksternal"]},
                                                 "id_bibit": {"label": "Asal Bibit", "value": "{{ $t->id_bibit }}", "type": "select", "options": "bibitOptions"}
                                             }'>
                                             <i class="fas fa-edit"></i>

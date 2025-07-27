@@ -51,7 +51,7 @@
                                     <td>{{ format_tanggal($b->tanggal_pembelian) }}</td>
                                     <td>{{ $b->nama_penjual }}</td>
                                     <td>{{ rupiah($b->harga_satuan) }}</td>
-                                    <td>{{ format_jumlah_tanam($b->jumlah) }}</td>
+                                    <td>{{ format_jumlah_tanam($b->jumlah_sisa) }}</td>
                                     <td>{{ rupiah($b->harga_satuan * $b->jumlah) }}</td>
                                     <td class="text-center">
                                         @php
