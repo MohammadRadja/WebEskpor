@@ -55,7 +55,7 @@
                                     <td>{{ $p->deskripsi }}</td>
                                     <td>
                                         @if ($p->gambar)
-                                            <img src="{{ asset($p->gambar) }}" width="60" class="img-thumbnail">
+                                            <img src="{{ asset_or_default($p->gambar) }}" width="60" class="img-thumbnail">
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif

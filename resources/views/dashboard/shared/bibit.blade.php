@@ -15,6 +15,7 @@
                 <button class="btn btn-success" data-crud="add" data-url="{{ route('bibit.store') }}" data-method="POST"
                     data-title="Tambah Bibit"
                     data-fields='{
+        "nama": {"label": "Nama Bibit"},
         "tanggal_pembelian": {"label": "Tanggal Pembelian", "type": "date"},
         "nama_penjual": {"label": "Nama Penjual"},
         "harga_satuan": {"label": "Harga Satuan", "type": "number"},
@@ -34,10 +35,11 @@
                     <table class="table table-hover mb-0">
                         <thead class="bg-light">
                             <tr>
+                                <th>Nama Bibit</th>
                                 <th>Tanggal Pembelian</th>
                                 <th>Nama Penjual</th>
                                 <th>Harga Satuan</th>
-                                <th>Jumlah</th>
+                                <th>Jumlah Bibit</th>
                                 <th>Total</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
@@ -45,14 +47,19 @@
                         <tbody>
                             @forelse($bibit as $b)
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::parse($b->tanggal_pembelian)->translatedFormat('d F Y') }}</td>
+                                    <td>{{ $b->nama }}</td>
+                                    <td>{{ format_tanggal($b->tanggal_pembelian) }}</td>
                                     <td>{{ $b->nama_penjual }}</td>
-                                    <td>Rp {{ number_format($b->harga_satuan, 0, ',', '.') }}</td>
-                                    <td>{{ $b->jumlah }}</td>
-                                    <td>Rp {{ number_format($b->harga_satuan * $b->jumlah, 0, ',', '.') }}</td>
+                                    <td>{{ rupiah($b->harga_satuan) }}</td>
+                                    <td>{{ format_jumlah_tanam($b->jumlah) }}</td>
+                                    <td>{{ rupiah($b->harga_satuan * $b->jumlah) }}</td>
                                     <td class="text-center">
                                         @php
                                             $editFields = [
+                                                'nama' => [
+                                                    'label' => 'Nama Bibit',
+                                                    'value' => $b->nama,
+                                                ],
                                                 'tanggal_pembelian' => [
                                                     'label' => 'Tanggal Pembelian',
                                                     'type' => 'date',

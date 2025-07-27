@@ -29,7 +29,7 @@ class PetakKebunSeeder extends Seeder
                     'id_kebun' => $kebun->id,
                     'id_tanaman' => $tanaman->id,
                     'tanggal_tanam' => now()->subDays(rand(5, 30)),
-                    'jumlah_tanaman' => rand(50, 150),
+                    'jumlah_tanaman' => 50,
                     'jumlah_panen' => rand(200, 800),
                 ]);
                 $count++;

@@ -13,6 +13,7 @@ class Bibit extends Model
 
     // Daftar kolom yang boleh diisi secara massal
     protected $fillable = [
+        'nama',
         'tanggal_pembelian',
         'nama_penjual',
         'harga_satuan',

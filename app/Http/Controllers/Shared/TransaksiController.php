@@ -72,7 +72,7 @@ class TransaksiController extends Controller
                 'jumlah' => $item->quantity,
                 'harga_satuan' => $item->produk->harga,
                 'sub_total' => $subtotal,
-                
+
             ]);
 
             // Hapus item dari keranjang
@@ -98,7 +98,7 @@ class TransaksiController extends Controller
             ]);
 
             $transaksi = Transaksi::findOrFail($id);
-            
+
             if ($request->hasFile('bukti_pembayaran') && $request->file('bukti_pembayaran')->isValid()) {
                 $file = $request->file('bukti_pembayaran');
                 $filename = uniqid() . '.' . $file->getClientOriginalExtension();
@@ -145,6 +145,32 @@ class TransaksiController extends Controller
             }
 
             return redirect()->back()->with('error', 'Gagal menghapus transaksi.');
+        }
+    }
+
+    public function approve($id)
+    {
+        try {
+            $transaksi = Transaksi::findOrFail($id);
+            $transaksi->status = 'diterima';
+            $transaksi->save();
+
+            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil di-approve.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal meng-approve transaksi.');
+        }
+    }
+
+    public function reject($id)
+    {
+        try {
+            $transaksi = Transaksi::findOrFail($id);
+            $transaksi->status = 'ditolak';
+            $transaksi->save();
+
+            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditolak.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menolak transaksi.');
         }
     }
 }

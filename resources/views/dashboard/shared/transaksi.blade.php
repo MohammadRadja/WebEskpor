@@ -45,39 +45,52 @@
                                     <td>{{ $t->telepon }}</td>
                                     <td>{{ $t->alamat }}</td>
                                     <td>{{ $t->negara }}</td>
-                                    <td>{{ $t->jumlah }}</td>
-                                    <td>Rp {{ number_format($t->total_harga, 0, ',', '.') }}</td>
-                                    <td>Rp {{ number_format($t->biaya_pengiriman, 0, ',', '.') }}</td>
+                                    <td>{{ format_stok($t->jumlah) }}</td>
+                                    <td>{{ rupiah($t->total_harga) }}</td>
+                                    <td>{{ rupiah($t->biaya_pengiriman) }}</td>
                                     <td><span class="badge bg-success">{{ ucfirst($t->status) }}</span></td>
                                     <td>
                                         @if ($t->bukti_pembayaran)
-                                            <a href="{{ url($t->bukti_pembayaran) }}" class="btn btn-sm btn-outline-primary">Lihat</a>
+                                            <a href="{{ asset_or_default('uploads/bukti_pembayaran/' . $t->bukti_pembayaran) }}"
+                                                class="btn btn-sm btn-outline-primary" target="">Lihat</a>
                                         @else
-                                            <span class="text-muted">-</span>
+                                            <img src="{{ asset('assets/img/default.png') }}" alt="No Bukti" width="40">
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-outline-success me-1" data-crud="edit"
-                                            data-title="Edit Transaksi" data-method="PATCH"
-                                            data-url="{{ route('transaksi.update', $t->id) }}"
-                                            data-fields='{
-                                                "id_pelanggan": {"label": "Nama Pembeli", "value": "{{ $t->id_pelanggan }}", "type": "select", "options": "pelangganOptions"},
-                                                "telepon": {"label": "Telepon", "value": "{{ $t->telepon }}"},
-                                                "alamat": {"label": "Alamat", "value": "{{ $t->alamat }}"},
-                                                "negara": {"label": "Negara", "value": "{{ $t->negara }}"},
-                                                "jumlah": {"label": "Jumlah", "value": "{{ $t->jumlah }}"},
-                                                "total_harga": {"label": "Total Harga", "value": "{{ $t->total_harga }}"},
-                                                "biaya_pengiriman": {"label": "Biaya Pengiriman", "value": "{{ $t->biaya_pengiriman }}"},
-                                                "bukti_pembayaran": {"label": "Bukti Pembayaran", "type": "file"},
-                                                "status": {"label": "Status", "value": "{{ $t->status }}", "type": "select", "options": ["menunggu", "dibayar", "dikirim", "selesai"]}
-                                            }'>
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" data-crud="delete"
-                                            data-title="Hapus Transaksi" data-method="DELETE"
-                                            data-url="{{ route('transaksi.destroy', $t->id) }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <div class="d-flex flex-wrap justify-content-center gap-1">
+                                            <!-- Tombol Detail -->
+                                            <button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                                data-bs-target="#detailModal{{ $t->id }}" title="Lihat Detail">
+                                                <i class="fas fa-info-circle"></i>
+                                            </button>
+
+                                            @if ($t->status === 'proses')
+                                                <!-- Tombol Approve -->
+                                                <form action="{{ route('transaksi.approve', $t->id) }}" method="POST"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-sm btn-success"
+                                                        title="Setujui Transaksi">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </form>
+
+                                                <!-- Tombol Reject -->
+                                                <form action="{{ route('transaksi.reject', $t->id) }}" method="POST"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-sm btn-danger"
+                                                        title="Tolak Transaksi">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -90,20 +103,23 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Tabel Detail Transaksi -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-dark text-white">
-                <h5 class="mb-0 text-success"><i class="fas fa-info-circle me-2"></i>Detail Transaksi</h5>
-            </div>
-            <div class="card-body p-3">
-                @forelse($transaksi as $t)
-                    <div class="mb-4">
-                        <h6 class="text-success fw-bold">
-                            <i class="fas fa-user me-2"></i>{{ $t->pelanggan->username }} - {{ ucfirst($t->status) }}
-                        </h6>
+    <!-- Modal Detail Transaksi -->
+    @foreach ($transaksi as $t)
+        <div class="modal fade" id="detailModal{{ $t->id }}" tabindex="-1"
+            aria-labelledby="detailModalLabel{{ $t->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title text-success">
+                            <i class="fas fa-info-circle me-2"></i>Detail Transaksi - {{ $t->pelanggan->username }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-sm mb-2">
+                            <table class="table table-bordered table-sm">
                                 <thead class="table-light">
                                     <tr>
                                         <th>Produk</th>
@@ -125,17 +141,12 @@
                             </table>
                         </div>
                     </div>
-                @empty
-                    <p class="text-muted">Belum ada data transaksi.</p>
-                @endforelse
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
             </div>
         </div>
+    @endforeach
 
-    </div>
 @endsection
-
-@push('scripts')
-    <script>
-        window.pelangganOptions = @json($pelangganList);
-    </script>
-@endpush
