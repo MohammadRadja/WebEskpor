@@ -1,4 +1,4 @@
-@extends('layouts.panel.index')
+@extends($layout)
 @section('title', 'Profil')
 @section('content')
     <div class="container">

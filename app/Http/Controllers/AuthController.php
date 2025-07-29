@@ -80,7 +80,8 @@ class AuthController extends Controller
     public function showProfile()
     {
         $user = Auth::user();
-        return view('dashboard.shared.profile', compact('user'));
+        $layout = auth()->user()->role == 'pelanggan' ? 'layouts.guest.index' : 'layouts.panel.index';
+        return view('auth.profile', compact('user', 'layout'));
     }
 
     public function updateProfile(Request $request)

@@ -56,7 +56,7 @@
 
                                 <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="mobileProfileDropdown">
                                     <li>
-                                        <a href="#" class="dropdown-item">
+                                        <a href="{{ route('profile.show') }}" class="dropdown-item">
                                             <i class="bi bi-person me-2"></i> Profile
                                         </a>
                                     </li>
@@ -119,7 +119,7 @@
                     <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="desktopProfileDropdown">
                         @auth
                             <li>
-                                <a href="#" class="dropdown-item">
+                                <a href="{{ route('profile.show') }}" class="dropdown-item">
                                     <i class="bi bi-person me-2"></i> Profile
                                 </a>
                             </li>
