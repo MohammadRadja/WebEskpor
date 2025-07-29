@@ -14,6 +14,8 @@ use App\Http\Controllers\Shared\TransaksiController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Penjual\KontenController;
+use App\Http\Controllers\MessageController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -51,16 +53,23 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // routes/web.php
+    // Message
+    Route::prefix('messages')
+        ->name('message.')
+        ->group(function () {
+            Route::get('/', [MessageController::class, 'index'])->name('index');
+            Route::get('/read/{id}', [MessageController::class, 'read'])->name('read');
+            Route::get('/mark-all', [MessageController::class, 'markAllRead'])->name('markAllRead');
+        });
+
+    // Cart
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/add-to-cart', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/update-qty', [CartController::class, 'updateQuantity'])->name('cart.updateQty');
     Route::get('/checkout', [CartController::class, 'checkoutForm'])->name('checkout.form');
-
-
-
+    Route::post('/buy-now', [CartController::class, 'buyNow'])->name('cart.buyNow');
 
     // Profile
     Route::get('/dashboard/profile', [AuthController::class, 'showProfile'])->name('profile.show');

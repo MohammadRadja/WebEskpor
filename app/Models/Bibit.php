@@ -12,19 +12,7 @@ class Bibit extends Model
     protected $table = 'bibit';
 
     // Daftar kolom yang boleh diisi secara massal
-    protected $fillable = ['nama', 'tanggal_pembelian', 'nama_penjual', 'harga_satuan', 'jumlah', 'total_harga'];
-
-    public function getJumlahTerpakaiAttribute()
-    {
-        return $this->tanaman->sum(function ($t) {
-            return $t->petakKebun->sum('jumlah_tanaman');
-        });
-    }
-
-    public function getJumlahSisaAttribute()
-    {
-        return $this->jumlah - $this->jumlah_terpakai;
-    }
+    protected $fillable = ['id_tanaman', 'nama', 'tanggal_pembelian', 'nama_penjual', 'harga_satuan', 'jumlah'];
 
     // Membuat UUID secara otomatis saat membuat data baru
     protected static function boot()
@@ -36,6 +24,6 @@ class Bibit extends Model
     // Relasi ke tanaman
     public function tanaman()
     {
-        return $this->hasMany(Tanaman::class, 'id_bibit');
+        return $this->belongsTo(Tanaman::class, 'id_tanaman');
     }
 }

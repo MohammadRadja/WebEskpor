@@ -16,7 +16,10 @@ class Produk extends Model
     protected static function boot()
     {
         parent::boot();
-        static::creating(fn($model) => ($model->id = (string) Str::uuid()));
+
+        static::creating(function ($model) {
+        $model->id = (string) Str::uuid();
+    });
     }
 
     public function tanaman()
@@ -27,10 +30,5 @@ class Produk extends Model
     public function detailTransaksi()
     {
         return $this->hasMany(DetailTransaksi::class, 'id_produk');
-    }
-
-    public function produkEksternal()
-    {
-        return $this->hasMany(ProdukEksternal::class, 'id_produk');
     }
 }

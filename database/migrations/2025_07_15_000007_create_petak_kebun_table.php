@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('penanggung_jawab');
             $table->enum('status', ['aktif', 'non-aktif'])->default('aktif');
             $table->date('tanggal_tanam');
+            $table->date('tanggal_panen')->nullable();
             $table->integer('jumlah_tanaman')->nullable();
             $table->integer('jumlah_panen')->nullable();
             $table->timestamps();

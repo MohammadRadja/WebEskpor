@@ -35,7 +35,7 @@
                                 </form>
 
                                 {{-- Form Beli Sekarang --}}
-                                <form action="" method="POST">
+                                <form action="{{ route('cart.buyNow') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $item->id }}">
                                     <button type="submit" class="btn btn-primary w-100">Beli Sekarang</button>

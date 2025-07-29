@@ -14,17 +14,9 @@ class TanamanController extends Controller
     public function index()
     {
         try {
-            $tanaman = Tanaman::with('bibit')->get();
-            $bibitList = Bibit::all()
-                ->map(function ($b) {
-                    return [
-                        'value' => $b->id,
-                        'label' => $b->nama,
-                    ];
-                })
-                ->values();
+            $tanaman = Tanaman::all();
 
-            return view('dashboard.shared.tanaman', compact('tanaman', 'bibitList'));
+            return view('dashboard.shared.tanaman', compact('tanaman'));
         } catch (Exception $e) {
             return redirect()
                 ->back()
@@ -40,9 +32,8 @@ class TanamanController extends Controller
             $request->validate([
                 'nama' => 'required|string',
                 'jenis' => 'required|in:sayur,buah,rempah,lainnya',
-                'stok_panen' => 'nullable|integer',
-                'id_bibit' => 'required|exists:bibit,id',
-                'sumber_eksternal' => 'nullable|string|required_if:sumber,eksternal',
+                'stok_barang_jadi' => 'nullable|integer',
+                'stok_bibit' => 'nullable|integer',
             ]);
 
             $tanaman = Tanaman::create($request->only(['nama', 'jenis', 'stok_panen', 'id_bibit', 'sumber', 'sumber_eksternal']));
@@ -66,10 +57,8 @@ class TanamanController extends Controller
             $request->validate([
                 'nama' => 'required|string',
                 'jenis' => 'required|in:sayur,buah,rempah,lainnya',
-                'stok_panen' => 'nullable|integer',
-                'id_bibit' => 'required|exists:bibit,id',
-                'sumber' => 'required|in:internal,eksternal',
-                'sumber_eksternal' => 'nullable|string|required_if:sumber,eksternal',
+                'stok_barang_jadi' => 'nullable|integer',
+                'stok_bibit' => 'nullable|integer',
             ]);
 
             $tanaman = Tanaman::findOrFail($id);

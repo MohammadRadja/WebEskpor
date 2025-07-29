@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('produk_eksternal', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('id_produk');
+            $table->uuid('id_tanaman');
             $table->string('nama_supplier');
             $table->string('kontak');
             $table->enum('jenis_perjanjian', ['konsinyasi', 'pembelian-putus']);
@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->decimal('total_harga', 15, 2);
             $table->timestamps();
 
-            $table->foreign('id_produk')->references('id')->on('produk')->cascadeOnDelete();
+            $table->foreign('id_tanaman')->references('id')->on('tanaman')->cascadeOnDelete();
         });
     }
 

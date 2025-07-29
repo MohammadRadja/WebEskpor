@@ -15,11 +15,9 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('nama');
             $table->enum('jenis', ['sayur', 'buah', 'rempah', 'herbal', 'biji', 'kacang', 'umbi', 'hias']);
-            $table->uuid('id_bibit');
-            $table->string('sumber_eksternal')->nullable();
+            $table->integer('stok_bibit')->nullable();
+            $table->integer('stok_barang_jadi')->nullable();
             $table->timestamps();
-
-            $table->foreign('id_bibit')->references('id')->on('bibit')->cascadeOnDelete();
         });
     }
 
@@ -29,5 +27,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('tanaman');
+
     }
 };

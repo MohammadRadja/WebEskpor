@@ -3,32 +3,38 @@
 namespace App\Observers;
 
 use App\Models\Bibit;
-use App\Models\Tanaman;
-use App\Models\PetakKebun;
 
 class BibitObserver
 {
+
+    public function created(Bibit $bibit)
+    {
+        $tanaman = $bibit->tanaman;
+        if ($tanaman) {
+            $tanaman->stok_bibit += $bibit->jumlah;
+            $tanaman->save();
+        }
+    }
+
     public function updating(Bibit $bibit)
     {
-        if ($bibit->isDirty('jumlah')) {
-            $oldQty = $bibit->getOriginal('jumlah');
-            $newQty = $bibit->jumlah;
-            $selisih = $newQty - $oldQty;
+        // Ambil nilai lama jumlah sebelum update
+        $oldJumlah = $bibit->getOriginal('jumlah');
 
-            $tanaman = Tanaman::where('id_bibit', $bibit->id)->first();
+        $tanaman = $bibit->tanaman;
+        if ($tanaman) {
+            // Kurangi stok lama, lalu tambahkan stok baru
+            $tanaman->stok_bibit = ($tanaman->stok_bibit - $oldJumlah) + $bibit->jumlah;
+            $tanaman->save();
+        }
+    }
 
-            if (!$tanaman) {
-                return;
-            }
-
-            $petakKebun = PetakKebun::where('id_tanaman', $tanaman->id)->first();
-
-            if (!$petakKebun) {
-                return;
-            }
-
-            $petakKebun->jumlah_tanaman += $selisih;
-            $petakKebun->save();
+    public function deleted(Bibit $bibit)
+    {
+        $tanaman = $bibit->tanaman;
+        if ($tanaman) {
+            $tanaman->stok_bibit -= $bibit->jumlah;
+            $tanaman->save();
         }
     }
 }

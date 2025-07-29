@@ -22,7 +22,6 @@ class ProdukSeeder extends Seeder
         foreach (Tanaman::all() as $tanaman) {
             Produk::create([
                 'nama' => Str::title($tanaman->nama) . ' Organik',
-                'stok' => rand(100, 1000),
                 'harga' => rand(10000, 25000),
                 'deskripsi' => $deskripsi[array_rand($deskripsi)],
                 'gambar' => 'produk/' . Str::slug($tanaman->nama) . '.jpg',

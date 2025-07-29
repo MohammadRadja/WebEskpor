@@ -93,7 +93,8 @@
                             <div class="service-item-content">
                                 <h3 class="service-heading">Pembersihan Lahan</h3>
                                 <p>
-                                   Kami membersihkan lahan dengan teknik ramah lingkungan untuk memastikan kesiapan sebelum penanaman.
+                                    Kami membersihkan lahan dengan teknik ramah lingkungan untuk memastikan kesiapan sebelum
+                                    penanaman.
                                 </p>
                             </div>
                         </div>
@@ -186,144 +187,142 @@
                 </div>
             </div>
         </div>
-    </section><!-- /Services Section -->
-    <!-- Services 2 Section -->
-    <section id="services-2" class="services-2 section dark-background">
-        <!-- Section Title -->
-        <div class="container section-title" data-aos="fade-up">
+    </section>
 
+    <!-- Product Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Produk Kami</h2>
+                <p class="text-muted">Produk segar dan berkualitas setiap hari</p>
+            </div>
 
+            <div class="row">
+                @forelse ($product as $item)
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <img src="{{ asset('assets/img/default.png') }}" class="card-img-top"
+                                alt="{{ $item->nama }}" style="height: 180px; object-fit: cover;">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ $item->nama }}</h5>
+                                <p class="card-text text-muted small mb-2">
+                                    {{ $item->deskripsi ?? 'Deskripsi tidak tersedia.' }}</p>
+                                <ul class="list-unstyled small mb-3">
+                                    <li><strong>Harga:</strong> {{ rupiah($item->harga) }} / 500 Kg</li>
+                                    <li><strong>Stok:</strong> {{ format_stok($item->stok) }}</li>
+                                </ul>
 
-            <p>HASIL PERKEBUNAN KAMI</p>
-        </div><!-- End Section Title -->
-
-        <div class="services-carousel-wrap">
-            <div class="container">
-                <div class="swiper init-swiper">
-                    <script type="application/json" class="swiper-config">
-                    {
-                    "loop": true,
-                    "speed": 600,
-                    "autoplay": {
-                        "delay": 5000
-                    },
-                    "slidesPerView": "auto",
-                    "pagination": {
-                        "el": ".swiper-pagination",
-                        "type": "bullets",
-                        "clickable": true
-                    },
-                    "navigation": {
-                        "nextEl": ".js-custom-next",
-                        "prevEl": ".js-custom-prev"
-                    },
-                    "breakpoints": {
-                        "320": {
-                        "slidesPerView": 1,
-                        "spaceBetween": 40
-                        },
-                        "1200": {
-                        "slidesPerView": 3,
-                        "spaceBetween": 40
-                        }
-                    }
-                    }
-                </script>
-                    <button class="navigation-prev js-custom-prev">
-                        <i class="bi bi-arrow-left-short"></i>
-                    </button>
-                    <button class="navigation-next js-custom-next">
-                        <i class="bi bi-arrow-right-short"></i>
-                    </button>
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="service-item">
-                                <div class="service-item-contents">
-                                    <a href="#">
-                                        <span class="service-item-category">Kami Melakukan</span>
-                                        <h2 class="service-item-title">Menanam</h2>
-                                    </a>
-                                </div>
-                                <img src="{{ asset('assets/img/img_sq_1.jpg') }}" alt="Gambar" class="img-fluid">
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="service-item">
-                                <div class="service-item-contents">
-                                    <a href="#">
-                                        <span class="service-item-category">Kami Melakukan</span>
-                                        <h2 class="service-item-title">Menutup Tanah (Mulching)</h2>
-                                    </a>
-                                </div>
-                                <img src="{{ asset('assets/img/img_sq_3.jpg') }}" alt="Gambar" class="img-fluid">
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="service-item">
-                                <div class="service-item-contents">
-                                    <a href="#">
-                                        <span class="service-item-category">Kami Melakukan</span>
-                                        <h2 class="service-item-title">Menyiram</h2>
-                                    </a>
-                                </div>
-                                <img src="{{ asset('assets/img/img_sq_8.jpg') }}" alt="Gambar" class="img-fluid">
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="service-item">
-                                <div class="service-item-contents">
-                                    <a href="#">
-                                        <span class="service-item-category">Kami Melakukan</span>
-                                        <h2 class="service-item-title">Pemupukan</h2>
-                                    </a>
-                                </div>
-                                <img src="{{ asset('assets/img/img_sq_4.jpg') }}" alt="Gambar" class="img-fluid">
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="service-item">
-                                <div class="service-item-contents">
-                                    <a href="#">
-                                        <span class="service-item-category">Kami Melakukan</span>
-                                        <h2 class="service-item-title">Panen</h2>
-                                    </a>
-                                </div>
-                                <img src="{{ asset('assets/img/img_sq_5.jpg') }}" alt="Gambar" class="img-fluid">
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="service-item">
-                                <div class="service-item-contents">
-                                    <a href="#">
-                                        <span class="service-item-category">Kami Melakukan</span>
-                                        <h2 class="service-item-title">Memotong Rumput</h2>
-                                    </a>
-                                </div>
-                                <img src="{{ asset('assets/img/img_sq_6.jpg') }}" alt="Gambar" class="img-fluid">
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <div class="service-item">
-                                <div class="service-item-contents">
-                                    <a href="#">
-                                        <span class="service-item-category">Kami Melakukan</span>
-                                        <h2 class="service-item-title">Menyemai Tanaman</h2>
-                                    </a>
-                                </div>
-                                <img src="{{ asset('assets/img/img_sq_8.jpg') }}" alt="Gambar" class="img-fluid">
+                                {{-- Tombol Lihat Detail Produk --}}
+                                <a href="{{ url('/product') }}" class="btn btn-primary mt-auto w-100">
+                                    Lihat Detail
+                                </a>
                             </div>
                         </div>
                     </div>
+                @empty
+                    <div class="col-12 text-center text-muted">
+                        <p>Produk belum tersedia.</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
 
-                    <div class="swiper-pagination"></div>
+    <!-- Visi Misi -->
+    <section class="section py-5 bg-white">
+        <div class="container" data-aos="fade-up">
+            <div class="text-center mb-5">
+                <h2 class="content-title fw-bold">{{ $visiMisi->judul ?? '' }}</h2>
+                <p class="text-muted">{{ $visiMisi->kutipan ?? '' }}</p>
+            </div>
+
+            <!-- Visi -->
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-10" data-aos="fade-right" data-aos-delay="100">
+                    <div class="p-4 shadow-sm rounded bg-light border-start border-success border-5">
+                        <h4 class="fw-semibold text-success mb-3">Visi</h4>
+                        <p class="mb-0">{{ meta($visiMisi, 'visi') }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Misi -->
+            <div class="row justify-content-center">
+                <div class="col-lg-10" data-aos="fade-left" data-aos-delay="200">
+                    <div class="p-4 shadow-sm rounded bg-light border-start border-success border-5">
+                        <h4 class="fw-semibold text-success mb-3">Misi</h4>
+                        <ul class="list-unstyled ps-3">
+                            @foreach (meta($visiMisi, 'misi', []) as $item)
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span>{{ $item }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </section><!-- /Services 2 Section -->
+    </section>
+
+    <!-- Blog Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <!-- Judul Blog -->
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Berita & Artikel</h2>
+                <p class="text-muted">Update terbaru seputar kegiatan dan informasi menarik lainnya</p>
+            </div>
+
+            <div class="swipper" data-slider-id="blog-slider" data-per-page="3" data-rows="1">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        @forelse ($blog as $item)
+                            @php
+                                $isExternal = Str::startsWith($item->tautan, ['http://', 'https://']);
+                            @endphp
+
+                            <div class="swiper-slide">
+                                <div class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden">
+                                    <a href="{{ $item->tautan }}" class="text-decoration-none text-dark"
+                                        @if ($isExternal) target="_blank" rel="noopener noreferrer" @endif>
+                                        <img src="{{ asset_or_default('assets/img/blog/' . $item->gambar) }}"
+                                            class="card-img-top" style="height: 200px; object-fit: cover;"
+                                            alt="{{ $item->slug }}">
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="fw-semibold mb-2">{{ $item->kutipan }}</h5>
+                                            <p class="text-muted small mb-2">
+                                                <i class="bi bi-calendar"></i>
+                                                {{ format_tanggal($item->diterbitkan_pada) }}
+                                            </p>
+                                            <p class="card-text text-muted small flex-grow-1">
+                                                {{ Str::limit($item->konten, 100) }}</p>
+                                            <span class="text-primary mt-2 fw-semibold">Baca Selengkapnya →</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-12 text-center text-muted">
+                                <p>Tidak ada berita saat ini.</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- Navigasi Slider -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <button id="blog-prev" class="btn btn-outline-primary">
+                        <i class="bi bi-chevron-left"></i> Sebelumnya
+                    </button>
+                    <button id="blog-next" class="btn btn-outline-primary">
+                        Selanjutnya <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Indikator -->
+                <ul class="carousel-indicators-banner d-flex justify-content-center gap-2 mt-3 list-unstyled"></ul>
+            </div>
+        </div>
+    </section>
 @endsection

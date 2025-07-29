@@ -12,6 +12,7 @@
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
+        "mckenziearts/laravel-notify": "^2.7",
         "spatie/laravel-activitylog": "^4.10"
     },
     "require-dev": {

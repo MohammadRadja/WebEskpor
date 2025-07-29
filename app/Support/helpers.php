@@ -65,7 +65,7 @@ if (!function_exists('format_jumlah_tanam')) {
     {
         // Pastikan jumlah tidak null
         if (is_null($jumlah)) {
-            return '-';
+            return '0 tanaman';
         }
 
         // Format dengan ribuan

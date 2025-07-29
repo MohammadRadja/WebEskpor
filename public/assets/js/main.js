@@ -533,6 +533,185 @@
         }
     }
 
+    /** === CHART KEUANGAN === */
+    function initChartKeuangan() {
+        const chartEl = document.getElementById("chartKeuangan");
+        if (!chartEl) return;
+
+        const rawData = chartEl.dataset.chart;
+        if (!rawData) return;
+
+        let chartData;
+        try {
+            chartData = JSON.parse(rawData);
+        } catch (e) {
+            console.error("[Chart Error] Gagal parse data chart:", e);
+            return;
+        }
+
+        const labels = chartData.map((d) => d.bulan);
+        const pendapatan = chartData.map((d) => d.pendapatan);
+        const pengeluaran = chartData.map((d) => d.pengeluaran);
+        const bersih = chartData.map((d) => d.bersih);
+
+        const ctx = chartEl.getContext("2d");
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "Pendapatan",
+                        data: pendapatan,
+                        borderColor: "green",
+                        backgroundColor: "rgba(0,128,0,0.05)",
+                        fill: false,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                    },
+                    {
+                        label: "Pengeluaran",
+                        data: pengeluaran,
+                        borderColor: "red",
+                        backgroundColor: "rgba(255,0,0,0.05)",
+                        fill: false,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                    },
+                    {
+                        label: "Pendapatan Bersih",
+                        data: bersih,
+                        borderColor: "blue",
+                        backgroundColor: "rgba(0,0,255,0.05)",
+                        fill: false,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (ctx) {
+                                let val = ctx.raw ?? 0;
+                                return (
+                                    "Rp " + Number(val).toLocaleString("id-ID")
+                                );
+                            },
+                        },
+                    },
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: function (val) {
+                                return (
+                                    "Rp " + Number(val).toLocaleString("id-ID")
+                                );
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    }
+
+    /** === CHART PANEN & TANAMAN === */
+    function initChartPanenTanaman() {
+        const chartEl = document.getElementById("chartPanenTanaman");
+        if (!chartEl) return;
+
+        let chartData;
+        try {
+            chartData = JSON.parse(chartEl.dataset.chart);
+        } catch (e) {
+            console.error(
+                "[Chart Error] Gagal parse data chart Panen & Tanaman:",
+                e
+            );
+            return;
+        }
+
+        const labels = chartData.map((d) => d.bulan);
+        const dataPanen = chartData.map((d) => d.panen);
+        const dataEksternal = chartData.map((d) => d.eksternal);
+        const dataBibit = chartData.map((d) => d.bibit);
+
+        new Chart(chartEl.getContext("2d"), {
+            type: "line",
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: "Jumlah Panen",
+                        data: dataPanen,
+                        borderColor: "#28a745",
+                        backgroundColor: "rgba(40,167,69,0.2)",
+                        fill: false,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                    },
+                    {
+                        label: "Produk Eksternal",
+                        data: dataEksternal,
+                        borderColor: "#17a2b8",
+                        backgroundColor: "rgba(23,162,184,0.2)",
+                        fill: false,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                    },
+                    {
+                        label: "Stok Bibit",
+                        data: dataBibit,
+                        borderColor: "#ffc107",
+                        backgroundColor: "rgba(255,193,7,0.2)",
+                        fill: false,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (ctx) {
+                                let val = ctx.raw;
+                                if (
+                                    ctx.dataset.label.includes("Panen") ||
+                                    ctx.dataset.label.includes("Eksternal")
+                                ) {
+                                    return val >= 1000
+                                        ? (val / 1000).toFixed(2) + " ton"
+                                        : val + " kg";
+                                } else if (
+                                    ctx.dataset.label.includes("Bibit")
+                                ) {
+                                    return (
+                                        val.toLocaleString("id-ID") + " batang"
+                                    );
+                                }
+                                return val;
+                            },
+                        },
+                    },
+                },
+                scales: {
+                    y: { beginAtZero: true },
+                },
+            },
+        });
+    }
+
     /** === INIT ALL === */
     window.addEventListener("load", () => {
         toggleScrolled();
@@ -547,6 +726,8 @@
         initUniversalModal();
         initSummernote();
         initSidebarToggle();
+        initChartKeuangan();
+        initChartPanenTanaman();
     });
 
     document.addEventListener("scroll", toggleScrolled);

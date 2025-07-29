@@ -25,7 +25,8 @@
         "id_tanaman": {"label": "Tanaman", "type": "select", "options": "tanamanOptions"},
         "penanggung_jawab": {"label": "Penanggung Jawab"},
         "tanggal_tanam": {"label": "Tanggal Tanam", "type": "date"},
-        "jumlah_tanaman": {"label": "Jumlah Tanam"},
+        "tanggal_panen": {"label": "Tanggal Panen", "type": "date"},
+        "jumlah_tanaman": {"label": "Jumlah Tanaman"},
         "jumlah_panen": {"label": "Jumlah Panen"},
         "status": {"label": "Status", "type": "select", "options": ["aktif", "non-aktif"]}
     }'>
@@ -53,6 +54,7 @@
                                 <th>Tanaman</th>
                                 <th>Penanggung Jawab</th>
                                 <th>Tanggal Tanam</th>
+                                <th>Tanggal Panen</th>
                                 <th>Jumlah Tanam</th>
                                 <th>Jumlah Panen</th>
                                 <th>Status</th>
@@ -68,6 +70,7 @@
                                     <td>{{ $p->tanaman->nama ?? '-' }}</td>
                                     <td>{{ $p->penanggung_jawab }}</td>
                                     <td>{{ format_tanggal($p->tanggal_tanam) }}</td>
+                                    <td>{{ format_tanggal($p->tanggal_panen) }}</td>
                                     <td>{{ format_jumlah_tanam($p->jumlah_tanaman) }}</td>
                                     <td>{{ format_stok($p->jumlah_panen) }}</td>
                                     <td>
@@ -86,7 +89,8 @@
         "id_tanaman": {"label": "Tanaman", "value": "{{ $p->id_tanaman }}", "type": "select", "options": "tanamanOptions"},
         "penanggung_jawab": {"label": "Penanggung Jawab", "value": "{{ $p->penanggung_jawab }}"},
         "tanggal_tanam": {"label": "Tanggal Tanam", "value": "{{ $p->tanggal_tanam }}", "type": "date"},
-        "jumlah_tanaman": {"label": "Jumlah Tanam", "value": "{{ $p->jumlah_tanaman }}"},
+        "tanggal_panen": {"label": "Tanggal Panen", "value": "{{ $p->tanggal_panen }}", "type": "date"},
+        "jumlah_tanaman": {"label": "Jumlah Tanaman", "value": "{{ $p->jumlah_tanaman }}"},
         "jumlah_panen": {"label": "Jumlah Panen", "value": "{{ $p->jumlah_panen }}"},
         "status": {"label": "Status", "value": "{{ $p->status }}", "type": "select", "options": ["aktif", "non-aktif"]}
     }'>

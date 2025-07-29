@@ -18,16 +18,11 @@
                         'bg' => 'bg-primary text-white',
                     ],
                     [
-                        'label' => 'Total Produk Internal',
-                        'value' => $totalProduk,
-                        'icon' => 'fas fa-box',
+                        'label' => 'Total Produk',
+                        'value' => $totalProduk + $totalProdukEksternal,
+                        'sub' => "Internal: $totalProduk | Eksternal: $totalProdukEksternal",
+                        'icon' => 'fas fa-boxes',
                         'bg' => 'bg-info text-white',
-                    ],
-                    [
-                        'label' => 'Total Produk Eksternal',
-                        'value' => $totalProdukEksternal,
-                        'icon' => 'fas fa-cubes',
-                        'bg' => 'bg-warning text-white',
                     ],
                     [
                         'label' => 'Total Transaksi',
@@ -36,34 +31,11 @@
                         'bg' => 'bg-danger text-white',
                     ],
                     [
-                        'label' => 'Total Pendapatan',
-                        'value' => 'Rp' . number_format($totalPendapatan ?? 0, 0, ',', '.'),
-                        'icon' => 'fas fa-dollar-sign',
-                        'bg' => 'bg-success text-white',
-                    ],
-                    [
-                        'label' => 'Jumlah Kebun',
+                        'label' => 'Kebun & Petak',
                         'value' => $totalKebun,
+                        'sub' => "Kebun: $totalKebun | Petak Kebun: $totalPetak",
                         'icon' => 'fas fa-tree',
                         'bg' => 'bg-success-subtle text-success',
-                    ],
-                    [
-                        'label' => 'Jumlah Petak Kebun',
-                        'value' => $totalPetak,
-                        'icon' => 'fas fa-border-style',
-                        'bg' => 'bg-info-subtle text-info',
-                    ],
-                    [
-                        'label' => 'Jumlah Tanaman',
-                        'value' => $totalTanaman,
-                        'icon' => 'fas fa-seedling',
-                        'bg' => 'bg-warning-subtle text-warning',
-                    ],
-                    [
-                        'label' => 'Jumlah Bibit',
-                        'value' => $totalBibit,
-                        'icon' => 'fas fa-leaf',
-                        'bg' => 'bg-primary-subtle text-primary',
                     ],
                     [
                         'label' => 'Jumlah Konten',
@@ -71,8 +43,29 @@
                         'icon' => 'fas fa-newspaper',
                         'bg' => 'bg-danger-subtle text-danger',
                     ],
+                    [
+                        'label' => 'Jumlah Panen (Bulan Ini)',
+                        'value' => format_stok($totalPanen),
+                        'icon' => 'fas fa-tractor',
+                        'bg' => 'bg-success text-white',
+                    ],
+                    [
+                        'label' => 'Jumlah Bibit (Bulan Ini)',
+                        'value' => format_jumlah_tanam($totalBibit),
+                        'icon' => 'fas fa-leaf',
+                        'bg' => 'bg-primary-subtle text-primary',
+                    ],
+                    [
+                        'label' => 'Laba (Bulan Ini)',
+                        'value' => rupiah($totalPendapatan - $totalPengeluaran),
+                        'sub' =>
+                            'Pendapatan: ' . rupiah($totalPendapatan) . ' | Pengeluaran: ' . rupiah($totalPengeluaran),
+                        'icon' => 'fas fa-dollar-sign',
+                        'bg' => 'bg-success text-white',
+                    ],
                 ];
             @endphp
+
             @foreach ($statCards as $card)
                 <div class="col-md-4 col-lg-3 mb-3">
                     <div class="card {{ $card['bg'] }} h-100">
@@ -80,12 +73,37 @@
                             <div>
                                 <h4 class="mb-0">{{ $card['value'] }}</h4>
                                 <p class="mb-0">{{ $card['label'] }}</p>
+                                @if (isset($card['sub']))
+                                    <small>{{ $card['sub'] }}</small>
+                                @endif
                             </div>
                             <i class="{{ $card['icon'] }} fa-2x"></i>
                         </div>
                     </div>
                 </div>
             @endforeach
+        </div>
+
+        <!-- Chart Statistik Keuangan -->
+        <div class="card bg-white shadow-sm mb-4">
+            <div class="card-header bg-primary text-white fw-bold">
+                <i class="fas fa-chart-line me-2"></i> Statistik Keuangan (6 Bulan Terakhir)
+            </div>
+            <div class="card-body">
+                <canvas id="chartKeuangan" height="120" data-chart="{{ json_encode($chartData) }}">
+                </canvas>
+            </div>
+        </div>
+
+        <!-- Chart Panen & Tanaman -->
+        <div class="card bg-white shadow-sm mb-4">
+            <div class="card-header bg-warning text-dark fw-bold">
+                <i class="fas fa-seedling me-2"></i> Statistik Panen & Tanaman
+            </div>
+            <div class="card-body">
+                <canvas id="chartPanenTanaman" height="120" data-chart="{{ json_encode($chartPanenTanaman) }}">
+                </canvas>
+            </div>
         </div>
 
         <!-- Log Aktivitas -->
@@ -106,8 +124,8 @@
                     <tbody>
                         @forelse ($logs as $log)
                             <tr>
-                                <td>{{ \Carbon\Carbon::parse($log->created_at)->translatedFormat('d F Y') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($log->created_at)->format('H:i') }}</td>
+                                <td>{{ format_tanggal($log->created_at, 'd F Y') }}</td>
+                                <td>{{ format_tanggal($log->created_at, 'H:i') }}</td>
                                 <td>{{ $log->causer ?? 'System' }}</td>
                                 <td>{{ $log->description }}</td>
                             </tr>

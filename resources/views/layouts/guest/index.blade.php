@@ -5,6 +5,9 @@
 <body class="index-page overflow-x-hidden d-flex flex-column min-vh-100">
     @include('layouts.guest.navbar')
 
+    <!-- Notifikasi -->
+    @include('notify::components.notify')
+
     <main class="main flex-grow-1">
         @yield('content')
     </main>

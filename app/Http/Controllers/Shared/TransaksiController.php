@@ -9,9 +9,12 @@ use Illuminate\Validation\ValidationException;
 use App\Models\Transaksi;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use App\Services\DatabaseNotify;
 
 class TransaksiController extends Controller
 {
+    public function __construct(protected DatabaseNotify $notify) {}
+
     public function index()
     {
         try {
@@ -34,53 +37,60 @@ class TransaksiController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'telepon' => 'required|string',
-            'alamat' => 'required|string',
-            'negara' => 'required|string',
-            'biaya_pengiriman' => 'required|numeric|min:0',
-            'jumlah' => 'required|integer|min:1',
-            'total_harga' => 'required|numeric|min:0',
-            'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'status' => 'required|in:menunggu,dibayar,dikirim,selesai',
-            'id_pelanggan' => 'required|exists:users,id',
-            'checkout_items' => 'required',
-            'checkout_items.*' => 'required'
-        ]);
-
-        // Simpan bukti pembayaran
-        if ($request->hasFile('bukti_pembayaran') && $request->file('bukti_pembayaran')->isValid()) {
-            $file = $request->file('bukti_pembayaran');
-            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/bukti_pembayaran'), $filename);
-            $validated['bukti_pembayaran'] = 'uploads/bukti_pembayaran/' . $filename;
-        }
-
-        // Simpan transaksi utama
-        $transaksi = Transaksi::create($validated);
-
-        // Ambil item dari cart_items yang dipilih
-        $selectedItems = CartItem::with('produk')
-            ->whereIn('id', $validated['checkout_items'])
-            ->get();
-
-        foreach ($selectedItems as $item) {
-            $subtotal = $item->produk->harga * $item->quantity;
-            // Simpan detail transaksi
-            $transaksi->detailTransaksi()->create([
-                'id_produk' => $item->produk_id,
-                'jumlah' => $item->quantity,
-                'harga_satuan' => $item->produk->harga,
-                'sub_total' => $subtotal,
-
+        try {
+            $validated = $request->validate([
+                'telepon' => 'required|string',
+                'alamat' => 'required|string',
+                'negara' => 'required|string',
+                'biaya_pengiriman' => 'required|numeric|min:0',
+                'jumlah' => 'required|integer|min:1',
+                'total_harga' => 'required|numeric|min:0',
+                'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'status' => 'required|in:menunggu,proses,diterima,ditolak',
+                'id_pelanggan' => 'required|exists:users,id',
+                'checkout_items' => 'required',
+                'checkout_items.*' => 'required'
             ]);
 
-            // Hapus item dari keranjang
-            $item->delete();
-        }
+            if ($request->hasFile('bukti_pembayaran') && $request->file('bukti_pembayaran')->isValid()) {
+                $file = $request->file('bukti_pembayaran');
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/bukti_pembayaran'), $filename);
+                $validated['bukti_pembayaran'] = 'uploads/bukti_pembayaran/' . $filename;
+            }
 
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
+            $transaksi = Transaksi::create($validated);
+
+            $selectedItems = CartItem::with('produk')
+                ->whereIn('id', $validated['checkout_items'])
+                ->get();
+
+            foreach ($selectedItems as $item) {
+                $subtotal = $item->produk->harga * $item->quantity;
+
+                $transaksi->detailTransaksi()->create([
+                    'id_produk' => $item->produk_id,
+                    'jumlah' => $item->quantity,
+                    'harga_satuan' => $item->produk->harga,
+                    'sub_total' => $subtotal,
+                ]);
+
+                $item->delete();
+            }
+
+            $this->notify->success(
+                'Transaksi berhasil dibuat dan sedang menunggu verifikasi pembayaran.',
+                'Sukses',
+                $transaksi->id
+            );
+            return redirect()->route('message.index');
+
+        } catch (\Exception $e) {
+            $this->notify->withPopup()->error('Gagal menambahkan transaksi: '.$e->getMessage(), 'Error');
+            return back()->withInput();
+        }
     }
+
 
     public function update(Request $request, $id)
     {

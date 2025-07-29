@@ -15,11 +15,12 @@
                 <button class="btn btn-success" data-crud="add" data-url="{{ route('bibit.store') }}" data-method="POST"
                     data-title="Tambah Bibit"
                     data-fields='{
+        "id_tanaman": {"label": "Tanaman", "type": "select", "options": "tanamanList"},
         "nama": {"label": "Nama Bibit"},
         "tanggal_pembelian": {"label": "Tanggal Pembelian", "type": "date"},
         "nama_penjual": {"label": "Nama Penjual"},
         "harga_satuan": {"label": "Harga Satuan", "type": "number"},
-        "jumlah": {"label": "Jumlah", "type": "number"}
+        "jumlah": {"label": "Jumlah Bibit", "type": "number"}
     }'>
                     <i class="fas fa-plus"></i> Tambah Bibit
                 </button>
@@ -35,6 +36,7 @@
                     <table class="table table-hover mb-0">
                         <thead class="bg-light">
                             <tr>
+                                <th>Nama Tanaman</th>
                                 <th>Nama Bibit</th>
                                 <th>Tanggal Pembelian</th>
                                 <th>Nama Penjual</th>
@@ -47,15 +49,22 @@
                         <tbody>
                             @forelse($bibit as $b)
                                 <tr>
+                                    <td>{{ $b->tanaman->nama }}</td>
                                     <td>{{ $b->nama }}</td>
                                     <td>{{ format_tanggal($b->tanggal_pembelian) }}</td>
                                     <td>{{ $b->nama_penjual }}</td>
                                     <td>{{ rupiah($b->harga_satuan) }}</td>
-                                    <td>{{ format_jumlah_tanam($b->jumlah_sisa) }}</td>
+                                    <td>{{ format_jumlah_tanam($b->jumlah) }}</td>
                                     <td>{{ rupiah($b->harga_satuan * $b->jumlah) }}</td>
                                     <td class="text-center">
                                         @php
                                             $editFields = [
+                                                'id_tanaman' => [
+                                                    'label' => 'Tanaman',
+                                                    'type' => 'select',
+                                                    'options' => 'tanamanList',
+                                                    'value' => $b->tanaman->id,
+                                                ],
                                                 'nama' => [
                                                     'label' => 'Nama Bibit',
                                                     'value' => $b->nama,
@@ -109,3 +118,8 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        window.tanamanList = @json($tanamanList);
+    </script>
+@endpush

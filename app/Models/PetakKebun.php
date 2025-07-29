@@ -11,7 +11,7 @@ class PetakKebun extends Model
     protected $keyType = 'string';
     protected $table = 'petak_kebun';
 
-    protected $fillable = ['nama', 'ukuran', 'penanggung_jawab', 'status', 'id_kebun', 'id_tanaman', 'tanggal_tanam', 'jumlah_tanaman', 'jumlah_panen'];
+    protected $fillable = ['nama', 'ukuran', 'penanggung_jawab', 'status', 'id_kebun', 'id_tanaman', 'tanggal_tanam', 'tanggal_panen', 'jumlah_tanaman', 'jumlah_panen'];
 
     protected static function boot()
     {

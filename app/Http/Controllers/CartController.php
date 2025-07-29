@@ -7,22 +7,21 @@ use App\Models\CartItem;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class CartController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-
         $cart = $user->cart; // dapatkan cart milik user
 
         if (!$cart) {
-            return view('pages.cart', ['cartItems' => collect()]); // kosong
+            return view('pages.partials.cart', ['cartItems' => collect()]); // jika cart kosong
         }
 
         $cartItems = $cart->items()->with('produk')->get();
-        $cartid = $cart->items()->with('produk')->first();
-        return view('pages.cart', compact('cartItems'));
+        return view('pages.partials.cart', compact('cartItems'));
     }
 
     public function add(Request $request)
@@ -51,8 +50,8 @@ class CartController extends Controller
     public function updateQuantity(Request $request)
     {
         $validated = $request->validate([
-            'item_id' => 'required',
-            'quantity' => 'required'
+            'item_id' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
         ]);
 
         $cartItem = CartItem::findOrFail($validated['item_id']);
@@ -62,13 +61,12 @@ class CartController extends Controller
         return response()->json([
             'message' => 'Item updated successfully',
             'item_id' => $cartItem->id,
-            'new_quantity' => $cartItem->quantity
+            'new_quantity' => $cartItem->quantity,
         ]);
     }
 
     public function remove(Request $request)
     {
-
         $user = auth()->user();
         $cart = $user->cart;
 
@@ -79,27 +77,68 @@ class CartController extends Controller
         return back()->with('success', 'Produk dihapus dari keranjang!');
     }
 
-
     public function checkoutForm(Request $request)
     {
-        $userId = auth()->id();
-        $cart = Cart::where('user_id', $userId)->first();
+        try {
+            $userId = auth()->id();
+            $cart = Cart::where('user_id', $userId)->first();
 
-        $itemIds = explode(',', $request->query('items', '')); // dari query string
-        $cartItems = CartItem::with('produk')
-            ->where('cart_id', $cart->id)
-            ->whereIn('id', $itemIds)
-            ->get();
+            if (!$cart) {
+                return redirect()->route('cart.index')->with('error', 'Keranjang Anda kosong.');
+            }
 
-        $totalHarga = $cartItems->sum(fn($item) => $item->produk->harga * $item->quantity);
-        $totalJumlah = $cartItems->sum('quantity');
+            $itemIds = array_filter(explode(',', $request->query('items', '')));
+            if (empty($itemIds)) {
+                return redirect()->route('cart.index')->with('error', 'Tidak ada item yang dipilih untuk checkout.');
+            }
 
-        return view('pages.checkout', [
-            'cartItems' => $cartItems,
-            'totalHarga' => $totalHarga,
-            'totalJumlah' => $totalJumlah,
-        ]);
+            $cartItems = CartItem::with('produk')->where('cart_id', $cart->id)->whereIn('id', $itemIds)->get();
+
+            if ($cartItems->isEmpty()) {
+                return redirect()->route('cart.index')->with('error', 'Item yang dipilih tidak ditemukan.');
+            }
+
+            // Total Harga dan Jumlah Item
+            $totalHarga = $cartItems->sum(fn($item) => $item->produk->harga * $item->quantity);
+            $totalJumlah = $cartItems->sum('quantity');
+
+            // Total Berat
+            $totalBerat = $cartItems->sum(fn($item) => 500 * $item->quantity);
+
+            return view('pages.partials.checkout', compact('cartItems', 'totalHarga', 'totalBerat', 'totalJumlah'));
+        } catch (Exception $e) {
+            return redirect()
+                ->route('cart.index')
+                ->with('error', 'Gagal memuat halaman checkout: ' . $e->getMessage());
+        }
     }
 
-    
+    public function buyNow(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $produk = Produk::findOrFail($request->product_id);
+
+            // Buat data sementara untuk checkout (tidak disimpan di database)
+            $cartItems = collect([
+                (object) [
+                    'id' => 0, // karena bukan dari cart
+                    'produk' => $produk,
+                    'quantity' => 1,
+                ],
+            ]);
+
+            // Total Harga dan Jumlah Item
+            $totalHarga = $produk->harga;
+            $totalJumlah = 1;
+
+            // Total Berat
+            $totalBerat = 500;
+
+            // Kirim data langsung ke view checkout tanpa menggunakan cart
+            return view('pages.partials.checkout', compact('cartItems', 'totalHarga', 'totalBerat', 'totalJumlah'))->with('success', 'Lanjutkan ke checkout.');
+        } catch (Exception $e) {
+            return back()->with('error', 'Gagal memproses pembelian: ' . $e->getMessage());
+        }
+    }
 }

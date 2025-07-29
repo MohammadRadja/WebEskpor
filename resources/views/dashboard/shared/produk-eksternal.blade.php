@@ -18,7 +18,7 @@
                     data-fields='{
                         "nama_supplier": {"label": "Nama Supplier"},
                         "kontak": {"label": "Kontak"},
-                        "id_produk": {"label": "Produk" , "type": "select", "options": "produkList"},
+                        "id_tanaman": {"label": "Tanaman" , "type": "select", "options": "tanamanList"},
                         "jenis_perjanjian": {"label": "Jenis Perjanjian", "type": "select", "options": ["konsinyasi", "pembelian-putus"]},
                         "komisi": {"label": "Komisi (%)"},
                         "harga_satuan": {"label": "Harga Satuan"},
@@ -43,7 +43,7 @@
                             <tr>
                                 <th>Supplier</th>
                                 <th>Kontak</th>
-                                <th>Produk</th>
+                                <th>Tanaman</th>
                                 <th>Jenis Perjanjian</th>
                                 <th>Komisi (%)</th>
                                 <th>Harga Satuan</th>
@@ -58,7 +58,7 @@
                                 <tr>
                                     <td>{{ $pe->nama_supplier }}</td>
                                     <td>{{ $pe->kontak }}</td>
-                                    <td>{{ $pe->produk->nama ?? '-' }}</td>
+                                    <td>{{ $pe->tanaman->nama ?? '-' }}</td>
                                     <td>{{ ucwords(str_replace('-', ' ', $pe->jenis_perjanjian)) }}</td>
                                     <td>{{ $pe->komisi }}%</td>
                                     <td>{{ rupiah($pe->harga_satuan) }}</td>
@@ -72,7 +72,7 @@
                                             data-fields='{
                                                 "nama_supplier": {"label": "Nama Supplier", "value": "{{ $pe->nama_supplier }}"},
                                                 "kontak": {"label": "Kontak", "value": "{{ $pe->kontak }}"},
-                                                "id_produk": {"label": "Produk", "value": "{{ $pe->id_produk }}", "type": "select", "options": "produkList"},
+                                                "id_tanaman": {"label": "Tanaman", "value": "{{ $pe->id_tanaman }}", "type": "select", "options": "tanamanList"},
                                                 "jenis_perjanjian": {"label": "Jenis Perjanjian", "value": "{{ $pe->jenis_perjanjian }}", "type": "select", "options": ["konsinyasi", "pembelian-putus"]},
                                                 "komisi": {"label": "Komisi (%)", "value": "{{ $pe->komisi }}"},
                                                 "harga_satuan": {"label": "Harga Satuan", "value": "{{ $pe->harga_satuan }}"},
@@ -105,6 +105,6 @@
 @endsection
 @push('scripts')
     <script>
-        window.produkList = @json($produkList);
+        window.tanamanList = @json($tanamanList);
     </script>
 @endpush

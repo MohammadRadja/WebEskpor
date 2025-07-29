@@ -18,11 +18,11 @@
                     data-url="{{ route('tanaman.store') }}"
                     data-fields='{
         "nama": {"label": "Nama Tanaman"},
-        "id_bibit": {"label": "Nama Bibit", "type": "select", "options": "bibitOptions"},
         "jenis": {"label": "Jenis", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]}
     }'>
                     <i class="fas fa-plus me-1"></i> Tambah Tanaman
                 </button>
+
             </div>
         </div>
 
@@ -37,7 +37,8 @@
                             <tr>
                                 <th>Nama Tanaman</th>
                                 <th>Jenis</th>
-                                <th>Asal Bibit</th>
+                                <th>Stok Barang Jadi</th>
+                                <th>Stok Bibit</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -46,17 +47,16 @@
                                 <tr>
                                     <td>{{ $t->nama }}</td>
                                     <td>{{ ucfirst($t->jenis) }}</td>
-                                    <td>{{ $t->bibit->nama_penjual ?? '-' }}</td>
+                                    <td>{{ format_stok($t->stok_barang_jadi) }}</td>
+                                    <td>{{ format_jumlah_tanam($t->stok_bibit) }}</td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-outline-success me-1" data-crud="edit"
                                             data-title="Edit Tanaman" data-method="PATCH"
                                             data-url="{{ route('tanaman.update', $t->id) }}"
                                             data-fields='{
-                                                "nama": {"label": "Nama Tanaman", "value": "{{ $t->nama }}"},
-                                                "jenis": {"label": "Jenis", "value": "{{ $t->jenis }}", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]},
-                                                "stok_panen": {"label": "Stok Panen", "value": "{{ $t->stok_panen }}", "type": "number"},
-                                                "id_bibit": {"label": "Asal Bibit", "value": "{{ $t->id_bibit }}", "type": "select", "options": "bibitOptions"}
-                                            }'>
+                        "nama": {"label": "Nama Tanaman", "value": "{{ $t->nama }}"},
+                        "jenis": {"label": "Jenis", "value": "{{ $t->jenis }}", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]}
+                    }'>
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger" data-crud="delete"
@@ -78,8 +78,3 @@
         </div>
     </div>
 @endsection
-@push('scripts')
-    <script>
-        window.bibitOptions = @json($bibitList);
-    </script>
-@endpush

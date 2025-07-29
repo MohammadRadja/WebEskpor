@@ -12,47 +12,11 @@ class PageController extends Controller
     public function index()
     {
         $konten = Konten::where('jenis', 'komponen')->get()->keyBy('judul');
+        $product = Produk::take(4)->get();
+        $visiMisi = $konten->get('Visi & Misi');
+        $blog = Konten::where('jenis', 'artikel')->get();
 
-        // Ambil carousel
-        $carousel = $konten->get('Carousel');
-
-        $meta = json_decode($carousel->meta ?? '[]', true);
-        $media = json_decode($carousel->media ?? '[]', true);
-
-        $carouselItems = [];
-        foreach ($meta as $i => $item) {
-            $item['media'] = $media[$i] ?? null;
-            $carouselItems[] = $item;
-        }
-
-        // Ambil SERVICES
-        $services = $konten->get('SERVICES');
-        $metaService = json_decode($services->meta ?? '[]', true);
-        $mediaService = json_decode($services->media ?? '[]', true);
-
-        $serviceItems = [];
-        foreach ($metaService as $i => $item) {
-            $item['media'] = $mediaService[$i] ?? null;
-            $serviceItems[] = $item;
-        }
-
-        // Ambil HASIL PERKEBUNAN
-        $hasilPerkebunan = $konten->get('Hasil Perkebunan');
-        $metaPerkebunan = json_decode($hasilPerkebunan->meta ?? '[]', true);
-        $mediaPerkebunan = json_decode($hasilPerkebunan->media ?? '[]', true);
-
-        $perkebunanItems = [];
-        foreach ($metaPerkebunan as $i => $item) {
-            $item['media'] = $mediaPerkebunan[$i] ?? null;
-            $perkebunanItems[] = $item;
-        }
-        return view('pages.index', [
-            'serviceItems' => $serviceItems,
-            'carouselItems' => $carouselItems,
-            'service' => $konten->get('SERVICES'),
-            'perkebunanItems' => $perkebunanItems,
-            'perkebunan' => $hasilPerkebunan,
-        ]);
+        return view('pages.index', compact('product', 'visiMisi', 'blog'));
     }
 
     public function about()

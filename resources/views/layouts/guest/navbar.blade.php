@@ -92,11 +92,22 @@
             <!-- ICONS - Desktop Only -->
             <div class="d-none d-lg-flex align-items-center gap-3 ms-3">
                 @auth
-                    <a href="{{ url('/messages') }}" class="position-relative text-dark">
+                    <a href="{{ route('message.index') }}" class="position-relative text-dark">
                         <i class="bi bi-envelope fs-5"></i>
+                        @if ($unreadCount > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ $unreadCount }}
+                            </span>
+                        @endif
                     </a>
+
                     <a href="{{ url('/cart') }}" class="position-relative text-dark">
                         <i class="bi bi-cart3 fs-5"></i>
+                        @if ($cartCount > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                                {{ $cartCount }}
+                            </span>
+                        @endif
                     </a>
                 @endauth
 

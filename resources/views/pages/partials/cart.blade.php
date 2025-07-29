@@ -16,17 +16,6 @@
                     </div>
                 </div>
 
-                <!-- Success Alert -->
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-check-circle-fill fs-5 me-2"></i>
-                            <span>{{ session('success') }}</span>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 @if ($cartItems->isEmpty())
                     <!-- Empty Cart State -->
                     <div class="card border-0 shadow-sm">
@@ -61,7 +50,7 @@
                                 @endphp
                                 <div class="cart-item border-bottom" data-item-id="{{ $item->id }}"
                                     data-price="{{ $item->produk->harga }}">
-                                    <div class="row align-items-center p-4 d-flex">
+                                    <div class="row align-items-center p-4 d-flex flex-wrap">
                                         <!-- Checkbox -->
                                         <div class="col-md-1 col-2">
                                             <div class="form-check">
@@ -87,23 +76,19 @@
                                         <!-- Price -->
                                         <div class="col-md-2 col-6 text-center">
                                             <label class="form-label small text-muted mb-1">Harga</label>
-                                            <div class="fw-bold text-dark">
-                                                {{ rupiah($item->produk->harga) }} / 500 Kg
-                                            </div>
+                                            <div class="fw-bold text-dark">{{ rupiah($item->produk->harga) }} / 500 Kg</div>
                                         </div>
 
                                         <!-- Quantity -->
                                         <div class="col-md-2 col-6">
                                             <label class="form-label small text-muted mb-1">Jumlah</label>
                                             <div class="input-group input-group-sm">
-                                                <button class="btn btn-outline-secondary qty-btn qty-minus" type="button">
-                                                    <i class="bi bi-dash"></i>
-                                                </button>
+                                                <button class="btn btn-outline-secondary qty-btn qty-minus"
+                                                    type="button"><i class="bi bi-dash"></i></button>
                                                 <input type="number" class="form-control text-center quantity-input"
                                                     value="{{ $item->quantity }}" min="1" readonly>
-                                                <button class="btn btn-outline-secondary qty-btn qty-plus" type="button">
-                                                    <i class="bi bi-plus"></i>
-                                                </button>
+                                                <button class="btn btn-outline-secondary qty-btn qty-plus" type="button"><i
+                                                        class="bi bi-plus"></i></button>
                                             </div>
                                         </div>
 
@@ -111,29 +96,25 @@
                                         <div class="col-md-1 col-6 text-center">
                                             <label class="form-label small text-muted mb-1">Berat</label>
                                             <div class="fw-bold text-primary berat" data-base-weight="500">
-                                                {{ format_stok(500 * $item->quantity) }}
-                                            </div>
+                                                {{ format_stok(500 * $item->quantity) }}</div>
                                         </div>
 
-                                        <!-- Subtotal -->
-                                        <div class="col-md-2 col-6 text-center">
-                                            <label class="form-label small text-muted mb-1">Subtotal</label>
-                                            <div class="fw-bold text-primary subtotal">
-                                                {{ rupiah($subtotal) }}
+                                        <!-- Subtotal + Trash (Flexbox) -->
+                                        <div class="col-md-2 col-6 d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="form-label small text-muted mb-1">Subtotal</label>
+                                                <div class="fw-bold text-primary subtotal">{{ rupiah($subtotal) }}</div>
                                             </div>
+                                            <form action="{{ route('cart.remove') }}" method="POST"
+                                                onsubmit="return confirm('Yakin ingin menghapus barang ini dari keranjang?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="product_id" value="{{ $item->produk_id }}">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Hapus">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
                                         </div>
-
-                                        <!-- Actions -->
-                                        <form action="{{ route('cart.remove') }}" class=" w-auto" method="POST"
-                                            onsubmit="return confirm('Yakin ingin menghapus barang ini dari keranjang?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="product_id" value="{{ $item->produk_id }}">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                title="Hapus dari keranjang">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
                                     </div>
                                 </div>
                             @endforeach
@@ -165,11 +146,6 @@
                                         <span class="fw-semibold" id="subtotal-amount">Rp 0</span>
                                     </div>
 
-                                    <div class="d-flex justify-content-between mb-3">
-                                        <span class="text-muted">Ongkos Kirim:</span>
-                                        <span class="text-success fw-semibold">Gratis</span>
-                                    </div>
-
                                     <hr class="my-3">
 
                                     <div class="d-flex justify-content-between mb-4">
@@ -193,6 +169,30 @@
                         </div>
                     </div>
                 @endif
+            </div>
+        </div>
+
+        <!-- Modal Konfirmasi Delete -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="deleteModalLabel"><i class="bi bi-trash"></i> Konfirmasi Hapus</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Apakah Anda yakin ingin menghapus item ini dari keranjang?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <form id="deleteForm" method="POST" action="">
+                            @csrf
+                            @method('DELETE')
+                            <input type="hidden" name="product_id" id="deleteProductId">
+                            <button type="submit" class="btn btn-danger">Hapus</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -353,6 +353,7 @@
                 }
                 return kg.toLocaleString('id-ID') + ' kg';
             };
+
             const updateItemWeight = (cartItem) => {
                 const baseWeight = parseInt(cartItem.querySelector('.berat').dataset.baseWeight);
                 const quantity = parseInt(cartItem.querySelector('.quantity-input').value);
@@ -459,7 +460,6 @@
 
 
             document.getElementById('checkout-btn').addEventListener('click', function(event) {
-                console.log("test");
                 const form = document.getElementById('checkout-form');
 
                 // Hapus input lama

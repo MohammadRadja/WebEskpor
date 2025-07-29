@@ -36,7 +36,10 @@ class ProdukController extends Controller
                 'gambar' => 'nullable|image|max:2048',
             ]);
 
-            $data = $request->only(['nama', 'id_tanaman', 'stok', 'harga', 'deskripsi']);
+            $data = $request->only(['nama', 'id_tanaman', 'harga', 'deskripsi']);
+            if ($request->filled('stok')) {
+                $data['stok'] = $request->stok;
+            }
             $data['id'] = Str::uuid();
 
             if ($request->hasFile('gambar')) {

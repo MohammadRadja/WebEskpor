@@ -12,7 +12,7 @@ class ProdukEksternal extends Model
     protected $table = 'produk_eksternal';
 
     protected $fillable = [
-        'nama_supplier', 'kontak', 'id_produk',
+        'nama_supplier', 'kontak', 'id_tanaman',
         'jenis_perjanjian', 'komisi', 'harga_satuan',
         'jumlah', 'tanggal_pembelian', 'total_harga'
     ];
@@ -23,8 +23,8 @@ class ProdukEksternal extends Model
         static::creating(fn ($model) => $model->id = (string) Str::uuid());
     }
 
-    public function produk()
+    public function tanaman()
     {
-        return $this->belongsTo(Produk::class, 'id_produk');
+        return $this->belongsTo(Tanaman::class, 'id_tanaman');
     }
 }

@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('bibit', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('id_tanaman');
             $table->string('nama');
             $table->date('tanggal_pembelian');
             $table->string('nama_penjual');
             $table->decimal('harga_satuan', 10, 2);
             $table->integer('jumlah');
+
             $table->timestamps();
+            $table->foreign('id_tanaman')->references('id')->on('tanaman')->onDelete('cascade');
         });
     }
 

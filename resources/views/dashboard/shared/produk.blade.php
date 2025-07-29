@@ -5,7 +5,7 @@
     <div class="container-fluid py-4">
         <div class="d-flex justify-content-between mb-4">
             <div>
-                <h2 class="text-success fw-bold"><i class="fas fa-box me-2"></i>Produk</h2>
+                <h2 class="text-success fw-bold"><i class="fas fa-box me-2"></i>Kelola Produk</h2>
                 <p class="text-muted mb-0">Daftar produk hasil panen</p>
             </div>
             <div>

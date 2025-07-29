@@ -3,43 +3,73 @@
 namespace App\Observers;
 
 use App\Models\PetakKebun;
-use App\Models\Produk;
+use App\Models\Tanaman;
 
 class PetakKebunObserver
 {
     public function created(PetakKebun $petakKebun)
     {
-        $this->syncProdukStok($petakKebun->id_tanaman);
+        if (!is_null($petakKebun->jumlah_tanaman) && $petakKebun->jumlah_tanaman > 0) {
+            $this->kurangiStokBibit($petakKebun->id_tanaman, $petakKebun->jumlah_tanaman);
+        }
+
+        $this->updateStokTanaman($petakKebun->id_tanaman);
     }
 
     public function updated(PetakKebun $petakKebun)
     {
-        // Jika jumlah_panen berubah atau status berubah, sinkronisasi stok
+        if ($petakKebun->wasChanged('jumlah_tanaman')) {
+            $originalJumlah = $petakKebun->getOriginal('jumlah_tanaman') ?? 0;
+            $newJumlah = $petakKebun->jumlah_tanaman ?? 0;
+
+            $selisih = $newJumlah - $originalJumlah;
+            if ($selisih > 0) {
+                $this->kurangiStokBibit($petakKebun->id_tanaman, $selisih);
+            }
+        }
+
         if ($petakKebun->wasChanged('jumlah_panen') || $petakKebun->wasChanged('status')) {
-            $this->syncProdukStok($petakKebun->id_tanaman);
+            $this->updateStokTanaman($petakKebun->id_tanaman);
         }
     }
 
     public function deleted(PetakKebun $petakKebun)
     {
-        $this->syncProdukStok($petakKebun->id_tanaman);
+        if (!is_null($petakKebun->jumlah_tanaman) && $petakKebun->jumlah_tanaman > 0) {
+            $this->tambahStokBibit($petakKebun->id_tanaman, $petakKebun->jumlah_tanaman);
+        }
+
+        $this->updateStokTanaman($petakKebun->id_tanaman);
     }
 
     public function restored(PetakKebun $petakKebun)
     {
-        $this->syncProdukStok($petakKebun->id_tanaman);
+        $this->updateStokTanaman($petakKebun->id_tanaman);
     }
 
-    private function syncProdukStok(string $idTanaman): void
+    private function updateStokTanaman(string $idTanaman): void
     {
-        // Hitung total panen untuk tanaman ini
-        $totalPanen = PetakKebun::where('id_tanaman', $idTanaman)->sum('jumlah_panen');
+        $tanaman = Tanaman::find($idTanaman);
+        if ($tanaman) {
+            $tanaman->sinkronisasiStokBarangJadi();
+        }
+    }
 
-        // Update semua produk yang menggunakan tanaman ini
-        $produkList = Produk::where('id_tanaman', $idTanaman)->get();
+    private function kurangiStokBibit(string $idTanaman, int $jumlah): void
+    {
+        $tanaman = Tanaman::find($idTanaman);
+        if ($tanaman) {
+            $tanaman->stok_bibit = max(0, ($tanaman->stok_bibit ?? 0) - $jumlah);
+            $tanaman->save();
+        }
+    }
 
-        foreach ($produkList as $produk) {
-            $produk->update(['stok' => $totalPanen]);
+    private function tambahStokBibit(string $idTanaman, int $jumlah): void
+    {
+        $tanaman = Tanaman::find($idTanaman);
+        if ($tanaman) {
+            $tanaman->stok_bibit = ($tanaman->stok_bibit ?? 0) + $jumlah;
+            $tanaman->save();
         }
     }
 }

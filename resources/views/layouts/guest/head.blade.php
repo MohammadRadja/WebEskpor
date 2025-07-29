@@ -33,4 +33,5 @@
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     @stack('styles')
+    @notifyCss
 </head>

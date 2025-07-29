@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Tanaman;
 use App\Models\Bibit;
 use App\Exports\BibitExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -13,12 +14,18 @@ class BibitController extends Controller
     public function index()
     {
         $bibit = Bibit::latest()->get();
-        return view('dashboard.shared.bibit', compact('bibit'));
+        $tanamanList = Tanaman::all()->map(fn($p) => [
+            'value' => $p->id,
+            'label' => $p->nama
+        ])->values();
+        return view('dashboard.shared.bibit', compact('bibit', 'tanamanList'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'id_tanaman' => 'required|exists:tanaman,id',
+            'nama' => 'required|string',
             'tanggal_pembelian' => 'required|date',
             'nama_penjual' => 'required|string',
             'harga_satuan' => 'required|numeric',
@@ -34,6 +41,8 @@ class BibitController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
+            'id_tanaman' => 'required|exists:tanaman,id',
+            'nama' => 'required|string',
             'tanggal_pembelian' => 'required|date',
             'nama_penjual' => 'required|string',
             'harga_satuan' => 'required|numeric',
