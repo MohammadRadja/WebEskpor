@@ -4,7 +4,7 @@
         overflow-y: auto;
     }
 </style>
-<div id="layoutSidenav_nav">
+<div id="layoutSidenav_nav" class="position-fixed">
     <nav class="sb-sidenav border-end border-light d-flex flex-column mt-5" id="sidenavAccordion">
         {{-- Bagian Konten Utama Menu --}}
         <div class="sb-sidenav-menu px-3 py-4 flex-grow-1 position-fixed">

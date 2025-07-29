@@ -21,6 +21,7 @@ class CartController extends Controller
         }
 
         $cartItems = $cart->items()->with('produk')->get();
+        
         return view('pages.partials.cart', compact('cartItems'));
     }
 
