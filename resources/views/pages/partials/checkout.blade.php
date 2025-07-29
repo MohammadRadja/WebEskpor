@@ -1,5 +1,5 @@
 @extends('layouts.guest.index')
-@section('title', 'Form Pemesanan -PT.RAJAWALI PRIMA ANDALAS')
+@section('title', 'Form Pemesanan - PT.RAJAWALI PRIMA ANDALAS')
 @section('content')
     <div class="container py-4">
         <div class="row justify-content-center">
@@ -14,7 +14,7 @@
             @endif
 
             <div class="col-md-8">
-                <h2 class="mb-4 text-succes">Form Pemesanan</h2>
+                <h2 class="mb-4 text-success">Form Pemesanan</h2>
 
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -23,15 +23,12 @@
                             <h5>Daftar Produk:</h5>
                             <ul>
                                 @foreach ($cartItems as $item)
-                                    <li>
-                                        {{ $item->produk->nama }} ({{ $item->quantity }}) -
-                                        {{ rupiah($item->produk->harga) }}
-                                    </li>
-
-                                    <!-- Kirim ID cart item agar bisa diproses di TransaksiController -->
+                                    <li>{{ $item->produk->nama }} ({{ $item->quantity }}) -
+                                        {{ rupiah($item->produk->harga) }}</li>
                                     <input type="hidden" name="checkout_items[]" value="{{ $item->id }}">
                                 @endforeach
                             </ul>
+
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Nomor Telepon</label>
@@ -61,39 +58,40 @@
                                 <div class="col-md-4">
                                     <label class="form-label">Total Berat</label>
                                     <input type="text" name="total_berat" class="form-control"
-                                        value="{{ $totalBerat }} kg" readonly>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Jenis Pengiriman</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">Rp</span>
-                                        <input type="number" name="biaya_pengiriman" class="form-control" min="0"
-                                            required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Total Harga</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">Rp</span>
-                                        <input type="number" name="total_harga" class="form-control" min="0"
-                                            value="{{ $totalHarga }}" readonly required>
-                                    </div>
+                                        value="{{ format_stok($totalBerat) }}" readonly>
                                 </div>
                             </div>
 
-                            <div class="mb-4">
-                                <label class="form-label">Bukti Pembayaran</label>
-                                <input type="file" name="bukti_pembayaran" class="form-control"
-                                    accept=".jpg,.jpeg,.png,.pdf">
-                                <div class="form-text">Format: JPG, PNG, PDF</div>
+                            <div class="mb-3">
+                                <label class="form-label">Jenis Pengiriman</label>
+                                <select name="jenis_pengiriman" class="form-select" required>
+                                    <option value="ditanggung_pembeli">Ditanggung Pembeli</option>
+                                    <option value="ditanggung_penjual">Ditanggung Penjual</option>
+                                    <option value="ditanggung_bersama">Ditanggung Bersama</option>
+                                </select>
                             </div>
 
-                            <input type="hidden" name="status" value="menunggu">
+                            <div class="mb-3">
+                                <label class="form-label">Total Harga <small class="text-muted">*Belum Termasuk
+                                        Ongkir</small></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="number" name="total_harga" class="form-control"
+                                        value="{{ $totalHarga }}" readonly>
+                                </div>
+                                <small class="text-danger">
+                                    *Catatan: Total harga di atas <b>belum termasuk biaya pengiriman</b>.
+                                    Admin akan mengkonfirmasi biaya pengiriman dan mengirimkan nomor resi setelah pesanan
+                                    diproses.
+                                </small>
+                            </div>
+
+                            <input type="hidden" name="no_resi" value="">
                             <input type="hidden" name="id_pelanggan" value="{{ auth()->user()->id }}">
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary">Proses Pesanan</button>
-                                <a href="" class="btn btn-outline-secondary">Kembali</a>
+                                <a href="{{ route('cart.index') }}" class="btn btn-outline-secondary">Kembali</a>
                             </div>
                         </form>
                     </div>

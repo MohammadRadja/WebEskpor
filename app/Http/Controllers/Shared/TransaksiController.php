@@ -45,19 +45,13 @@ class TransaksiController extends Controller
                 'biaya_pengiriman' => 'required|numeric|min:0',
                 'jumlah' => 'required|integer|min:1',
                 'total_harga' => 'required|numeric|min:0',
-                'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'jenis_pengiriman' => 'required|in:ditanggung_pembeli,ditanggung_penjual,ditanggung_bersama',
+                'no_resi' => 'nullable|string',
                 'status' => 'required|in:menunggu,proses,diterima,ditolak',
                 'id_pelanggan' => 'required|exists:users,id',
                 'checkout_items' => 'required',
                 'checkout_items.*' => 'required'
             ]);
-
-            if ($request->hasFile('bukti_pembayaran') && $request->file('bukti_pembayaran')->isValid()) {
-                $file = $request->file('bukti_pembayaran');
-                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('uploads/bukti_pembayaran'), $filename);
-                $validated['bukti_pembayaran'] = 'uploads/bukti_pembayaran/' . $filename;
-            }
 
             $transaksi = Transaksi::create($validated);
 
@@ -74,7 +68,7 @@ class TransaksiController extends Controller
                     'harga_satuan' => $item->produk->harga,
                     'sub_total' => $subtotal,
                 ]);
-                
+
                 $item->produk->stok -= $subquantity;
                 $item->produk->save();
 
@@ -95,50 +89,42 @@ class TransaksiController extends Controller
 
 
     public function update(Request $request, $id)
-    {
-        try {
-            $validated = $request->validate([
-                'telepon' => 'required|string',
-                'alamat' => 'required|string',
-                'negara' => 'required|string',
-                'biaya_pengiriman' => 'required|numeric|min:0',
-                'jumlah' => 'required|integer|min:1',
-                'total_harga' => 'required|numeric|min:0',
-                'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-                'status' => 'required|in:menunggu,dibayar,dikirim,selesai',
-                'id_pelanggan' => 'required|exists:users,id',
-            ]);
+{
+    try {
+        $validated = $request->validate([
+            'telepon' => 'required|string',
+            'alamat' => 'required|string',
+            'negara' => 'required|string',
+            'biaya_pengiriman' => 'required|numeric|min:0',
+            'jumlah' => 'required|integer|min:1',
+            'total_harga' => 'required|numeric|min:0',
+            'jenis_pengiriman' => 'required|in:ditanggung_pembeli,ditanggung_penjual,ditanggung_bersama',
+            'no_resi' => 'nullable|string',
+            'status' => 'required|in:menunggu,proses,diterima,ditolak',
+            'id_pelanggan' => 'required|exists:users,id',
+        ]);
 
-            $transaksi = Transaksi::findOrFail($id);
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->update($validated);
 
-            if ($request->hasFile('bukti_pembayaran') && $request->file('bukti_pembayaran')->isValid()) {
-                $file = $request->file('bukti_pembayaran');
-                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('uploads/bukti_pembayaran'), $filename);
-                $validated['bukti_pembayaran'] = 'uploads/bukti_pembayaran/' . $filename;
-            }
-
-            $transaksi->update($validated);
-
-            if ($request->ajax()) {
-                return response()->json(['message' => 'Berhasil diperbarui']);
-            }
-
-            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
-        } catch (ValidationException $e) {
-            if ($request->ajax()) {
-                return response()->json(['errors' => $e->errors()], 422);
-            }
-
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json(['error' => 'Terjadi kesalahan saat memperbarui transaksi.'], 500);
-            }
-
-            return redirect()->back()->with('error', 'Gagal memperbarui transaksi.');
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Transaksi berhasil diperbarui']);
         }
+
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
+    } catch (ValidationException $e) {
+        if ($request->ajax()) {
+            return response()->json(['errors' => $e->errors()], 422);
+        }
+        return redirect()->back()->withErrors($e->errors())->withInput();
+    } catch (\Exception $e) {
+        if ($request->ajax()) {
+            return response()->json(['error' => 'Terjadi kesalahan saat memperbarui transaksi.'], 500);
+        }
+        return redirect()->back()->with('error', 'Gagal memperbarui transaksi.' . $e->getMessage());
     }
+}
+
 
     public function destroy(Request $request, $id)
     {

@@ -51,9 +51,9 @@ if (!function_exists('format_stok')) {
     function format_stok($jumlah): string
     {
         if ($jumlah >= 1000) {
-            // Konversi ke ton (1 ton = 1000 kg)
             $nilai = $jumlah / 1000;
-            return number_format($nilai, 0, ',', '.') . ' ton';
+            $formatted = rtrim(rtrim(number_format($nilai, 1, ',', '.'), '0'), ',');
+            return $formatted . ' ton';
         }
 
         return number_format($jumlah, 0, ',', '.') . ' kg';

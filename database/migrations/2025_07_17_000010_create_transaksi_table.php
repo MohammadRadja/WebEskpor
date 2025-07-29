@@ -17,10 +17,15 @@ return new class extends Migration
             $table->string('telepon');
             $table->text('alamat');
             $table->string('negara');
-            $table->decimal('biaya_pengiriman', 12, 2)->default(0);
+            $table->decimal('biaya_pengiriman', 12, 2)->nullable();
             $table->integer('jumlah');
             $table->decimal('total_harga', 15, 2);
-            $table->string('bukti_pembayaran')->nullable();
+            $table->string('no_resi')->nullable();
+            $table->enum('jenis_pengiriman', [
+                'ditanggung_pembeli',
+                'ditanggung_penjual',
+                'ditanggung_bersama'
+            ])->default('ditanggung_pembeli');
             $table->enum('status', ['menunggu', 'proses', 'diterima', 'ditolak'])->default('menunggu');
             $table->timestamps();
 
