@@ -50,8 +50,8 @@ class CartController extends Controller
     public function updateQuantity(Request $request)
     {
         $validated = $request->validate([
-            'item_id' => 'required|integer',
-            'quantity' => 'required|integer|min:1',
+            'item_id' => 'required|',
+            'quantity' => 'required|min:1',
         ]);
 
         $cartItem = CartItem::findOrFail($validated['item_id']);
@@ -104,7 +104,6 @@ class CartController extends Controller
 
             // Total Berat
             $totalBerat = $cartItems->sum(fn($item) => 500 * $item->quantity);
-
             return view('pages.partials.checkout', compact('cartItems', 'totalHarga', 'totalBerat', 'totalJumlah'));
         } catch (Exception $e) {
             return redirect()

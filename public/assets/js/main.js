@@ -245,11 +245,9 @@
                     ?.querySelectorAll(".carousel-item")
                     .forEach((item, index) => {
                         indicators.innerHTML += `
-                    <li data-bs-target="#${
-                        carousel.id
-                    }" data-bs-slide-to="${index}" ${
-                            index === 0 ? 'class="active"' : ""
-                        }></li>
+                    <li data-bs-target="#${carousel.id
+                            }" data-bs-slide-to="${index}" ${index === 0 ? 'class="active"' : ""
+                            }></li>
                 `;
                     });
             });
@@ -513,24 +511,26 @@
         const toggleButton = document.getElementById("sidebarToggle");
         const body = document.body;
 
+        // Saat halaman dimuat, cek preferensi
+        if (localStorage.getItem("sb|sidebar-toggle") === "toggled") {
+            document.body.classList.toggle("sb-sidenav-toggled");
+            localStorage.removeItem("sb|sidebar-toggle");
+        }
+
         if (toggleButton) {
             toggleButton.addEventListener("click", function (e) {
                 e.preventDefault();
                 body.classList.toggle("sb-sidenav-toggled");
-
                 // Simpan preferensi di localStorage
                 if (body.classList.contains("sb-sidenav-toggled")) {
                     localStorage.setItem("sb|sidebar-toggle", "toggled");
-                } else {
-                    localStorage.removeItem("sb|sidebar-toggle");
+                } 
+                if(!body.classList.contains("sb-sidenav-toggled")) {
+                    localStorage.setItem("sb|sidebar-toggle", "toggled");
                 }
             });
         }
 
-        // Saat halaman dimuat, cek preferensi
-        if (localStorage.getItem("sb|sidebar-toggle") === "toggled") {
-            document.body.classList.toggle("sb-sidenav-toggled");
-        }
     }
 
     /** === CHART KEUANGAN === */
@@ -713,7 +713,7 @@
     }
 
     /** === INIT ALL === */
-    window.addEventListener("load", () => {
+    document.addEventListener("DOMContentLoaded", () => {
         toggleScrolled();
         handleStickyHeader();
         initMobileNavToggle();

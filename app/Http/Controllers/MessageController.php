@@ -23,7 +23,7 @@ class MessageController extends Controller
 
         $notifications = $query->paginate(10);
 
-        return view('pages.message', compact('notifications', 'type'));
+        return view('pages.partials.message', compact('notifications', 'type'));
     }
 
 

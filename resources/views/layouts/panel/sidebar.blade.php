@@ -1,12 +1,11 @@
 <style>
     .sb-sidenav {
-        height: 100vh !important;
+        min-height: 100vh !important;
         overflow-y: auto;
     }
 </style>
 <div id="layoutSidenav_nav">
-    <nav class="sb-sidenav bg-dark border-end border-light d-flex flex-column mt-5" id="sidenavAccordion">
-
+    <nav class="sb-sidenav border-end border-light d-flex flex-column mt-5" id="sidenavAccordion">
         {{-- Bagian Konten Utama Menu --}}
         <div class="sb-sidenav-menu px-3 py-4 flex-grow-1 position-fixed">
             <div class="nav flex-column">

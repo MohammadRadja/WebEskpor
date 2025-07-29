@@ -273,7 +273,7 @@
             // Update cart item quantity on server
             const updateQuantityOnServer = async (itemId, quantity) => {
                 console.log('Sending update for item:', itemId, 'with quantity:', quantity);
-
+                console.log('bisa')
                 try {
                     const response = await fetch('{{ route('cart.updateQty') }}', {
                         method: 'POST',

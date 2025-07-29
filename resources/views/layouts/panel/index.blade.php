@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 @include('layouts.panel.head')
 
 <body class="sb-nav-fixed">
     @include('layouts.panel.navbar')
 
-    <div class="display-0" id="layoutSidenav">
-        @include('layouts.panel.sidebar')
+    <div id="layoutSidenav" class="d-flex">
+        {{-- Sidebar --}}
+        <div id="layoutSidenav_nav mt-5">
+            @include('layouts.panel.sidebar')
+        </div>
 
+        {{-- Konten Utama --}}
         <div id="layoutSidenav_content">
-            <main>
-                <div class="container px-4 mt-5">
-                    @yield('content')
-                </div>
+            <main class="mt-5 w-100">
+                @yield('content')
             </main>
 
             @include('layouts.panel.footer')
@@ -26,5 +27,4 @@
     {{-- Modal Form --}}
     <x-modal-form />
 </body>
-
 </html>

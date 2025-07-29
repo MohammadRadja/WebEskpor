@@ -67,13 +67,16 @@ class TransaksiController extends Controller
 
             foreach ($selectedItems as $item) {
                 $subtotal = $item->produk->harga * $item->quantity;
-
+                $subquantity = 500 * $item->quantity;
                 $transaksi->detailTransaksi()->create([
                     'id_produk' => $item->produk_id,
                     'jumlah' => $item->quantity,
                     'harga_satuan' => $item->produk->harga,
                     'sub_total' => $subtotal,
                 ]);
+                
+                $item->produk->stok -= $subquantity;
+                $item->produk->save();
 
                 $item->delete();
             }
@@ -84,9 +87,8 @@ class TransaksiController extends Controller
                 $transaksi->id
             );
             return redirect()->route('message.index');
-
         } catch (\Exception $e) {
-            $this->notify->withPopup()->error('Gagal menambahkan transaksi: '.$e->getMessage(), 'Error');
+            $this->notify->withPopup()->error('Gagal menambahkan transaksi: ' . $e->getMessage(), 'Error');
             return back()->withInput();
         }
     }
