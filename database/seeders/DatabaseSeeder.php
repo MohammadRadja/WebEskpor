@@ -17,8 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(KebunSeeder::class);
         $this->call(PetakKebunSeeder::class);
         $this->call(ProdukSeeder::class);
-        $this->call(TransaksiSeeder::class);
-        $this->call(DetailTransaksiSeeder::class);
         $this->call(KontenSeeder::class);
         $this->call(ProdukEksternalSeeder::class);
     }

@@ -8,6 +8,7 @@ use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
@@ -21,7 +22,7 @@ class CartController extends Controller
         }
 
         $cartItems = $cart->items()->with('produk')->get();
-        
+
         return view('pages.partials.cart', compact('cartItems'));
     }
 
@@ -131,12 +132,12 @@ class CartController extends Controller
             // Total Harga dan Jumlah Item
             $totalHarga = $produk->harga;
             $totalJumlah = 1;
-
-            // Total Berat
             $totalBerat = 500;
 
-            // Kirim data langsung ke view checkout tanpa menggunakan cart
-            return view('pages.partials.checkout', compact('cartItems', 'totalHarga', 'totalBerat', 'totalJumlah'))->with('success', 'Lanjutkan ke checkout.');
+            $buyNow = true;
+            $produkId = $produk->id;
+
+            return view('pages.partials.checkout', compact('cartItems', 'totalHarga', 'totalBerat', 'totalJumlah', 'buyNow', 'produkId'))->with('success', 'Lanjutkan ke checkout.');
         } catch (Exception $e) {
             return back()->with('error', 'Gagal memproses pembelian: ' . $e->getMessage());
         }

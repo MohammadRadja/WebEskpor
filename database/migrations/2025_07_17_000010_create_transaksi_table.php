@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('alamat');
             $table->string('negara');
             $table->decimal('biaya_pengiriman', 12, 2)->nullable();
-            $table->integer('jumlah');
+            $table->integer('jumlah')->default(1);
             $table->decimal('total_harga', 15, 2);
             $table->string('no_resi')->nullable();
             $table->enum('jenis_pengiriman', [
@@ -26,7 +26,8 @@ return new class extends Migration
                 'ditanggung_penjual',
                 'ditanggung_bersama'
             ])->default('ditanggung_pembeli');
-            $table->enum('status', ['menunggu', 'proses', 'diterima', 'ditolak'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'proses', 'dibayar', 'expired', 'gagal'])->default('menunggu');
+            $table->string('payment_url')->nullable();
             $table->timestamps();
 
             $table->foreign('id_pelanggan')->references('id')->on('users')->cascadeOnDelete();

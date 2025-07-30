@@ -3,12 +3,14 @@
 @section('title', 'Message')
 
 @section('content')
-    <div class="container mt-4">
-        <h3 class="mb-4">📩 Daftar Pesan</h3>
+    <div class="container py-4">
+        <h3 class="fw-bold mb-4 text-primary">
+            📩 Daftar Pesan
+        </h3>
 
         <!-- Filter -->
-        <div class="mb-3 d-flex justify-content-between">
-            <div>
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div class="btn-group">
                 <a href="{{ route('message.index') }}" class="btn btn-outline-secondary btn-sm">Semua</a>
                 <a href="{{ route('message.index', ['type' => 'success']) }}"
                     class="btn btn-outline-success btn-sm">Success</a>
@@ -21,9 +23,9 @@
         </div>
 
         @if ($notifications->isEmpty())
-            <div class="alert alert-info text-center">Tidak ada pesan saat ini.</div>
+            <div class="alert alert-info text-center shadow-sm">Tidak ada pesan saat ini.</div>
         @else
-            <div class="row">
+            <div class="row g-3">
                 @foreach ($notifications as $notify)
                     @php
                         $status = $notify->transaksi->status ?? '';
@@ -36,25 +38,39 @@
                         };
                     @endphp
 
-                    <div class="col-md-6 mb-3">
-                        <div class="card shadow-sm {{ $notify->is_read ? '' : 'border-warning' }}">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="card-title mb-1">{{ $notify->title }}</h5>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100 {{ $notify->is_read ? '' : 'border border-warning' }}">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="mb-0 fw-semibold">{{ $notify->title }}</h5>
                                     @if ($status)
-                                        <span class="badge bg-{{ $badgeColor }}">{{ ucfirst($status) }}</span>
+                                        <span class="badge bg-{{ $badgeColor }} px-2 py-1">{{ ucfirst($status) }}</span>
                                     @endif
                                 </div>
-                                <p class="card-text text-muted">{{ $notify->message }}</p>
 
-                                <div class="d-flex justify-content-between mt-2">
+                                <p class="text-muted small flex-grow-1">{{ $notify->message }}</p>
+
+                                <div class="d-flex justify-content-between align-items-center mt-3">
                                     <small class="text-muted">{{ $notify->created_at->diffForHumans() }}</small>
-                                    @if ($notify->id_transaksi)
-                                        <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal"
-                                            data-bs-target="#modalTransaksi{{ $notify->id }}">
-                                            <i class="bi bi-info-circle"></i> Detail
-                                        </button>
-                                    @endif
+                                    <div class="d-flex gap-2">
+                                        @if ($notify->id_transaksi)
+                                            <button type="button" class="btn btn-sm btn-outline-info"
+                                                data-bs-toggle="modal" data-bs-target="#modalTransaksi{{ $notify->id }}">
+                                                <i class="bi bi-info-circle"></i> Detail
+                                            </button>
+                                        @endif
+
+                                        @if ($status === 'proses')
+                                            <form action="{{ route('checkout.xendit') }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="id_transaksi"
+                                                    value="{{ $notify->transaksi->id }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-success">
+                                                    <i class="bi bi-credit-card"></i> Bayar
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -64,13 +80,14 @@
                     @if ($notify->transaksi)
                         <div class="modal fade" id="modalTransaksi{{ $notify->id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-light">
+                                <div class="modal-content shadow-lg">
+                                    <div class="modal-header bg-primary text-white">
                                         <h5 class="modal-title">🧾 Detail Transaksi</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        <button type="button" class="btn-close btn-close-white"
+                                            data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <table class="table table-striped table-bordered">
+                                        <table class="table table-bordered">
                                             <tr>
                                                 <th>ID Transaksi</th>
                                                 <td>{{ $notify->transaksi->id }}</td>
@@ -94,21 +111,8 @@
                                                 <td>{{ $notify->transaksi->alamat }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Bukti Pembayaran</th>
-                                                <td>
-                                                    @if ($notify->transaksi->bukti_pembayaran)
-                                                        @php $file = $notify->transaksi->bukti_pembayaran; @endphp
-                                                        @if (Str::endsWith($file, ['jpg', 'jpeg', 'png']))
-                                                            <img src="{{ asset_or_default($file) }}" alt="Bukti Pembayaran"
-                                                                class="img-fluid rounded" style="max-height:150px">
-                                                        @else
-                                                            <a href="{{ asset_or_default($file) }}" target="_blank"
-                                                                class="btn btn-sm btn-primary">Lihat Bukti</a>
-                                                        @endif
-                                                    @else
-                                                        <span class="text-muted">Tidak ada</span>
-                                                    @endif
-                                                </td>
+                                                <th>Jenis Pengiriman</th>
+                                                <td>{{ $notify->transaksi->jenis_pengiriman }}</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -123,7 +127,7 @@
                 @endforeach
             </div>
 
-            <div class="mt-3">
+            <div class="mt-4">
                 {{ $notifications->withQueryString()->links() }}
             </div>
         @endif

@@ -106,9 +106,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Transaksi
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
-    Route::patch('/transaksi/{id}/approve', [TransaksiController::class, 'approve'])->name('transaksi.approve');
-    Route::patch('/transaksi/{id}/reject', [TransaksiController::class, 'reject'])->name('transaksi.reject');
     Route::resource('/transaksi', TransaksiController::class);
+    Route::post('/checkout/xendit', [TransaksiController::class, 'checkoutXendit'])->name('checkout.xendit');
+    Route::post('/xendit/callback', [TransaksiController::class, 'handleCallback']);
 
     Route::get('/konten', [DashboardController::class, 'konten'])->name('konten');
 

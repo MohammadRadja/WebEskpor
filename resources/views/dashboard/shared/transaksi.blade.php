@@ -32,9 +32,10 @@
                                 <th>Negara</th>
                                 <th>Jumlah</th>
                                 <th>Total Harga</th>
+                                <th>Jenis Pengiriman</th>
                                 <th>Biaya Pengiriman</th>
+                                <th>No Resi</th>
                                 <th>Status</th>
-                                <th>Bukti Pembayaran</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -47,16 +48,10 @@
                                     <td>{{ $t->negara }}</td>
                                     <td>{{ format_stok($t->jumlah) }}</td>
                                     <td>{{ rupiah($t->total_harga) }}</td>
+                                    <td>{{ ucwords(str_replace('_', ' ', $t->jenis_pengiriman)) }}</td>
                                     <td>{{ rupiah($t->biaya_pengiriman) }}</td>
+                                    <td>{{ $t->no_resi }}</td>
                                     <td><span class="badge bg-success">{{ ucfirst($t->status) }}</span></td>
-                                    <td>
-                                        @if ($t->bukti_pembayaran)
-                                            <a href="{{ asset_or_default('uploads/bukti_pembayaran/' . $t->bukti_pembayaran) }}"
-                                                class="btn btn-sm btn-outline-primary" target="">Lihat</a>
-                                        @else
-                                            <img src="{{ asset('assets/img/default.png') }}" alt="No Bukti" width="40">
-                                        @endif
-                                    </td>
                                     <td class="text-center">
                                         <div class="d-flex flex-wrap justify-content-center gap-1">
                                             <!-- Tombol Detail -->
@@ -65,30 +60,14 @@
                                                 <i class="fas fa-info-circle"></i>
                                             </button>
 
-                                            @if ($t->status === 'proses')
-                                                <!-- Tombol Approve -->
-                                                <form action="{{ route('transaksi.approve', $t->id) }}" method="POST"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-sm btn-success"
-                                                        title="Setujui Transaksi">
-                                                        <i class="fas fa-check"></i>
-                                                    </button>
-                                                </form>
-
-                                                <!-- Tombol Reject -->
-                                                <form action="{{ route('transaksi.reject', $t->id) }}" method="POST"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-sm btn-danger"
-                                                        title="Tolak Transaksi">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </form>
+                                            @if ($t->status === 'menunggu')
+                                                <!-- Tombol Isi Pengiriman -->
+                                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                                    data-bs-target="#pengirimanModal{{ $t->id }}"
+                                                    title="Isi Biaya & Resi">
+                                                    <i class="fas fa-shipping-fast"></i>
+                                                </button>
                                             @else
-                                                <span class="text-muted">-</span>
                                             @endif
                                         </div>
                                     </td>
@@ -149,4 +128,35 @@
         </div>
     @endforeach
 
+    <!-- Modal Pengiriman -->
+    @foreach ($transaksi as $t)
+        <div class="modal fade" id="pengirimanModal{{ $t->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route('transaksi.update', $t->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <div class="modal-header bg-dark text-white">
+                            <h5 class="modal-title text-warning"><i class="fas fa-shipping-fast me-2"></i>Pengiriman</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Biaya Pengiriman</label>
+                                <input type="number" name="biaya_pengiriman" class="form-control" required min="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nomor Resi</label>
+                                <input type="text" name="no_resi" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-warning">Simpan</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
 @endsection

@@ -87,7 +87,10 @@
                             </div>
 
                             <input type="hidden" name="no_resi" value="">
+                            <input type="hidden" name="status" value="menunggu">
                             <input type="hidden" name="id_pelanggan" value="{{ auth()->user()->id }}">
+                            <input type="hidden" name="buy_now" value="{{ $buyNow ?? false }}">
+                            <input type="hidden" name="produk_id" value="{{ $produkId ?? '' }}">
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary">Proses Pesanan</button>
