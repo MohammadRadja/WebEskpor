@@ -33,6 +33,7 @@
                                 <th>Jumlah</th>
                                 <th>Total Harga</th>
                                 <th>Jenis Pengiriman</th>
+                                <th>Nama Ekspedisi</th>
                                 <th>Biaya Pengiriman</th>
                                 <th>No Resi</th>
                                 <th>Status</th>
@@ -49,9 +50,22 @@
                                     <td>{{ format_stok($t->jumlah) }}</td>
                                     <td>{{ rupiah($t->total_harga) }}</td>
                                     <td>{{ ucwords(str_replace('_', ' ', $t->jenis_pengiriman)) }}</td>
+                                    <td>{{ $t->ekspedisi }}</td>
                                     <td>{{ rupiah($t->biaya_pengiriman) }}</td>
                                     <td>{{ $t->no_resi }}</td>
-                                    <td><span class="badge bg-success">{{ ucfirst($t->status) }}</span></td>
+                                    @php
+                                        $badgeColors = [
+                                            'menunggu' => 'bg-warning',
+                                            'proses' => 'bg-info',
+                                            'dibayar' => 'bg-success',
+                                            'expired' => 'bg-secondary',
+                                            'gagal' => 'bg-danger',
+                                        ];
+                                        $color = $badgeColors[$t->status] ?? 'bg-dark';
+                                    @endphp
+                                    <td>
+                                        <span class="badge {{ $color }}">{{ ucfirst($t->status) }}</span>
+                                    </td>
                                     <td class="text-center">
                                         <div class="d-flex flex-wrap justify-content-center gap-1">
                                             <!-- Tombol Detail -->
@@ -64,13 +78,19 @@
                                                 <!-- Tombol Isi Pengiriman -->
                                                 <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                                     data-bs-target="#pengirimanModal{{ $t->id }}"
-                                                    title="Isi Biaya & Resi">
+                                                    title="Isi Biaya Pengiriman">
                                                     <i class="fas fa-shipping-fast"></i>
                                                 </button>
-                                            @else
+                                            @elseif ($t->status === 'dibayar')
+                                                <!-- Tombol Isi No Resi -->
+                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#resiModal{{ $t->id }}" title="Isi Nomor Resi">
+                                                    <i class="fas fa-barcode"></i>
+                                                </button>
                                             @endif
                                         </div>
                                     </td>
+
                                 </tr>
                             @empty
                                 <tr>
@@ -142,12 +162,14 @@
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
+                                <label class="form-label">Nama Ekspedisi</label>
+                                <input type="text" name="ekspedisi" class="form-control" required min="0">
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
                                 <label class="form-label">Biaya Pengiriman</label>
                                 <input type="number" name="biaya_pengiriman" class="form-control" required min="0">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Nomor Resi</label>
-                                <input type="text" name="no_resi" class="form-control" required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -159,4 +181,37 @@
             </div>
         </div>
     @endforeach
+
+    <!-- Modal Resi -->
+    @foreach ($transaksi as $t)
+        @if ($t->status === 'dibayar')
+            <div class="modal fade" id="resiModal{{ $t->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="{{ route('transaksi.update', $t->id) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <div class="modal-header bg-dark text-white">
+                                <h5 class="modal-title text-primary">
+                                    <i class="fas fa-barcode me-2"></i>Isi Nomor Resi
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Nomor Resi</label>
+                                    <input type="text" name="no_resi" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endforeach
+
 @endsection

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use App\Services\DatabaseNotify;
 use Xendit\Configuration;
 use Xendit\Invoice\InvoiceApi;
+use App\Models\Notifications;
 
 class TransaksiController extends Controller
 {
@@ -38,6 +39,63 @@ class TransaksiController extends Controller
         }
     }
 
+    // Redirect Sukses Xendit
+    public function checkoutSuccess(Request $request)
+    {
+        $transaksi = Transaksi::find($request->trx);
+        Log::info($transaksi);
+
+        if (!$transaksi) {
+            return redirect('/')->with('error', 'Transaksi tidak ditemukan.');
+        }
+
+        // Fallback status menjadi dibayar
+        if ($transaksi->status == 'proses') {
+            $transaksi->update(['status' => 'dibayar']);
+        }
+
+        // Update Notifikasi
+        $notify = Notifications::where('id_transaksi', $transaksi->id)->latest()->first();
+        if ($notify) {
+            $notify->update([
+                'type' => 'success',
+                'title' => 'Pembayaran Berhasil',
+                'message' => 'Pembayaran untuk transaksi #' . $transaksi->id . ' telah berhasil, pesanan sedang diproses.',
+            ]);
+        }
+
+        return view('pages.partials.checkout.checkout-success', compact('transaksi'));
+    }
+
+    // Redirect Gagal Xendit
+    public function checkoutFailed(Request $request)
+    {
+        $transaksi = Transaksi::find($request->trx);
+        Log::info($transaksi);
+
+        if (!$transaksi) {
+            return redirect('/')->with('error', 'Transaksi tidak ditemukan.');
+        }
+
+        // Fallback status menjadi gagal
+        if ($transaksi->status === 'proses') {
+            $transaksi->update(['status' => 'gagal']);
+        }
+
+        // Update Notifikasi
+        $notify = Notifications::where('id_transaksi', $transaksi->id)->latest()->first();
+        if ($notify) {
+            $notify->update([
+                'type' => 'error',
+                'title' => 'Pembayaran Gagal',
+                'message' => 'Pembayaran untuk transaksi #' . $transaksi->id . ' gagal. Silakan coba lagi.',
+            ]);
+        }
+
+        return view('pages.partials.checkout.checkout-failed', compact('transaksi'));
+    }
+
+    // Store/Create Transaksi
     public function store(Request $request)
     {
         try {
@@ -45,6 +103,7 @@ class TransaksiController extends Controller
                 'telepon' => 'required|string',
                 'alamat' => 'required|string',
                 'negara' => 'required|string',
+                'ekspedisi' => 'nullable|string',
                 'biaya_pengiriman' => 'nullable|numeric|min:0',
                 'jumlah' => 'required|integer|min:1',
                 'total_harga' => 'required|numeric|min:0',
@@ -59,6 +118,14 @@ class TransaksiController extends Controller
             ]);
 
             $transaksi = Transaksi::create($validated);
+
+            // Notifikasi berdasarkan jenis pengiriman
+            if ($validated['jenis_pengiriman'] === 'ditanggung_pembeli') {
+                $transaksi->update(['status' => 'proses']);
+                $this->notify->success('Transaksi berhasil dibuat. Silakan segera melakukan pembayaran karena biaya pengiriman ditanggung pembeli.', 'Pembayaran Segera', $transaksi->id);
+            } else {
+                $this->notify->success('Transaksi berhasil dibuat. Silakan menunggu, admin akan menginput detail ekspedisi dan biaya pengiriman sebelum Anda melakukan pembayaran.', 'Menunggu Konfirmasi', $transaksi->id);
+            }
 
             // Jika berasal dari keranjang
             if (empty($validated['buy_now'])) {
@@ -101,7 +168,6 @@ class TransaksiController extends Controller
                 $produk->save();
             }
 
-            $this->notify->success('Transaksi berhasil dibuat dan sedang menunggu verifikasi pembayaran.', 'Sukses', $transaksi->id);
             return redirect()->route('message.index');
         } catch (\Exception $e) {
             Log::error('Gagal menambahkan transaksi: ' . $e->getMessage());
@@ -134,8 +200,8 @@ class TransaksiController extends Controller
                 'payer_email' => $transaksi->pelanggan->email,
                 'description' => 'Pembayaran pesanan #' . $transaksi->id,
                 'amount' => $transaksi->total_harga,
-                'success_redirect_url' => url('/checkout/success'),
-                'failure_redirect_url' => url('/checkout/failed'),
+                'success_redirect_url' => url('/checkout/success?trx=' . $transaksi->id),
+                'failure_redirect_url' => url('/checkout/failed?trx=' . $transaksi->id),
             ];
 
             $invoice = $apiInstance->createInvoice($params);
@@ -150,57 +216,30 @@ class TransaksiController extends Controller
         }
     }
 
-    public function handleCallback(Request $request)
-    {
-        Log::info('Xendit Callback:', $request->all());
-
-        $data = $request->all();
-        $orderId = str_replace('order-', '', $data['external_id']);
-        $transaksi = Transaksi::find($orderId);
-
-        if (!$transaksi) {
-            return response()->json(['error' => 'Transaksi tidak ditemukan'], 404);
-        }
-
-        // Mapping status dari Xendit ke status lokal sesuai enum
-        $statusMap = [
-            'PAID' => 'dibayar',
-            'SETTLED' => 'dibayar',
-            'EXPIRED' => 'expired',
-            'FAILED' => 'gagal',
-            'VOIDED' => 'gagal',
-        ];
-
-        // Update status jika cocok
-        if (isset($statusMap[$data['status']])) {
-            $transaksi->status = $statusMap[$data['status']];
-            $transaksi->save();
-        }
-
-        return response()->json(['success' => true]);
-    }
-
     public function update(Request $request, $id)
     {
         try {
             $validated = $request->validate([
+                'ekspedisi' => 'nullable|string',
                 'biaya_pengiriman' => 'nullable|numeric|min:0',
                 'no_resi' => 'nullable|string',
             ]);
 
             $transaksi = Transaksi::findOrFail($id);
 
+            // Jika biaya_pengiriman diisi, tambahkan ke total_harga
+            if (isset($validated['biaya_pengiriman'])) {
+                // Jika biaya_pengiriman lama ada, kurangi dulu untuk menghindari double counting
+                $total_harga_sebelumnya = $transaksi->total_harga - ($transaksi->biaya_pengiriman ?? 0);
+                $validated['total_harga'] = $total_harga_sebelumnya + $validated['biaya_pengiriman'];
+            }
+
             // Jika kedua field diisi, ubah status menjadi proses
-            if (!empty($validated['biaya_pengiriman']) && !empty($validated['no_resi'])) {
+            if (!empty($validated['biaya_pengiriman']) && !empty($validated['ekspedisi'])) {
                 $validated['status'] = 'proses';
             }
 
             $transaksi->update($validated);
-
-            // Jika transaksi sudah memiliki payment_url, redirect ke payment
-            if ($transaksi->payment_url && ($validated['status'] ?? null) === 'proses') {
-                return redirect($transaksi->payment_url);
-            }
 
             return redirect()->route('transaksi.index')->with('success', 'Biaya pengiriman & No Resi berhasil diperbarui.');
         } catch (ValidationException $e) {

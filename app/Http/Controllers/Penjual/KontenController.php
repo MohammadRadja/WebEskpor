@@ -22,20 +22,7 @@ class KontenController extends Controller
             $spanduk = Konten::where('jenis', 'spanduk')->paginate(10);
             $komponen = Konten::where('jenis', 'komponen')->paginate(10);
 
-            $penulisList = User::whereIn('role', ['administrator', 'penjual'])
-                ->get()
-                ->map(function ($user) {
-                    return [
-                        'value' => $user->id,
-                        'label' => $user->username,
-                    ];
-                })
-                ->values();
-
-            // Log data penulis
-            Log::info('Isi Penulis List:', $penulisList->toArray());
-
-            return view('dashboard.penjual.konten', compact('halaman', 'artikel', 'spanduk', 'komponen', 'penulisList'));
+            return view('dashboard.penjual.konten', compact('halaman', 'artikel', 'spanduk', 'komponen'));
         } catch (\Exception $e) {
             Log::error('Gagal memuat data konten:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Gagal memuat data konten.');

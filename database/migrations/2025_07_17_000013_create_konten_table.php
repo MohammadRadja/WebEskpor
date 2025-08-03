@@ -20,10 +20,8 @@ return new class extends Migration {
             $table->json('media')->nullable();
             $table->enum('status', ['draf', 'terbit'])->default('draf');
             $table->timestamp('diterbitkan_pada');
-            $table->uuid('id_penulis');
+            $table->string('penulis')->nullable();
             $table->timestamps();
-
-            $table->foreign('id_penulis')->references('id')->on('users')->cascadeOnDelete();
         });
     }
 

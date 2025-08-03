@@ -245,9 +245,11 @@
                     ?.querySelectorAll(".carousel-item")
                     .forEach((item, index) => {
                         indicators.innerHTML += `
-                    <li data-bs-target="#${carousel.id
-                            }" data-bs-slide-to="${index}" ${index === 0 ? 'class="active"' : ""
-                            }></li>
+                    <li data-bs-target="#${
+                        carousel.id
+                    }" data-bs-slide-to="${index}" ${
+                            index === 0 ? 'class="active"' : ""
+                        }></li>
                 `;
                     });
             });
@@ -524,13 +526,12 @@
                 // Simpan preferensi di localStorage
                 if (body.classList.contains("sb-sidenav-toggled")) {
                     localStorage.setItem("sb|sidebar-toggle", "toggled");
-                } 
-                if(!body.classList.contains("sb-sidenav-toggled")) {
+                }
+                if (!body.classList.contains("sb-sidenav-toggled")) {
                     localStorage.setItem("sb|sidebar-toggle", "toggled");
                 }
             });
         }
-
     }
 
     /** === CHART KEUANGAN === */
@@ -712,6 +713,44 @@
         });
     }
 
+    /** === PENGIRIMAN KETENTUAN === */
+    function initPengirimanKetentuan() {
+        const selectPengiriman = document.getElementById("jenis_pengiriman");
+        const infoPengiriman = document.getElementById("info_pengiriman");
+        const infoHarga = document.getElementById("info_harga");
+
+        if (!selectPengiriman || !infoPengiriman || !infoHarga) {
+            console.warn("[initPengirimanKetentuan] Elemen tidak ditemukan.");
+            return;
+        }
+
+        function updateKetentuan() {
+            switch (selectPengiriman.value) {
+                case "ditanggung_pembeli":
+                    infoPengiriman.innerHTML =
+                        "<strong>Ditanggung Pembeli:</strong> Pembeli bertanggung jawab sepenuhnya dalam mengatur ekspedisi dan menanggung seluruh biaya pengiriman.";
+                    infoHarga.innerHTML =
+                        "Catatan: Total harga yang tertera belum termasuk biaya pengiriman, karena seluruh biaya ongkos kirim menjadi tanggung jawab pembeli.";
+                    break;
+                case "ditanggung_penjual":
+                    infoPengiriman.innerHTML =
+                        "<strong>Ditanggung Penjual:</strong> Pengaturan ekspedisi, biaya pengiriman, dan nomor resi akan dikonfirmasi oleh pihak penjual.";
+                    infoHarga.innerHTML =
+                        "Catatan: Akan ada biaya tambahan pengiriman yang akan dikonfirmasi oleh penjual dan harus diselesaikan pembeli sebelum proses pengiriman dilakukan.";
+                    break;
+                case "ditanggung_bersama":
+                    infoPengiriman.innerHTML =
+                        "<strong>Ditanggung Bersama:</strong> Biaya pengiriman akan dibagi sesuai kesepakatan bersama antara pembeli dan penjual.";
+                    infoHarga.innerHTML =
+                        "Catatan: Besaran biaya ongkos kirim akan ditentukan berdasarkan hasil kesepakatan antara kedua belah pihak.";
+                    break;
+            }
+        }
+
+        selectPengiriman.addEventListener("change", updateKetentuan);
+        updateKetentuan(); // tampilkan ketentuan default saat halaman dimuat
+    }
+
     /** === INIT ALL === */
     document.addEventListener("DOMContentLoaded", () => {
         toggleScrolled();
@@ -728,6 +767,7 @@
         initSidebarToggle();
         initChartKeuangan();
         initChartPanenTanaman();
+        initPengirimanKetentuan();
     });
 
     document.addEventListener("scroll", toggleScrolled);

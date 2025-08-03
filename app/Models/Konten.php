@@ -11,16 +11,11 @@ class Konten extends Model
     protected $keyType = 'string';
     protected $table = 'konten';
 
-    protected $fillable = ['judul', 'slug', 'jenis', 'kutipan', 'konten', 'gambar', 'meta', 'media', 'tautan', 'status', 'diterbitkan_pada', 'id_penulis'];
+    protected $fillable = ['judul', 'slug', 'jenis', 'kutipan', 'konten', 'gambar', 'meta', 'media', 'tautan', 'status', 'diterbitkan_pada', 'penulis'];
 
     protected static function boot()
     {
         parent::boot();
         static::creating(fn($model) => ($model->id = (string) Str::uuid()));
-    }
-
-    public function penulis()
-    {
-        return $this->belongsTo(User::class, 'id_penulis');
     }
 }

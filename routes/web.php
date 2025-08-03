@@ -16,7 +16,6 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\Penjual\KontenController;
 use App\Http\Controllers\MessageController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Halaman Publik - Guest
@@ -110,6 +109,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/xendit', [TransaksiController::class, 'checkoutXendit'])->name('checkout.xendit');
     Route::post('/xendit/callback', [TransaksiController::class, 'handleCallback']);
 
+    // Checkout Success & Failed
+    Route::get('/checkout/success', [TransaksiController::class, 'checkoutSuccess'])->name('checkout.success');
+    Route::get('/checkout/failed', [TransaksiController::class, 'checkoutFailed'])->name('checkout.failed');
+
+    // Konten Admin
     Route::get('/konten', [DashboardController::class, 'konten'])->name('konten');
 
     // User Management
@@ -118,7 +122,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/user/export', [UserController::class, 'exportExcel'])->name('user.export.excel');
     });
 
-    // Konten
+    // Konten Penjual
     Route::middleware('role:administrator,penjual')->group(function () {
         Route::resource('konten', KontenController::class);
     });
@@ -132,6 +136,5 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:pelanggan'])
     ->prefix('pelanggan')
     ->group(function () {
-        // ✳️ Route baru: Lihat info kebun atau produk (read-only)
         Route::get('/home', [PageController::class, 'index'])->name('pelanggan.index');
     });

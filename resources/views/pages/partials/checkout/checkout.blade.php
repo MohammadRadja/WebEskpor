@@ -64,26 +64,26 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Jenis Pengiriman</label>
-                                <select name="jenis_pengiriman" class="form-select" required>
+                                <select name="jenis_pengiriman" id="jenis_pengiriman" class="form-select" required>
                                     <option value="ditanggung_pembeli">Ditanggung Pembeli</option>
                                     <option value="ditanggung_penjual">Ditanggung Penjual</option>
                                     <option value="ditanggung_bersama">Ditanggung Bersama</option>
                                 </select>
+                                <div class="mt-2">
+                                    <small id="info_pengiriman" class="text-muted d-block"></small>
+                                </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Total Harga <small class="text-muted">*Belum Termasuk
-                                        Ongkir</small></label>
+                                <label class="form-label">Total Harga</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
                                     <input type="number" name="total_harga" class="form-control"
                                         value="{{ $totalHarga }}" readonly>
                                 </div>
-                                <small class="text-danger">
-                                    *Catatan: Total harga di atas <b>belum termasuk biaya pengiriman</b>.
-                                    Admin akan mengkonfirmasi biaya pengiriman dan mengirimkan nomor resi setelah pesanan
-                                    diproses.
-                                </small>
+                                <div class="mt-2">
+                                    <small id="info_harga" class="text-info d-block fw-bold"></small>
+                                </div>
                             </div>
 
                             <input type="hidden" name="no_resi" value="">

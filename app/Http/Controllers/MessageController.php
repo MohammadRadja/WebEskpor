@@ -12,20 +12,24 @@ class MessageController extends Controller
     public function index(Request $request)
     {
         $type = $request->query('type');
+        $status = $request->query('status');
 
-        $query = Notifications::where('user_id', Auth::id())
-            ->with('transaksi')
-            ->latest();
+        $query = Notifications::where('user_id', Auth::id())->with('transaksi')->latest();
 
         if ($type) {
             $query->where('type', $type);
         }
 
+        if ($status) {
+            $query->whereHas('transaksi', function ($q) use ($status) {
+                $q->where('status', $status);
+            });
+        }
+
         $notifications = $query->paginate(10);
 
-        return view('pages.partials.message', compact('notifications', 'type'));
+        return view('pages.partials.message', compact('notifications', 'type', 'status'));
     }
-
 
     public function read($id)
     {

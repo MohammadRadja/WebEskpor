@@ -11,13 +11,16 @@
         <!-- Filter -->
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div class="btn-group">
-                <a href="{{ route('message.index') }}" class="btn btn-outline-secondary btn-sm">Semua</a>
-                <a href="{{ route('message.index', ['type' => 'success']) }}"
-                    class="btn btn-outline-success btn-sm">Success</a>
-                <a href="{{ route('message.index', ['type' => 'error']) }}" class="btn btn-outline-danger btn-sm">Error</a>
-                <a href="{{ route('message.index', ['type' => 'warning']) }}"
-                    class="btn btn-outline-warning btn-sm">Warning</a>
-                <a href="{{ route('message.index', ['type' => 'info']) }}" class="btn btn-outline-info btn-sm">Info</a>
+                <a href="{{ route('message.index') }}"
+                    class="btn btn-outline-secondary btn-sm {{ request('status') == '' ? 'active' : '' }}">Semua</a>
+                <a href="{{ route('message.index', ['status' => 'dibayar']) }}"
+                    class="btn btn-outline-success btn-sm {{ request('status') == 'dibayar' ? 'active' : '' }}">Dibayar</a>
+                <a href="{{ route('message.index', ['status' => 'gagal']) }}"
+                    class="btn btn-outline-danger btn-sm {{ request('status') == 'gagal' ? 'active' : '' }}">Gagal</a>
+                <a href="{{ route('message.index', ['status' => 'proses']) }}"
+                    class="btn btn-outline-warning btn-sm {{ request('status') == 'proses' ? 'active' : '' }}">Proses</a>
+                <a href="{{ route('message.index', ['status' => 'menunggu']) }}"
+                    class="btn btn-outline-info btn-sm {{ request('status') == 'menunggu' ? 'active' : '' }}">Menunggu</a>
             </div>
             <a href="{{ route('message.markAllRead') }}" class="btn btn-primary btn-sm">✅ Tandai Semua Dibaca</a>
         </div>
@@ -32,8 +35,9 @@
                         $badgeColor = match ($status) {
                             'menunggu' => 'secondary',
                             'proses' => 'warning',
-                            'diterima' => 'success',
-                            'ditolak' => 'danger',
+                            'dibayar' => 'success',
+                            'gagal' => 'danger',
+                            'expired' => 'danger',
                             default => 'info',
                         };
                     @endphp
@@ -86,19 +90,32 @@
                                         <button type="button" class="btn-close btn-close-white"
                                             data-bs-dismiss="modal"></button>
                                     </div>
+
                                     <div class="modal-body">
-                                        <table class="table table-bordered">
+
+                                        {{-- 👤 Detail Pelanggan --}}
+                                        <h6 class="border-bottom pb-2 mb-3">👤 Detail Pelanggan</h6>
+                                        <table class="table table-sm table-striped">
                                             <tr>
-                                                <th>ID Transaksi</th>
+                                                <th width="30%">Nama Pelanggan</th>
+                                                <td>{{ $notify->user->username ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Email</th>
+                                                <td>{{ $notify->user->email ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Alamat</th>
+                                                <td>{{ $notify->transaksi->alamat ?? '-' }}</td>
+                                            </tr>
+                                        </table>
+
+                                        {{-- 📦 Detail Transaksi --}}
+                                        <h6 class="border-bottom pb-2 mt-4 mb-3">📦 Detail Transaksi</h6>
+                                        <table class="table table-sm table-bordered">
+                                            <tr>
+                                                <th width="30%">ID Transaksi</th>
                                                 <td>{{ $notify->transaksi->id }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Jumlah</th>
-                                                <td>{{ $notify->transaksi->jumlah }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Total Harga</th>
-                                                <td>{{ rupiah($notify->transaksi->total_harga) }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Status</th>
@@ -107,15 +124,68 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th>Alamat</th>
-                                                <td>{{ $notify->transaksi->alamat }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Jenis Pengiriman</th>
-                                                <td>{{ $notify->transaksi->jenis_pengiriman }}</td>
+                                                <th>Total Harga</th>
+                                                <td><strong>{{ rupiah($notify->transaksi->total_harga) }}</strong></td>
                                             </tr>
                                         </table>
+
+                                        {{-- 📮 Informasi Pengiriman --}}
+                                        <h6 class="border-bottom pb-2 mt-4 mb-3">📮 Informasi Pengiriman</h6>
+                                        <table class="table table-sm table-bordered">
+                                            <tr>
+                                                <th width="30%">Jenis Pengiriman</th>
+                                                <td>{{ ucwords(str_replace('_', ' ', $notify->transaksi->jenis_pengiriman)) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>No Resi</th>
+                                                <td>{{ $notify->transaksi->no_resi ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nama Ekspedisi</th>
+                                                <td>{{ $notify->transaksi->ekspedisi ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Biaya Pengiriman</th>
+                                                <td>{{ rupiah($notify->transaksi->biaya_pengiriman) }}</td>
+                                            </tr>
+                                        </table>
+
+                                        {{-- 🛒 Detail Produk --}}
+                                        <h6 class="border-bottom pb-2 mt-4 mb-3">🛒 Detail Produk</h6>
+                                        <table class="table table-sm table-hover">
+                                            @php $detail = $notify->transaksi->detailTransaksi->first(); @endphp
+                                            @if ($detail)
+                                                <tr>
+                                                    <th width="30%">Nama Produk</th>
+                                                    <td>{{ $detail->produk->nama ?? '-' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Deskripsi Produk</th>
+                                                    <td>{{ $detail->produk->deskripsi ?? '-' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Jumlah</th>
+                                                    <td>{{ $detail->jumlah }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Berat Barang</th>
+                                                    <td>{{ format_stok($detail->jumlah * 500) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Harga Barang</th>
+                                                    <td>{{ rupiah($detail->sub_total) }}</td>
+                                                </tr>
+                                            @else
+                                                <tr>
+                                                    <td colspan="2" class="text-center text-muted">Tidak ada detail
+                                                        produk.</td>
+                                                </tr>
+                                            @endif
+                                        </table>
+
                                     </div>
+
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Tutup</button>

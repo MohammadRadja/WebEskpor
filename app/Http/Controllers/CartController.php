@@ -137,7 +137,7 @@ class CartController extends Controller
             $buyNow = true;
             $produkId = $produk->id;
 
-            return view('pages.partials.checkout', compact('cartItems', 'totalHarga', 'totalBerat', 'totalJumlah', 'buyNow', 'produkId'))->with('success', 'Lanjutkan ke checkout.');
+            return view('pages.partials.checkout.checkout', compact('cartItems', 'totalHarga', 'totalBerat', 'totalJumlah', 'buyNow', 'produkId'))->with('success', 'Lanjutkan ke checkout.');
         } catch (Exception $e) {
             return back()->with('error', 'Gagal memproses pembelian: ' . $e->getMessage());
         }

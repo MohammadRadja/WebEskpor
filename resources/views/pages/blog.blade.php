@@ -28,16 +28,21 @@
                                         @if ($isExternal) target="_blank" rel="noopener noreferrer" @endif>
                                         <div class="ratio ratio-16x9">
                                             <img src="{{ asset_or_default('assets/img/blog/' . $item->gambar) }}"
-                                                class="card-img-top" style="object-fit: cover;" alt="{{ $item->slug }}">
+                                                class="card-img-top object-fit-cover" alt="{{ $item->slug }}">
                                         </div>
                                         <div class="card-body d-flex flex-column">
                                             <h5 class="fw-semibold mb-2">{{ $item->kutipan }}</h5>
-                                            <p class="text-muted small mb-2">
-                                                <i class="bi bi-calendar"></i>
-                                                {{ format_tanggal($item->diterbitkan_pada) }}
-                                            </p>
+                                            <div
+                                                class="d-flex justify-content-between align-items-center text-muted small mb-2">
+                                                <span><i class="bi bi-calendar"></i>
+                                                    {{ format_tanggal($item->diterbitkan_pada) }}</span>
+                                                <span><i class="bi bi-person"></i>
+                                                    {{ $item->penulis ?? 'Admin' }}</span>
+                                            </div>
+
                                             <p class="card-text text-muted small flex-grow-1">
-                                                {{ Str::limit($item->konten, 100) }}</p>
+                                                {{ Str::limit($item->konten, 100) }}
+                                            </p>
                                             <span class="text-primary mt-2 fw-semibold">Baca Selengkapnya →</span>
                                         </div>
                                     </a>

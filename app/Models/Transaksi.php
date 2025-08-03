@@ -11,7 +11,7 @@ class Transaksi extends Model
     protected $keyType = 'string';
     protected $table = 'transaksi';
 
-    protected $fillable = ['telepon', 'alamat', 'negara', 'jumlah', 'biaya_pengiriman', 'no_resi', 'jenis_pengiriman', 'total_harga', 'status', 'id_pelanggan'];
+    protected $fillable = ['telepon', 'alamat', 'negara', 'jumlah', 'ekspedisi', 'biaya_pengiriman', 'no_resi', 'jenis_pengiriman', 'total_harga', 'status', 'id_pelanggan'];
 
     protected static function boot()
     {

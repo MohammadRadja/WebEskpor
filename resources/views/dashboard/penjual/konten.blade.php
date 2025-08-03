@@ -39,11 +39,7 @@
                             "media": {"label": "Media", "type": "json"},
                             "status": {"label": "Status", "type": "select", "options": ["terbit", "draf"]},
                             "diterbitkan_pada": {"label": "Diterbitkan Pada", "type": "date"},
-                            "id_penulis": {
-            "label": "Penulis",
-            "type": "select",
-            "options": {!! json_encode($penulisList) !!}
-        }
+                            "penulis": {"label": "Penulis", "type": "text"}
                         }'>
                         <i class="fas fa-plus me-1"></i> Tambah
                     </button>
@@ -81,7 +77,7 @@
                                                     <p><strong>Diterbitkan:</strong>
                                                         {{ \Carbon\Carbon::parse($k->diterbitkan_pada)->translatedFormat('d F Y') }}
                                                     </p>
-                                                    <p><strong>Penulis:</strong> {{ $k->penulis->username }}</p>
+                                                    <p><strong>Penulis:</strong> {{ $k->penulis }}</p>
                                                     <p><strong>Tautan:</strong>
                                                         @if ($k->tautan)
                                                             <a href="{{ $k->tautan }}"
@@ -151,12 +147,7 @@
             "options": ["terbit", "draf"],
             "value": "{{ $k->status }}"
         },
-        "id_penulis": {
-            "label": "Penulis",
-            "type": "select",
-            "options": {!! json_encode($penulisList) !!},
-            "value": "{{ $k->id_penulis }}"
-        },
+        "penulis": {"label": "Penulis", "type": "text"},
         "diterbitkan_pada": {
             "label": "Diterbitkan Pada",
             "type": "date",
@@ -189,9 +180,4 @@
         @endforeach
 
     </div>
-@endsection
-@section('scripts')
-    <script>
-        window.penulisList = @json($penulisList);
-    </script>
 @endsection

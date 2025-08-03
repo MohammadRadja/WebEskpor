@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Konten;
-use App\Models\User;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -12,14 +11,6 @@ class KontenSeeder extends Seeder
 {
     public function run(): void
     {
-        $penulis = User::where('role', 'administrator')->first();
-
-        if (!$penulis) {
-            $this->command->error('Gagal menjalankan KontenSeeder: tidak ditemukan user dengan role administrator.');
-            return;
-        }
-
-
         // 2. Tentang Kami
         // Profil Perusahaan
         Konten::create([
@@ -32,8 +23,9 @@ class KontenSeeder extends Seeder
             'tautan' => '/about',
             'status' => 'terbit',
             'diterbitkan_pada' => Carbon::now(),
-            'id_penulis' => $penulis->id,
+            'penulis' => '',
         ]);
+
         // Layanan Kami
         Konten::create([
             'judul' => 'Layanan Kami',
@@ -61,7 +53,7 @@ class KontenSeeder extends Seeder
             ]),
             'status' => 'terbit',
             'diterbitkan_pada' => now(),
-            'id_penulis' => $penulis->id,
+            'penulis' => '',
         ]);
         // Visi Misi
         Konten::create([
@@ -76,7 +68,7 @@ class KontenSeeder extends Seeder
             ]),
             'status' => 'terbit',
             'diterbitkan_pada' => now(),
-            'id_penulis' => $penulis->id,
+            'penulis' => '',
         ]);
 
         // 3. Produk
@@ -90,78 +82,88 @@ class KontenSeeder extends Seeder
             'tautan' => '/produk',
             'status' => 'terbit',
             'diterbitkan_pada' => Carbon::now(),
-            'id_penulis' => $penulis->id,
+            'penulis' => '',
         ]);
 
         // 4. Berita
         $beritaList = [
             [
                 'judul' => 'Panen Organik Meningkat',
+                'penulis' => 'Budi Santoso',
                 'kutipan' => 'Produksi panen organik meningkat signifikan tahun ini.',
-                'konten' => 'Para petani lokal berhasil meningkatkan hasil panen berkat metode pertanian alami tanpa bahan kimia.',
+                'konten' => 'Para petani lokal berhasil meningkatkan hasil panen...',
                 'gambar' => 'berita1.jpg',
                 'tautan' => 'https://www.twitter.com/',
             ],
             [
                 'judul' => 'Kerja Sama dengan Lembaga Internasional',
+                'penulis' => 'Siti Rahmawati',
                 'kutipan' => 'Kebun organik menjalin kemitraan internasional.',
-                'konten' => 'Kami bekerja sama dengan organisasi global untuk meningkatkan mutu dan jangkauan produk organik kami.',
+                'konten' => 'Kami bekerja sama dengan organisasi global...',
                 'gambar' => 'berita2.jpg',
                 'tautan' => 'https://www.twitter.com/',
             ],
             [
                 'judul' => 'Pelatihan Pertanian Berkelanjutan',
+                'penulis' => 'Andi Wijaya',
                 'kutipan' => 'Petani mendapat pelatihan tentang teknik pertanian berkelanjutan.',
-                'konten' => 'Pelatihan ini meliputi penggunaan pupuk alami, rotasi tanaman, dan pengendalian hama ramah lingkungan.',
+                'konten' => 'Pelatihan ini meliputi penggunaan pupuk alami...',
                 'gambar' => 'berita3.jpg',
                 'tautan' => 'https://www.twitter.com/',
             ],
             [
                 'judul' => 'Pameran Produk Organik Nasional',
+                'penulis' => 'Rina Puspita',
                 'kutipan' => 'Kami ikut serta dalam pameran produk organik tingkat nasional.',
-                'konten' => 'Dalam pameran ini kami memperkenalkan berbagai produk unggulan dan inovasi di bidang pertanian organik.',
+                'konten' => 'Dalam pameran ini kami memperkenalkan berbagai produk unggulan...',
                 'gambar' => 'berita4.jpg',
                 'tautan' => 'https://www.twitter.com/',
             ],
             [
                 'judul' => 'Kunjungan Menteri Pertanian',
+                'penulis' => 'Agus Prabowo',
                 'kutipan' => 'Menteri Pertanian mengapresiasi kegiatan petani organik.',
-                'konten' => 'Kunjungan ini menunjukkan dukungan pemerintah terhadap pertanian berkelanjutan dan mandiri.',
+                'konten' => 'Kunjungan ini menunjukkan dukungan pemerintah...',
                 'gambar' => 'berita5.jpg',
                 'tautan' => 'https://www.twitter.com/',
             ],
             [
                 'judul' => 'Program Edukasi Sekolah Alam',
+                'penulis' => 'Dewi Kartika',
                 'kutipan' => 'Anak-anak belajar langsung tentang pertanian organik.',
-                'konten' => 'Program ini bertujuan menanamkan kesadaran lingkungan dan cinta alam sejak dini.',
+                'konten' => 'Program ini bertujuan menanamkan kesadaran lingkungan...',
                 'gambar' => 'berita6.jpg',
                 'tautan' => 'https://www.twitter.com/',
             ],
             [
                 'judul' => 'Distribusi Produk ke Supermarket Nasional',
+                'penulis' => 'Hendra Wijaya',
                 'kutipan' => 'Produk kami kini tersedia di berbagai supermarket besar.',
-                'konten' => 'Kerja sama dengan jaringan ritel ini memperluas akses masyarakat terhadap produk sehat.',
+                'konten' => 'Kerja sama dengan jaringan ritel ini memperluas akses...',
                 'gambar' => 'berita7.jpg',
                 'tautan' => 'https://www.twitter.com/',
             ],
             [
                 'judul' => 'Panen Perdana di Lahan Baru',
+                'penulis' => 'Nur Aini',
                 'kutipan' => 'Panen pertama di lahan baru berjalan sukses.',
-                'konten' => 'Lahan ini merupakan hasil kerja sama dengan koperasi petani desa untuk memperluas kapasitas produksi.',
+                'konten' => 'Lahan ini merupakan hasil kerja sama dengan koperasi petani...',
                 'gambar' => 'berita8.jpg',
                 'tautan' => 'https://www.twitter.com/',
             ],
             [
                 'judul' => 'Workshop Kompos dan Pupuk Organik',
+                'penulis' => 'Yudi Saputra',
                 'kutipan' => 'Warga diajarkan cara membuat kompos dari limbah rumah tangga.',
-                'konten' => 'Workshop ini mendorong kemandirian pangan dan pengurangan sampah organik.',
+                'konten' => 'Workshop ini mendorong kemandirian pangan...',
                 'gambar' => 'berita9.jpg',
                 'tautan' => 'https://www.twitter.com/',
             ],
             [
                 'judul' => 'Program Subsidi Benih Organik',
+                'penulis' => 'Fitri Handayani',
                 'kutipan' => 'Pemerintah daerah memberikan bantuan benih organik.',
-                'konten' => 'Bantuan ini bertujuan meningkatkan produksi petani kecil dengan bibit berkualitas.',
+                'konten' => 'Bantuan ini bertujuan meningkatkan produksi petani kecil...',
                 'gambar' => 'berita10.jpg',
                 'tautan' => 'https://www.twitter.com/',
             ],
@@ -178,7 +180,7 @@ class KontenSeeder extends Seeder
                 'tautan' => $data['tautan'],
                 'status' => 'terbit',
                 'diterbitkan_pada' => Carbon::now(),
-                'id_penulis' => $penulis->id,
+                'penulis' => $data['penulis'],
             ]);
         }
 
@@ -202,7 +204,7 @@ class KontenSeeder extends Seeder
             ]),
             'status' => 'terbit',
             'diterbitkan_pada' => now(),
-            'id_penulis' => $penulis->id,
+            'penulis' => '',
         ]);
 
         // 6. Footer
@@ -221,8 +223,7 @@ class KontenSeeder extends Seeder
             ]),
             'status' => 'terbit',
             'diterbitkan_pada' => now(),
-            'id_penulis' => $penulis->id,
+            'penulis' => '',
         ]);
-
     }
 }

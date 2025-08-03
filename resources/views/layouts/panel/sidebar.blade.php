@@ -94,11 +94,6 @@
                         'icon' => 'fa-box-open',
                         'items' => [
                             ['route' => 'produk.index', 'icon' => 'fa-box', 'label' => 'Produk'],
-                            [
-                                'route' => 'produk-eksternal.index',
-                                'icon' => 'fa-boxes',
-                                'label' => 'Produk Eksternal',
-                            ],
                         ],
                     ])
 
