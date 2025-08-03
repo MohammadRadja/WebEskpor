@@ -74,14 +74,20 @@
                                                 <i class="fas fa-info-circle"></i>
                                             </button>
 
-                                            @if ($t->status === 'menunggu')
+                                            @if (
+                                                $t->status === 'menunggu' ||
+                                                    $t->jenis_pengiriman === 'ditanggung_penjual' ||
+                                                    $t->jenis_pengiriman === 'ditanggung_bersama')
                                                 <!-- Tombol Isi Pengiriman -->
                                                 <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                                     data-bs-target="#pengirimanModal{{ $t->id }}"
                                                     title="Isi Biaya Pengiriman">
                                                     <i class="fas fa-shipping-fast"></i>
                                                 </button>
-                                            @elseif ($t->status === 'dibayar')
+                                            @elseif (
+                                                $t->status === 'menunggu' ||
+                                                    $t->jenis_pengiriman === 'ditanggung_penjual' ||
+                                                    $t->jenis_pengiriman === 'ditanggung_bersama')
                                                 <!-- Tombol Isi No Resi -->
                                                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                                     data-bs-target="#resiModal{{ $t->id }}" title="Isi Nomor Resi">
@@ -133,7 +139,7 @@
                                             <td>{{ $d->produk->nama }}</td>
                                             <td>{{ format_stok($d->jumlah) }}</td>
                                             <td>{{ rupiah($d->harga_satuan) }}</td>
-                                            <td>{{ rupiah($d->subtotal) }}</td>
+                                            <td>{{ rupiah($d->sub_total) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -78,13 +78,15 @@
                                 <label class="form-label">Total Harga</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
-                                    <input type="number" name="total_harga" class="form-control"
-                                        value="{{ $totalHarga }}" readonly>
+                                    <input type="text" name="total_harga_display" class="form-control"
+                                        value="{{ rupiah($totalHarga) }}" readonly>
+                                    <input type="hidden" name="total_harga" value="{{ $totalHarga }}">
                                 </div>
                                 <div class="mt-2">
                                     <small id="info_harga" class="text-info d-block fw-bold"></small>
                                 </div>
                             </div>
+
 
                             <input type="hidden" name="no_resi" value="">
                             <input type="hidden" name="status" value="menunggu">
