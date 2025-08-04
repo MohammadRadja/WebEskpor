@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Penjual\KontenController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Admin\LaporanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,22 +77,18 @@ Route::middleware(['auth'])->group(function () {
 
     // Produk
     Route::resource('produk', ProdukController::class);
-    Route::get('/produk-export', [ProdukController::class, 'exportExcel'])->name('produk.export.excel');
 
     // Produk Eksternal
     Route::resource('produk-eksternal', ProdukEksternalController::class);
 
     // Bibit
     Route::resource('/bibit', BibitController::class);
-    Route::get('/bibit-export', [BibitController::class, 'exportExcel'])->name('bibit.export.excel');
 
     // Kebun
     Route::resource('/kebun', KebunController::class);
-    Route::get('/kebun-export', [KebunController::class, 'exportExcel'])->name('kebun.export.excel');
 
     // Tanaman
     Route::resource('/tanaman', TanamanController::class);
-    Route::get('/tanaman-export', [TanamanController::class, 'exportExcel'])->name('tanaman.export.excel');
 
     // Petak Kebun
     Route::get('/petak-kebun', [PetakKebunController::class, 'index'])->name('petak.kebun');
@@ -101,14 +98,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/petak-kebun/{id}/edit', [PetakKebunController::class, 'edit'])->name('petakan.edit');
     Route::put('/petak-kebun/{id}', [PetakKebunController::class, 'update'])->name('petakan.update');
     Route::delete('/petak-kebun/{id}', [PetakKebunController::class, 'destroy'])->name('petakan.destroy');
-    Route::get('/petak-kebun/export/excel', [PetakKebunController::class, 'exportExcel'])->name('petak.kebun.export.excel');
 
     // Transaksi
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
     Route::resource('/transaksi', TransaksiController::class);
     Route::post('/checkout/xendit', [TransaksiController::class, 'checkoutXendit'])->name('checkout.xendit');
-    Route::post('/xendit/callback', [TransaksiController::class, 'handleCallback']);
-
     // Checkout Success & Failed
     Route::get('/checkout/success', [TransaksiController::class, 'checkoutSuccess'])->name('checkout.success');
     Route::get('/checkout/failed', [TransaksiController::class, 'checkoutFailed'])->name('checkout.failed');
@@ -116,14 +110,24 @@ Route::middleware(['auth'])->group(function () {
     // Konten Admin
     Route::get('/konten', [DashboardController::class, 'konten'])->name('konten');
 
-    // User Management
+    // Route Administrator
     Route::middleware('role:administrator')->group(function () {
+        // User Management
         Route::resource('/user', UserController::class);
-        Route::get('/user/export', [UserController::class, 'exportExcel'])->name('user.export.excel');
+
+        // Laporan
+        Route::prefix('laporan')
+            ->as('laporan.')
+            ->controller(LaporanController::class)
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/export/{jenis}/{format?}', 'export')->name('export');
+            });
     });
 
-    // Konten Penjual
+    // Route Penjual
     Route::middleware('role:administrator,penjual')->group(function () {
+        // Konten Management
         Route::resource('konten', KontenController::class);
     });
 });

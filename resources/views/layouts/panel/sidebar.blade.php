@@ -59,6 +59,10 @@
                         class="nav-link d-flex align-items-center text-white {{ request()->routeIs('konten.*') ? 'active' : '' }}">
                         <i class="fas fa-edit me-2"></i> Manajemen Konten
                     </a>
+                    <a href="{{ route('laporan.index') }}"
+                        class="nav-link d-flex align-items-center text-white {{ request()->routeIs('laporan.*') ? 'active' : '' }}">
+                        <i class="fas fa-file-alt me-2"></i> Laporan
+                    </a>
                 @elseif(auth()->user()->role === 'manajer_kebun')
                     {{-- Manajer Kebun --}}
                     @include('components.sidebar.collapse', [
@@ -92,9 +96,7 @@
                         'id' => 'collapseProdukPenjual',
                         'title' => 'Manajemen Produk',
                         'icon' => 'fa-box-open',
-                        'items' => [
-                            ['route' => 'produk.index', 'icon' => 'fa-box', 'label' => 'Produk'],
-                        ],
+                        'items' => [['route' => 'produk.index', 'icon' => 'fa-box', 'label' => 'Produk']],
                     ])
 
                     <a href="{{ route('konten.index') }}"

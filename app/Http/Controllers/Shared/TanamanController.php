@@ -86,9 +86,4 @@ class TanamanController extends Controller
                 ->with('error', 'Gagal menghapus tanaman: ' . $e->getMessage());
         }
     }
-
-    public function exportExcel()
-    {
-        return Excel::download(new TanamanExport(), 'data-tanaman.xlsx');
-    }
 }

@@ -10,7 +10,15 @@ class KebunExport implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        return Kebun::select('nama', 'lokasi', 'created_at')->get();
+        $data = Kebun::select('nama', 'lokasi', 'created_at')->get();
+
+        return $data->map(function ($item) {
+            return [
+                'nama' => $item->nama,
+                'lokasi' => $item->lokasi,
+                'created_at' => format_tanggal($item->created_at),
+            ];
+        });
     }
 
     public function headings(): array

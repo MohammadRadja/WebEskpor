@@ -10,11 +10,20 @@ class TanamanExport implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        return Tanaman::select('nama', 'jenis', 'stok', 'id_bibit', 'sumber', 'sumber_eksternal')->get();
+        return Tanaman::with('bibit')
+            ->get()
+            ->map(function ($tanaman) {
+                return [
+                    'nama' => $tanaman->nama,
+                    'jenis' => ucfirst($tanaman->jenis),
+                    'stok_barang_jadi' => format_jumlah_tanam($tanaman->stok_barang_jadi),
+                    'stok_bibit' => format_jumlah_tanam($tanaman->stok_bibit),
+                ];
+            });
     }
 
     public function headings(): array
     {
-        return ['Nama', 'Jenis', 'Stok', 'ID Bibit', 'Sumber', 'Sumber Eksternal'];
+        return ['Nama Tanaman', 'Jenis', 'Stok Barang Jadi', 'Stok Bibit'];
     }
 }

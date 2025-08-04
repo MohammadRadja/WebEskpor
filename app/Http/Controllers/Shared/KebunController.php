@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Shared;
 use App\Http\Controllers\Controller;
 use App\Models\Kebun;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\KebunExport;
 
 class KebunController extends Controller
 {
@@ -59,15 +57,6 @@ class KebunController extends Controller
             return redirect()->route('kebun.index')->with('success', 'Kebun berhasil dihapus.');
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat menghapus kebun.');
-        }
-    }
-
-    public function exportExcel()
-    {
-        try {
-            return Excel::download(new KebunExport, 'kebun.xlsx');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal mengekspor data kebun.');
         }
     }
 }

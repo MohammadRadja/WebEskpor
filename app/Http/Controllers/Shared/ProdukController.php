@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Produk;
 use App\Models\Tanaman;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ProdukExport;
 
 class ProdukController extends Controller
 {
@@ -138,15 +136,6 @@ class ProdukController extends Controller
             }
 
             return redirect()->back()->with('error', 'Gagal menghapus produk.');
-        }
-    }
-
-    public function exportExcel()
-    {
-        try {
-            return Excel::download(new ProdukExport(), 'data-produk.xlsx');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal mengekspor data produk.');
         }
     }
 }

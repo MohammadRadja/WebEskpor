@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\PetakKebun;
 use App\Models\Kebun;
 use App\Models\Tanaman;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\PetakKebunExport;
 
 class PetakKebunController extends Controller
 {
