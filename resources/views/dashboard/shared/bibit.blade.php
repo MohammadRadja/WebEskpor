@@ -9,9 +9,6 @@
                 <p class="text-muted">Kelola data pembelian bibit tanaman</p>
             </div>
             <div>
-                <a href="{{ route('bibit.export.excel') }}" class="btn btn-outline-success me-2">
-                    <i class="fas fa-file-excel"></i> Export Excel
-                </a>
                 <button class="btn btn-success" data-crud="add" data-url="{{ route('bibit.store') }}" data-method="POST"
                     data-title="Tambah Bibit"
                     data-fields='{

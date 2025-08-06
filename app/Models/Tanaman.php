@@ -32,15 +32,15 @@ class Tanaman extends Model
         $this->stok_barang_jadi = $this->hitungTotalStokBarangJadi();
         $this->save();
 
-        foreach ($this->produk as $produk) {
-            $produk->stok = $this->stok_barang_jadi;
-            $produk->saveQuietly();
+        if ($this->produk) {
+            $this->produk->stok = $this->stok_barang_jadi;
+            $this->produk->saveQuietly();
         }
     }
 
     public function bibit()
     {
-        return $this->hasMany(Bibit::class, 'id_tanaman');
+        return $this->hasOne(Bibit::class, 'id_tanaman');
     }
 
     public function petakKebun()
@@ -50,11 +50,11 @@ class Tanaman extends Model
 
     public function produk()
     {
-        return $this->hasMany(Produk::class, 'id_tanaman');
+        return $this->hasOne(Produk::class, 'id_tanaman');
     }
 
     public function produkEksternal()
     {
-        return $this->hasMany(ProdukEksternal::class, 'id_tanaman');
+        return $this->hasOne(ProdukEksternal::class, 'id_tanaman');
     }
 }

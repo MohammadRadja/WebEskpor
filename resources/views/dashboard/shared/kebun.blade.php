@@ -14,9 +14,6 @@
                     <p class="text-muted mb-0">Lihat, tambahkan, atau kelola kebun Anda.</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('kebun.export.excel') }}" class="btn btn-outline-success">
-                        <i class="fas fa-file-excel me-1"></i> Export Excel
-                    </a>
                     <button class="btn btn-success" data-crud="add" data-method="POST" data-title="Tambah Kebun"
                         data-url="{{ route('kebun.store') }}"
                         data-fields='{

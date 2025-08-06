@@ -54,13 +54,21 @@ class TransaksiController extends Controller
             $transaksi->update(['status' => 'dibayar']);
         }
 
+        // Notifikasi By Jenis Pengiriman
+        if (in_array($transaksi->jenis_pengiriman, ['ditanggung_penjual', 'ditanggung_bersama'])) {
+            $message = 'Pembayaran untuk transaksi #' . $transaksi->id . ' berhasil. Harap tunggu nomor resi dari admin.';
+        } else {
+            // Notifikasi ditanggung_pembeli
+            $message = 'Pembayaran untuk transaksi #' . $transaksi->id . ' berhasil. Pesanan Anda sedang diproses dan segera dikirim.';
+        }
+
         // Update Notifikasi
         $notify = Notifications::where('id_transaksi', $transaksi->id)->latest()->first();
         if ($notify) {
             $notify->update([
                 'type' => 'success',
                 'title' => 'Pembayaran Berhasil',
-                'message' => 'Pembayaran untuk transaksi #' . $transaksi->id . ' telah berhasil, pesanan sedang diproses.',
+                'message' => $message,
             ]);
         }
 
@@ -234,12 +242,42 @@ class TransaksiController extends Controller
                 $validated['total_harga'] = $total_harga_sebelumnya + $validated['biaya_pengiriman'];
             }
 
+            $notifikasiPengiriman = false;
+            $notifikasiSelesai = false;
+
+            // Jika no_resi diisi
+            if (!empty($validated['no_resi'])) {
+                $validated['status'] = 'selesai';
+                $notifikasiSelesai = true;
+            }
+
             // Jika kedua field diisi, ubah status menjadi proses
             if (!empty($validated['biaya_pengiriman']) && !empty($validated['ekspedisi'])) {
                 $validated['status'] = 'proses';
+                $notifikasiPengiriman = true;
             }
 
             $transaksi->update($validated);
+
+            $notify = Notifications::where('id_transaksi', $transaksi->id)->latest()->first();
+
+            if ($notifikasiSelesai) {
+                if ($notify) {
+                    $notify->update([
+                        'type' => 'success',
+                        'title' => 'Pesanan Selesai',
+                        'message' => 'Pesanan Anda dengan transaksi #' . $transaksi->id . ' telah selesai dan sedang dalam perjalanan dengan nomor resi ' . $validated['no_resi'] . '.',
+                    ]);
+                }
+            } elseif ($notifikasiPengiriman) {
+                if ($notify) {
+                    $notify->update([
+                        'type' => 'info',
+                        'title' => 'Pengiriman Diproses',
+                        'message' => 'Biaya pengiriman dan ekspedisi untuk transaksi #' . $transaksi->id . ' telah ditentukan oleh admin. Silakan melanjutkan pembayaran agar pesanan Anda dapat segera diproses.',
+                    ]);
+                }
+            }
 
             return redirect()->route('transaksi.index')->with('success', 'Biaya pengiriman & No Resi berhasil diperbarui.');
         } catch (ValidationException $e) {

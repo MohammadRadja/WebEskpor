@@ -11,9 +11,6 @@
                 <p class="text-muted">Tambah dan kelola data tanaman</p>
             </div>
             <div>
-                <a href="{{ route('tanaman.export.excel') }}" class="btn btn-outline-success me-2">
-                    <i class="fas fa-file-excel"></i> Export Excel
-                </a>
                 <button class="btn btn-success" data-crud="add" data-method="POST" data-title="Tambah Tanaman"
                     data-url="{{ route('tanaman.store') }}"
                     data-fields='{

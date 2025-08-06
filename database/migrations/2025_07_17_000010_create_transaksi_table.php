@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->decimal('total_harga', 15, 2);
             $table->string('no_resi')->nullable();
             $table->enum('jenis_pengiriman', ['ditanggung_pembeli', 'ditanggung_penjual', 'ditanggung_bersama'])->default('ditanggung_pembeli');
-            $table->enum('status', ['menunggu', 'proses', 'dibayar', 'expired', 'gagal'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'proses', 'dibayar', 'selesai', 'expired', 'gagal'])->default('menunggu');
             $table->string('payment_url')->nullable();
             $table->timestamps();
 

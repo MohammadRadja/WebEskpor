@@ -31,6 +31,7 @@
                                 <th>Alamat</th>
                                 <th>Negara</th>
                                 <th>Jumlah</th>
+                                <th>Berat</th>
                                 <th>Total Harga</th>
                                 <th>Jenis Pengiriman</th>
                                 <th>Nama Ekspedisi</th>
@@ -47,7 +48,8 @@
                                     <td>{{ $t->telepon }}</td>
                                     <td>{{ $t->alamat }}</td>
                                     <td>{{ $t->negara }}</td>
-                                    <td>{{ format_stok($t->jumlah) }}</td>
+                                    <td>{{ $t->jumlah }}</td>
+                                    <td>{{ format_stok($t->jumlah * 500) }}</td>
                                     <td>{{ rupiah($t->total_harga) }}</td>
                                     <td>{{ ucwords(str_replace('_', ' ', $t->jenis_pengiriman)) }}</td>
                                     <td>{{ $t->ekspedisi }}</td>
@@ -74,20 +76,14 @@
                                                 <i class="fas fa-info-circle"></i>
                                             </button>
 
-                                            @if (
-                                                $t->status === 'menunggu' ||
-                                                    $t->jenis_pengiriman === 'ditanggung_penjual' ||
-                                                    $t->jenis_pengiriman === 'ditanggung_bersama')
+                                            @if ($t->status === 'menunggu' && in_array($t->jenis_pengiriman, ['ditanggung_penjual', 'ditanggung_bersama']))
                                                 <!-- Tombol Isi Pengiriman -->
                                                 <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                                     data-bs-target="#pengirimanModal{{ $t->id }}"
                                                     title="Isi Biaya Pengiriman">
                                                     <i class="fas fa-shipping-fast"></i>
                                                 </button>
-                                            @elseif (
-                                                $t->status === 'menunggu' ||
-                                                    $t->jenis_pengiriman === 'ditanggung_penjual' ||
-                                                    $t->jenis_pengiriman === 'ditanggung_bersama')
+                                            @elseif ($t->status === 'dibayar' && in_array($t->jenis_pengiriman, ['ditanggung_penjual', 'ditanggung_bersama']))
                                                 <!-- Tombol Isi No Resi -->
                                                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                                     data-bs-target="#resiModal{{ $t->id }}" title="Isi Nomor Resi">
@@ -125,19 +121,21 @@
                     <div class="modal-body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-sm">
-                                <thead class="table-light">
+                                <thead class="table-light text-center">
                                     <tr>
                                         <th>Produk</th>
                                         <th>Jumlah</th>
+                                        <th>Berat</th>
                                         <th>Harga Satuan</th>
                                         <th>Subtotal</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="text-center">
                                     @foreach ($t->detailTransaksi as $d)
                                         <tr>
                                             <td>{{ $d->produk->nama }}</td>
-                                            <td>{{ format_stok($d->jumlah) }}</td>
+                                            <td>{{ $d->jumlah }}</td>
+                                            <td>{{ format_stok($d->jumlah * 500) }}</td>
                                             <td>{{ rupiah($d->harga_satuan) }}</td>
                                             <td>{{ rupiah($d->sub_total) }}</td>
                                         </tr>

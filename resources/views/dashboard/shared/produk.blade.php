@@ -9,9 +9,6 @@
                 <p class="text-muted mb-0">Daftar produk hasil panen</p>
             </div>
             <div>
-                <a href="{{ route('produk.export.excel') }}" class="btn btn-outline-success me-2">
-                    <i class="fas fa-file-excel"></i> Export Excel
-                </a>
                 <button class="btn btn-success" data-crud="add" data-method="POST" data-title="Tambah Produk"
                     data-url="{{ route('produk.store') }}"
                     data-fields='{
@@ -54,7 +51,8 @@
                                     <td>{{ $p->deskripsi }}</td>
                                     <td>
                                         @if ($p->gambar)
-                                            <img src="{{ asset_or_default($p->gambar) }}" width="60" class="img-thumbnail">
+                                            <img src="{{ asset_or_default($p->gambar) }}" width="60"
+                                                class="img-thumbnail">
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif

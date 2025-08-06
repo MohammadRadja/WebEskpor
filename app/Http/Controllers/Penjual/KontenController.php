@@ -43,7 +43,7 @@ class KontenController extends Controller
                 'media' => 'nullable|array',
                 'diterbitkan_pada' => 'required|date',
                 'status' => 'nullable|in:terbit,draf',
-                'id_penulis' => 'required|exists:users,id',
+                'penulis' => 'nullable|string',
             ]);
 
             $penulis = User::whereIn('role', ['administrator', 'penjual'])->first();
@@ -64,7 +64,7 @@ class KontenController extends Controller
                 'media' => $request->media,
                 'status' => $request->status ?? 'draf',
                 'diterbitkan_pada' => Carbon::now(),
-                'id_penulis' => $penulis->id,
+                'penulis' => $request->penulis,
             ]);
 
             if ($request->ajax()) {
@@ -109,7 +109,7 @@ class KontenController extends Controller
                 'media' => 'nullable|json',
                 'status' => 'nullable|in:terbit,draf',
                 'diterbitkan_pada' => 'required|date',
-                'id_penulis' => 'required|exists:users,id',
+                'penulis' => 'nullable|string',
             ]);
 
             $penulis = User::whereIn('role', ['administrator', 'penjual'])->first();
@@ -130,7 +130,7 @@ class KontenController extends Controller
                 'tautan' => $request->tautan,
                 'status' => $request->status ?? 'draf',
                 'diterbitkan_pada' => Carbon::now(),
-                'id_penulis' => $penulis->id,
+                'penulis' => $request->penulis,
             ]);
 
             if ($request->hasFile('gambar')) {
