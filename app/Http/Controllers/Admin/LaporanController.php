@@ -44,7 +44,13 @@ class LaporanController extends Controller
 
         // Export Excel
         if ($format === 'excel') {
-            return Excel::download($exports[$jenis], $fileName);
+            $jenisWithCharts = ['transaksi', 'bibit', 'petak-kebun'];
+            $extraOptions = [];
+
+            if (in_array($jenis, $jenisWithCharts)) {
+                $extraOptions['withCharts'] = true;
+            }
+            return Excel::download($exports[$jenis], $fileName, \Maatwebsite\Excel\Excel::XLSX, $extraOptions);
         }
 
         if ($format === 'csv') {

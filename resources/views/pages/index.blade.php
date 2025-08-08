@@ -206,14 +206,14 @@
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">{{ $item->nama }}</h5>
                                 <p class="card-text text-muted small mb-2">
-                                {{ Str::words($item->deskripsi, 10, '...') ?? 'Deskripsi tidak tersedia.' }}
-                            </p>
+                                    {{ Str::words($item->deskripsi, 10, '...') ?? 'Deskripsi tidak tersedia.' }}
+                                </p>
                                 <ul class="list-unstyled small mb-3">
                                     <li><strong>Harga:</strong> {{ rupiah($item->harga) }} / 500 Kg</li>
                                     <li><strong>Stok:</strong> {{ format_stok($item->stok) }}</li>
                                 </ul>
 
-                                 {{-- Form Tambah ke Keranjang --}}
+                                {{-- Form Tambah ke Keranjang --}}
                                 <form action="{{ route('cart.add') }}" method="POST" class="mt-auto mb-2">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $item->id }}">
@@ -226,33 +226,37 @@
                                     <input type="hidden" name="product_id" value="{{ $item->id }}">
                                     <button type="submit" class="btn btn-primary w-100">Beli Sekarang</button>
                                 </form>
-                                 {{-- Tombol Lihat Detail --}}
-                                <button type="button" class="btn btn-outline-secondary w-100 mt-2" data-bs-toggle="modal"
-                                    data-bs-target="#productModal{{ $item->id }}">
+                                {{-- Tombol Lihat Detail --}}
+                                <button type="button" class="btn btn-outline-secondary w-100 mt-2"
+                                    data-bs-toggle="modal" data-bs-target="#productModal{{ $item->id }}">
                                     Lihat Detail
                                 </button>
                             </div>
                         </div>
                     </div>
+
                     {{-- Modal Detail Produk --}}
                     <div class="modal fade" id="productModal{{ $item->id }}" tabindex="-1"
                         aria-labelledby="productModalLabel{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title fw-bold" id="productModalLabel{{ $item->id }}">{{ $item->nama }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                    <h5 class="modal-title fw-bold" id="productModalLabel{{ $item->id }}">
+                                        {{ $item->nama }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Tutup"></button>
                                 </div>
                                 <div class="modal-body row">
                                     <div class="col-md-5 mb-3 mb-md-0">
-                                         <img src="{{ asset($item->gambar ?? 'assets/img/default.png') }}" class="card-img-top" alt="{{ $item->nama }}">
+                                        <img src="{{ asset($item->gambar ?? 'assets/img/default.png') }}"
+                                            class="card-img-top" alt="{{ $item->nama }}">
 
                                     </div>
                                     <div class="col-md-7">
                                         <h6 class="fw-semibold mb-2">Deskripsi</h6>
                                         <div class="deskripsi-produk">
-                                        {!! nl2br(e($item->deskripsi)) !!}
-                                    </div>
+                                            {!! nl2br(e($item->deskripsi)) !!}
+                                        </div>
 
 
 
@@ -269,7 +273,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Tutup</button>
                                 </div>
                             </div>
                         </div>
@@ -282,7 +287,7 @@
             </div>
         </div>
     </section>
-<!-- Tombol Lihat Selengkapnya -->
+    <!-- Tombol Lihat Selengkapnya -->
     <div class="container mb-5">
         <div class="row">
             <div class="col text-center">

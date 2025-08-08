@@ -167,13 +167,36 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">Nama Ekspedisi</label>
-                                <input type="text" name="ekspedisi" class="form-control" required min="0">
+                                <select name="ekspedisi" class="form-control" required>
+                                    <optgroup label="Ekspedisi Nasional">
+                                        <option value="JNE">JNE</option>
+                                        <option value="POS Indonesia">POS Indonesia</option>
+                                        <option value="TIKI">TIKI</option>
+                                        <option value="SiCepat">SiCepat</option>
+                                        <option value="J&T Express">J&T Express</option>
+                                        <option value="Ninja Xpress">Ninja Xpress</option>
+                                        <option value="Lion Parcel">Lion Parcel</option>
+                                        <option value="Wahana">Wahana</option>
+                                        <option value="AnterAja">AnterAja</option>
+                                    </optgroup>
+                                    <optgroup label="Ekspedisi Internasional">
+                                        <option value="DHL">DHL</option>
+                                        <option value="FedEx">FedEx</option>
+                                        <option value="UPS">UPS</option>
+                                        <option value="TNT Express">TNT Express</option>
+                                        <option value="Aramex">Aramex</option>
+                                    </optgroup>
+                                </select>
                             </div>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">Biaya Pengiriman</label>
-                                <input type="number" name="biaya_pengiriman" class="form-control" required min="0">
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="number" name="biaya_pengiriman" class="form-control" required
+                                        min="0">
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -202,6 +225,10 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Nama Ekspedisi</label>
+                                    <input type="text" class="form-control" value="{{ $t->ekspedisi }}" readonly>
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">Nomor Resi</label>
                                     <input type="text" name="no_resi" class="form-control" required>

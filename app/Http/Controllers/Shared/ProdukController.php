@@ -14,15 +14,32 @@ class ProdukController extends Controller
     {
         try {
             $produk = Produk::with('tanaman')->get();
-            $usedTanamanIds = Produk::pluck('id_tanaman')->toArray(); // ambil semua tanaman yang sudah dipakai
-            $tanamanList = Tanaman::whereNotIn('id', $usedTanamanIds)
+            // List untuk Tambah Produk
+            $tanamanListAdd = Tanaman::whereDoesntHave('produk')
                 ->get()
-                ->map(fn($t) => ['value' => $t->id, 'label' => $t->nama])
+                ->map(
+                    fn($t) => [
+                        'value' => $t->id,
+                        'label' => $t->nama,
+                    ],
+                )
                 ->values();
 
-            
+            if ($tanamanListAdd->isEmpty()) {
+                $tanamanListAdd = collect([['value' => null, 'label' => 'Semua tanaman sudah digunakan di produk']]);
+            }
 
-            return view('dashboard.shared.produk', compact('produk', 'tanamanList'));
+            // List untuk Edit Produk
+            $tanamanListEdit = Tanaman::all()
+                ->map(
+                    fn($t) => [
+                        'value' => $t->id,
+                        'label' => $t->nama,
+                    ],
+                )
+                ->values();
+
+            return view('dashboard.shared.produk', compact('produk', 'tanamanListAdd', 'tanamanListEdit'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal memuat data produk.');
         }
@@ -43,9 +60,12 @@ class ProdukController extends Controller
             // Cek apakah tanaman sudah dipakai
             $exists = Produk::where('id_tanaman', $request->id_tanaman)->exists();
             if ($exists) {
-                return response()->json([
-                    'errors' => ['id_tanaman' => ['Tanaman ini sudah digunakan pada produk lain.']]
-                ], 422);
+                return response()->json(
+                    [
+                        'errors' => ['id_tanaman' => ['Tanaman ini sudah digunakan pada produk lain.']],
+                    ],
+                    422,
+                );
             }
 
             $data = $request->only(['nama', 'id_tanaman', 'harga', 'deskripsi']);
@@ -89,9 +109,12 @@ class ProdukController extends Controller
             if ($request->id_tanaman !== $produk->id_tanaman) {
                 $exists = Produk::where('id_tanaman', $request->id_tanaman)->exists();
                 if ($exists) {
-                    return response()->json([
-                        'errors' => ['id_tanaman' => ['Tanaman ini sudah digunakan pada produk lain.']]
-                    ], 422);
+                    return response()->json(
+                        [
+                            'errors' => ['id_tanaman' => ['Tanaman ini sudah digunakan pada produk lain.']],
+                        ],
+                        422,
+                    );
                 }
             }
 

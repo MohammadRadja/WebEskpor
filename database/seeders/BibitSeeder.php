@@ -50,17 +50,50 @@ class BibitSeeder extends Seeder
             ],
         ];
 
-        foreach ($data as $item) {
-            $tanaman = Tanaman::where('nama', $item['nama'])->first();
+        $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->month;
 
-            Bibit::create([
-                'nama' => $item['nama'],
-                'tanggal_pembelian' => Carbon::now()->subMonths(rand(0,5))->subDays(rand(1,20)),
-                'nama_penjual' => $item['nama_penjual'],
-                'harga_satuan' => $item['harga_satuan'],
-                'jumlah' => $item['jumlah'],
-                'id_tanaman' => $tanaman?->id,
-            ]);
+        // Buat data pembelian mingguan untuk minggu ke 1-4 bulan ini
+        foreach ($data as $item) {
+            for ($week = 1; $week <= 4; $week++) {
+                // Tanggal random dalam minggu ke-$week bulan ini
+                $startDay = ($week - 1) * 7 + 1;
+                $endDay = $week * 7;
+                $randomDay = rand($startDay, $endDay);
+
+                $tanggalPembelian = Carbon::create($currentYear, $currentMonth, $randomDay);
+
+                $tanaman = Tanaman::where('nama', $item['nama'])->first();
+
+                Bibit::create([
+                    'nama' => $item['nama'],
+                    'tanggal_pembelian' => $tanggalPembelian,
+                    'nama_penjual' => $item['nama_penjual'],
+                    'harga_satuan' => $item['harga_satuan'],
+                    'jumlah' => $item['jumlah'],
+                    'id_tanaman' => $tanaman?->id,
+                ]);
+            }
+        }
+
+        // Buat data pembelian bulanan untuk bulan 6-8 tahun ini (Juni-Agustus)
+        for ($month = 6; $month <= 8; $month++) {
+            foreach ($data as $item) {
+                // Tanggal acak di bulan ini (1-28 supaya aman)
+                $randomDay = rand(1, 28);
+                $tanggalPembelian = Carbon::create($currentYear, $month, $randomDay);
+
+                $tanaman = Tanaman::where('nama', $item['nama'])->first();
+
+                Bibit::create([
+                    'nama' => $item['nama'],
+                    'tanggal_pembelian' => $tanggalPembelian,
+                    'nama_penjual' => $item['nama_penjual'],
+                    'harga_satuan' => $item['harga_satuan'],
+                    'jumlah' => $item['jumlah'],
+                    'id_tanaman' => $tanaman?->id,
+                ]);
+            }
         }
     }
 }
