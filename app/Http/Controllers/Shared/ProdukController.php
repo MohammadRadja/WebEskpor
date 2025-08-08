@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Produk;
 use App\Models\Tanaman;
+use Illuminate\Support\Facades\Log;
 
 class ProdukController extends Controller
 {
@@ -14,9 +15,33 @@ class ProdukController extends Controller
     {
         try {
             $produk = Produk::with('tanaman')->get();
-            $tanamanList = Tanaman::all()->map(fn($t) => ['value' => $t->id, 'label' => $t->nama])->values();
 
-            return view('dashboard.shared.produk', compact('produk', 'tanamanList'));
+            // List untuk Tambah Produk
+            $tanamanListAdd = Tanaman::whereDoesntHave('produk')
+                ->get()
+                ->map(
+                    fn($t) => [
+                        'value' => $t->id,
+                        'label' => $t->nama,
+                    ],
+                )
+                ->values();
+
+            if ($tanamanListAdd->isEmpty()) {
+                $tanamanListAdd = collect([['value' => null, 'label' => 'Semua tanaman sudah digunakan di produk']]);
+            }
+
+            // List untuk Edit Produk
+            $tanamanListEdit = Tanaman::all()
+                ->map(
+                    fn($t) => [
+                        'value' => $t->id,
+                        'label' => $t->nama,
+                    ],
+                )
+                ->values();
+
+            return view('dashboard.shared.produk', compact('produk', 'tanamanListAdd', 'tanamanListEdit'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal memuat data produk.');
         }

@@ -81,6 +81,8 @@ class CartController extends Controller
 
     public function checkoutForm(Request $request)
     {
+        \Log::info('Checkout dipanggil');
+        \Log::info('Item yang dikirim:', $request->all());
         try {
             $userId = auth()->id();
             $cart = Cart::where('user_id', $userId)->first();
@@ -106,8 +108,9 @@ class CartController extends Controller
 
             // Total Berat
             $totalBerat = $cartItems->sum(fn($item) => 500 * $item->quantity);
-            return view('pages.partials.checkout', compact('cartItems', 'totalHarga', 'totalBerat', 'totalJumlah'));
+            return view('pages.partials.checkout.checkout', compact('cartItems', 'totalHarga', 'totalBerat', 'totalJumlah'));
         } catch (Exception $e) {
+            Log::error('Gagal memuat halaman checkout: ' . $e->getMessage());
             return redirect()
                 ->route('cart.index')
                 ->with('error', 'Gagal memuat halaman checkout: ' . $e->getMessage());

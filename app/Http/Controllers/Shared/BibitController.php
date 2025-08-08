@@ -12,7 +12,7 @@ class BibitController extends Controller
 {
     public function index()
     {
-        $bibit = Bibit::latest()->get();
+        $bibit = Bibit::with('tanaman')->get();
         $tanamanList = Tanaman::all()
             ->map(
                 fn($p) => [

@@ -13,7 +13,7 @@
                     data-url="{{ route('produk.store') }}"
                     data-fields='{
                         "nama": {"label": "Nama Produk"},
-                        "id_tanaman": {"label": "Tanaman", "type": "select", "options": "tanamanOptions"},
+                        "id_tanaman": {"label": "Tanaman", "type": "select", "options": "tanamanOptionsAdd"},
                         "harga": {"label": "Harga"},
                         "deskripsi": {"label": "Deskripsi"},
                         "gambar": {"label": "Gambar", "type": "file"}
@@ -63,7 +63,7 @@
                                             data-url="{{ route('produk.update', $p->id) }}"
                                             data-fields='{
                                                 "nama": {"label": "Nama Produk", "value": "{{ $p->nama }}"},
-                                                        "id_tanaman": {"label": "Tanaman", "value": "{{ $p->id_tanaman }}", "type": "select", "options": "tanamanOptions"},
+                                                        "id_tanaman": {"label": "Tanaman", "value": "{{ $p->id_tanaman }}", "type": "select", "options": "tanamanOptionsEdit"},
                                                 "harga": {"label": "Harga", "value": "{{ $p->harga }}"},
                                                 "deskripsi": {"label": "Deskripsi", "value": "{{ $p->deskripsi }}"},
                                                 "gambar": {"label": "Gambar", "type": "file"}
@@ -91,6 +91,9 @@
 @endsection
 @push('scripts')
     <script>
-        window.tanamanOptions = @json($tanamanList);
+        // Untuk List Tambah
+        window.tanamanOptionsAdd = @json($tanamanListAdd);
+        // Untuk List Edit
+        window.tanamanOptionsEdit = @json($tanamanListEdit);
     </script>
 @endpush
