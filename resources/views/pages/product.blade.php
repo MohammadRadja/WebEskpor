@@ -1,7 +1,7 @@
 @extends('layouts.guest.index')
 @section('title', 'Product - PT.RAJAWALI PRIMA ANDALAS')
 @section('content')
-@php use Illuminate\Support\Str; @endphp
+    @php use Illuminate\Support\Str; @endphp
 
     {{-- Hero Section --}}
     <x-hero-section title="Product" background="assets/img/page-title-bg.webp" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'Product']]" />
@@ -13,24 +13,25 @@
                 <h2 class="fw-bold">Produk Kami</h2>
                 <p class="text-muted">Produk segar dan berkualitas setiap hari</p>
             </div>
-@if(session('stok_kurang'))
-    <div class="alert alert-danger">
-        {{ session('stok_kurang') }}
-    </div>
-@endif
+            @if (session('stok_kurang'))
+                <div class="alert alert-danger">
+                    {{ session('stok_kurang') }}
+                </div>
+            @endif
 
             <div class="row">
                 @forelse ($product as $item)
                     <div class="col-md-6 col-lg-3 mb-4">
                         <div class="card h-100 shadow-sm">
-                           <img src="{{ asset($item->gambar ?? 'assets/img/default.png') }}" class="card-img-top" alt="{{ $item->nama }}">
+                            <img src="{{ asset($item->gambar ?? 'assets/img/default.png') }}" class="card-img-top"
+                                alt="{{ $item->nama }}">
 
-                                {{-- style="height: 180px; object-fit: cover;"> --}}
+                            {{-- style="height: 180px; object-fit: cover;"> --}}
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">{{ $item->nama }}</h5>
-                               <p class="card-text text-muted small mb-2">
-                                {{ Str::words($item->deskripsi, 10, '...') ?? 'Deskripsi tidak tersedia.' }}
-                            </p>
+                                <p class="card-text text-muted small mb-2">
+                                    {{ Str::words($item->deskripsi, 10, '...') ?? 'Deskripsi tidak tersedia.' }}
+                                </p>
                                 {{-- Informasi Harga dan Stok --}}
 
                                 <ul class="list-unstyled small mb-3">
@@ -46,11 +47,11 @@
 
                                 {{-- Form Beli Sekarang --}}
                                 <form action="{{ route('cart.buyNow') }}" method="POST">
-    @csrf
-    <input type="hidden" name="product_id" value="{{ $item->id }}">
-    <input type="hidden" name="jumlah" value="1"> {{-- atau input sesuai jumlah yg dibeli --}}
-    <button type="submit" class="btn btn-primary w-100">Beli Sekarang</button>
-</form>
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $item->id }}">
+                                    <input type="hidden" name="jumlah" value="1"> {{-- atau input sesuai jumlah yg dibeli --}}
+                                    <button type="submit" class="btn btn-primary w-100">Beli Sekarang</button>
+                                </form>
 
                                 {{-- Tombol Lihat Detail --}}
                                 <button type="button" class="btn btn-outline-secondary w-100 mt-2" data-bs-toggle="modal"
@@ -67,19 +68,22 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title fw-bold" id="productModalLabel{{ $item->id }}">{{ $item->nama }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                    <h5 class="modal-title fw-bold" id="productModalLabel{{ $item->id }}">
+                                        {{ $item->nama }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Tutup"></button>
                                 </div>
                                 <div class="modal-body row">
                                     <div class="col-md-5 mb-3 mb-md-0">
-                                         <img src="{{ asset($item->gambar ?? 'assets/img/default.png') }}" class="card-img-top" alt="{{ $item->nama }}">
+                                        <img src="{{ asset($item->gambar ?? 'assets/img/default.png') }}"
+                                            class="card-img-top" alt="{{ $item->nama }}">
 
                                     </div>
                                     <div class="col-md-7">
                                         <h6 class="fw-semibold mb-2">Deskripsi</h6>
                                         <div class="deskripsi-produk">
-                                        {!! nl2br(e($item->deskripsi)) !!}
-                                    </div>
+                                            {!! nl2br(e($item->deskripsi)) !!}
+                                        </div>
 
 
 

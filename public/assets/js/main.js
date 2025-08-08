@@ -255,6 +255,31 @@
             });
     }
 
+    /** === Fungsi format Rupiah === */
+    function formatRupiah(angka) {
+        // Convert ke string
+        let number = angka.toString();
+
+        // Hilangkan decimal
+        number = number.replace(/(\.00|,00)$/, "");
+
+        // Hilangkan karakter kecuali digit
+        let cleanString = number.replace(/[^0-9]/g, "");
+
+        if (cleanString === "") return "";
+
+        let sisa = cleanString.length % 3;
+        let rupiah = cleanString.substr(0, sisa);
+        let ribuan = cleanString.substr(sisa).match(/\d{3}/g);
+
+        if (ribuan) {
+            let separator = sisa ? "." : "";
+            rupiah += separator + ribuan.join(".");
+        }
+
+        return "Rp " + rupiah;
+    }
+
     /** === UNIVERSAL MODAL CRUD === */
     function initUniversalModal() {
         const modalEl = document.getElementById("universalModal");
@@ -263,7 +288,6 @@
         const modalBody = document.getElementById("modalBody");
 
         if (!modalEl || !modalForm || !modalTitle || !modalBody) {
-            console.warn("[initUniversalModal] Modal element not found.");
             return;
         }
 
@@ -281,10 +305,6 @@
             const method = btn.dataset.method || "POST";
             const fieldsRaw = btn.dataset.fields;
 
-            console.log(
-                `[Modal Trigger] Action: ${action}, URL: ${url}, Method: ${method}`
-            );
-
             if (action === "add" || action === "edit") {
                 modalTitle.textContent = title;
                 modalBody.innerHTML = "";
@@ -294,13 +314,7 @@
                 let fields = {};
                 try {
                     fields = JSON.parse(fieldsRaw);
-                    console.log("[Parsed Fields]", fields);
                 } catch (err) {
-                    console.error(
-                        "[initUniversalModal] Failed to parse fields JSON:",
-                        fieldsRaw,
-                        err
-                    );
                     return;
                 }
 
@@ -354,6 +368,25 @@
                         input.className = "form-control";
                         input.name = name;
                         input.value = config.value || "";
+                    }
+
+                    // Format Rupiah Input
+                    if (/harga/i.test(name)) {
+                        if (input.value) {
+                            input.value = formatRupiah(input.value);
+                        }
+
+                        input.addEventListener("input", (e) => {
+                            let rawValue = e.target.value.toString();
+                            const formatted = formatRupiah(rawValue);
+
+                            e.target.value = formatted;
+
+                            e.target.setSelectionRange(
+                                formatted.length,
+                                formatted.length
+                            );
+                        });
                     }
 
                     wrapper.append(label, input);
@@ -431,11 +464,10 @@
                 formData.append("_method", currentMethod);
             }
 
-            console.log(
-                `[Form Submit] URL: ${currentUrl}, Method: ${currentMethod}`
-            );
-            for (let [key, value] of formData.entries()) {
-                console.log(` - ${key}:`, value);
+            for (const [key, val] of formData.entries()) {
+                if (/harga/i.test(key)) {
+                    formData.set(key, val.replace(/[^0-9]/g, ""));
+                }
             }
 
             try {

@@ -11,7 +11,7 @@
             <div>
                 {{-- Tombol Tambah hanya untuk role yang boleh mengelola --}}
                 @php
-                    $canManage = in_array(Auth::user()->role, ['manajer_kebun',]);
+                    $canManage = in_array(Auth::user()->role, ['manajer_kebun']);
                 @endphp
 
                 @if ($canManage)
@@ -22,7 +22,7 @@
                             "nama": {"label": "Nama Bibit"},
                             "tanggal_pembelian": {"label": "Tanggal Pembelian", "type": "date"},
                             "nama_penjual": {"label": "Nama Penjual"},
-                            "harga_satuan": {"label": "Harga Satuan", "type": "number"},
+                            "harga_satuan": {"label": "Harga Satuan"},
                             "jumlah": {"label": "Jumlah Bibit", "type": "number"}
                         }'>
                         <i class="fas fa-plus"></i> Tambah Bibit
