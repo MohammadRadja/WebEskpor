@@ -3,16 +3,18 @@
 namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Models\Tanaman;
 use App\Models\Bibit;
-use App\Exports\BibitExport;
 
 class BibitController extends Controller
 {
+    use AuthorizesRequests; // Wajib ditambahkan untuk authorize()
+
     public function index()
     {
-        $bibit = Bibit::with('tanaman')->get();
+        $bibit = Bibit::latest()->get();
         $tanamanList = Tanaman::all()
             ->map(
                 fn($p) => [
@@ -26,6 +28,8 @@ class BibitController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Bibit::class); // Cek hak akses
+
         $request->validate([
             'id_tanaman' => 'required|exists:tanaman,id',
             'nama' => 'required|string',
@@ -42,6 +46,9 @@ class BibitController extends Controller
 
     public function update(Request $request, $id)
     {
+        $bibit = Bibit::findOrFail($id);
+        $this->authorize('update', $bibit); // Cek hak akses
+
         $request->validate([
             'id_tanaman' => 'required|exists:tanaman,id',
             'nama' => 'required|string',
@@ -51,7 +58,6 @@ class BibitController extends Controller
             'jumlah' => 'required|integer',
         ]);
 
-        $bibit = Bibit::findOrFail($id);
         $bibit->update($request->all());
 
         return redirect()->route('bibit.index')->with('success', 'Data bibit berhasil diperbarui.');
@@ -60,6 +66,8 @@ class BibitController extends Controller
     public function destroy($id)
     {
         $bibit = Bibit::findOrFail($id);
+        $this->authorize('delete', $bibit); // Cek hak akses
+
         $bibit->delete();
 
         return redirect()->route('bibit.index')->with('success', 'Data bibit berhasil dihapus.');

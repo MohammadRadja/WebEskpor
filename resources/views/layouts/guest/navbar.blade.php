@@ -51,7 +51,7 @@
                             <div class="dropdown">
                                 <a href="#" class="text-dark" id="mobileProfileDropdown" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                    <i class="bi bi-person-circle fs-5"></i>
+                                    
                                 </a>
 
                                 <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="mobileProfileDropdown">
@@ -148,8 +148,51 @@
                 </div>
             </div>
 
-            <!-- Toggle Icon -->
-            <i class="mobile-nav-toggle d-lg-none bi bi-list fs-3 ms-3"></i>
+
+
         </nav>
+         <div class="d-flex align-items-center d-lg-none gap-3 ms-auto">
+            <!-- Toggle Icon (menu) -->
+            <i class="mobile-nav-toggle bi bi-list fs-3"></i>
+
+            @auth
+                <div class="dropdown">
+                    <a href="#" class="text-dark" id="mobileProfileDropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="bi bi-person-circle fs-4"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="mobileProfileDropdown">
+                        <li>
+                            <a href="{{ route('profile.show') }}" class="dropdown-item">
+                                <i class="bi bi-person me-2"></i> Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-gear me-2"></i> Settings
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item bg-transparent border-0 text-start w-100">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            @endauth
+
+            @guest
+                <a href="{{ route('login') }}" class="text-dark">
+                    <i class="bi bi-person-circle fs-4"></i>
+                </a>
+            @endguest
+        </div>
+            </div>
     </div>
 </header>

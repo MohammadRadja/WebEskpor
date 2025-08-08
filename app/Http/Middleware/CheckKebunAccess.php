@@ -16,7 +16,7 @@ class CheckKebunAccess
         $user = Auth::user();
 
         // Cek apakah sudah login dan memiliki role yang diizinkan
-        if (!$user || !in_array($user->role, ['owner', 'kepala_kebun', 'sales'])) {
+        if (!$user || !in_array($user->role, ['owner', 'manajer_kebun', 'sales'])) {
             abort(403, 'Akses ditolak.');
         }
 

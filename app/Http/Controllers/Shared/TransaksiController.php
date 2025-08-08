@@ -161,19 +161,29 @@ class TransaksiController extends Controller
                 Log::info('Store Transaksi - Buy Now:', $request->all());
                 // Jika Buy Now → buat detail dari produk langsung
                 $produk = Produk::findOrFail($request->produk_id);
-                $subtotal = $produk->harga * $validated['jumlah'];
-                $subquantity = 500 * $validated['jumlah'];
+$subtotal = $produk->harga * $validated['jumlah'];
+$subquantity = 500 * $validated['jumlah']; // jumlah dalam satuan kecil (misal gram)
 
-                $transaksi->detailTransaksi()->create([
-                    'id_produk' => $produk->id,
-                    'jumlah' => $validated['jumlah'],
-                    'harga_satuan' => $produk->harga,
-                    'sub_total' => $subtotal,
-                ]);
+// ✅ Cek apakah stok mencukupi sebelum buat transaksi
+if ($produk->stok < $subquantity) {
+    $this->notify->error('Stok produk tidak mencukupi. Minimal pembelian adalah 500 satuan dan stok harus cukup.', 'Stok Tidak Cukup');
 
-                // Kurangi stok
-                $produk->stok -= $subquantity;
-                $produk->save();
+    // Redirect ke halaman produk, atau sesuaikan
+    return redirect('/product')->with('stok_kurang', 'Stok produk tidak mencukupi. Silakan kurangi jumlah pembelian.');
+}
+
+// ✅ Buat detail transaksi
+$transaksi->detailTransaksi()->create([
+    'id_produk' => $produk->id,
+    'jumlah' => $validated['jumlah'],
+    'harga_satuan' => $produk->harga,
+    'sub_total' => $subtotal,
+]);
+
+// ✅ Kurangi stok
+$produk->stok -= $subquantity;
+$produk->save();
+
             }
 
             return redirect()->route('message.index');

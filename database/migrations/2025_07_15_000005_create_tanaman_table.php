@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tanaman', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama');
-            $table->enum('jenis', ['sayur', 'buah', 'rempah', 'herbal', 'biji', 'kacang', 'umbi', 'hias']);
+            $table->enum('jenis', ['sayur', 'buah', 'rempah', 'herbal', 'biji', 'kacang', 'umbi', 'obat']);
             $table->integer('stok_bibit')->nullable();
             $table->integer('stok_barang_jadi')->nullable();
             $table->timestamps();

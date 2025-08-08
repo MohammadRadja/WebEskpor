@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Produk;
 use App\Models\Tanaman;
-use Illuminate\Support\Facades\Log;
 
 class ProdukController extends Controller
 {
@@ -15,33 +14,15 @@ class ProdukController extends Controller
     {
         try {
             $produk = Produk::with('tanaman')->get();
-
-            // List untuk Tambah Produk
-            $tanamanListAdd = Tanaman::whereDoesntHave('produk')
+            $usedTanamanIds = Produk::pluck('id_tanaman')->toArray(); // ambil semua tanaman yang sudah dipakai
+            $tanamanList = Tanaman::whereNotIn('id', $usedTanamanIds)
                 ->get()
-                ->map(
-                    fn($t) => [
-                        'value' => $t->id,
-                        'label' => $t->nama,
-                    ],
-                )
+                ->map(fn($t) => ['value' => $t->id, 'label' => $t->nama])
                 ->values();
 
-            if ($tanamanListAdd->isEmpty()) {
-                $tanamanListAdd = collect([['value' => null, 'label' => 'Semua tanaman sudah digunakan di produk']]);
-            }
+            
 
-            // List untuk Edit Produk
-            $tanamanListEdit = Tanaman::all()
-                ->map(
-                    fn($t) => [
-                        'value' => $t->id,
-                        'label' => $t->nama,
-                    ],
-                )
-                ->values();
-
-            return view('dashboard.shared.produk', compact('produk', 'tanamanListAdd', 'tanamanListEdit'));
+            return view('dashboard.shared.produk', compact('produk', 'tanamanList'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal memuat data produk.');
         }
@@ -59,6 +40,14 @@ class ProdukController extends Controller
                 'gambar' => 'nullable|image|max:2048',
             ]);
 
+            // Cek apakah tanaman sudah dipakai
+            $exists = Produk::where('id_tanaman', $request->id_tanaman)->exists();
+            if ($exists) {
+                return response()->json([
+                    'errors' => ['id_tanaman' => ['Tanaman ini sudah digunakan pada produk lain.']]
+                ], 422);
+            }
+
             $data = $request->only(['nama', 'id_tanaman', 'harga', 'deskripsi']);
             if ($request->filled('stok')) {
                 $data['stok'] = $request->stok;
@@ -74,21 +63,11 @@ class ProdukController extends Controller
 
             Produk::create($data);
 
-            if ($request->ajax()) {
-                return response()->json(['message' => 'Produk berhasil ditambahkan.']);
-            }
-
-            return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan.');
+            return response()->json(['message' => 'Produk berhasil ditambahkan.']);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            if ($request->ajax()) {
-                return response()->json(['errors' => $e->errors()], 422);
-            }
-            return redirect()->back()->withErrors($e->errors())->withInput();
+            return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json(['error' => 'Gagal menambahkan produk.'], 500);
-            }
-            return redirect()->back()->with('error', 'Gagal menambahkan produk.');
+            return response()->json(['error' => 'Gagal menambahkan produk.'], 500);
         }
     }
 
@@ -106,6 +85,16 @@ class ProdukController extends Controller
                 'gambar' => 'nullable|image|max:2048',
             ]);
 
+            // Pastikan jika ID tanaman baru tidak dipakai di produk lain
+            if ($request->id_tanaman !== $produk->id_tanaman) {
+                $exists = Produk::where('id_tanaman', $request->id_tanaman)->exists();
+                if ($exists) {
+                    return response()->json([
+                        'errors' => ['id_tanaman' => ['Tanaman ini sudah digunakan pada produk lain.']]
+                    ], 422);
+                }
+            }
+
             $data = $request->only(['nama', 'id_tanaman', 'stok', 'harga', 'deskripsi']);
 
             if ($request->hasFile('gambar')) {
@@ -121,21 +110,11 @@ class ProdukController extends Controller
 
             $produk->update($data);
 
-            if ($request->ajax()) {
-                return response()->json(['message' => 'Produk berhasil diperbarui.']);
-            }
-
-            return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui.');
+            return response()->json(['message' => 'Produk berhasil diperbarui.']);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            if ($request->ajax()) {
-                return response()->json(['errors' => $e->errors()], 422);
-            }
-            return redirect()->back()->withErrors($e->errors())->withInput();
+            return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json(['error' => 'Gagal memperbarui produk.'], 500);
-            }
-            return redirect()->back()->with('error', 'Gagal memperbarui produk.');
+            return response()->json(['error' => 'Gagal memperbarui produk.'], 500);
         }
     }
 
@@ -150,17 +129,9 @@ class ProdukController extends Controller
 
             $produk->delete();
 
-            if ($request->ajax()) {
-                return response()->json(['message' => 'Produk berhasil dihapus.']);
-            }
-
-            return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
+            return response()->json(['message' => 'Produk berhasil dihapus.']);
         } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json(['error' => 'Gagal menghapus produk.'], 500);
-            }
-
-            return redirect()->back()->with('error', 'Gagal menghapus produk.');
+            return response()->json(['error' => 'Gagal menghapus produk.'], 500);
         }
     }
 }

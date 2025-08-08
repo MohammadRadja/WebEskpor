@@ -11,15 +11,15 @@ class Produk extends Model
     protected $keyType = 'string';
     protected $table = 'produk';
 
-    protected $fillable = ['nama', 'id_tanaman', 'stok', 'harga', 'deskripsi', 'gambar'];
+    protected $fillable = ['nama', 'id_tanaman','stok', 'harga', 'deskripsi', 'gambar'];
 
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-            $model->id = (string) Str::uuid();
-        });
+        $model->id = (string) Str::uuid();
+    });
     }
 
     public function tanaman()

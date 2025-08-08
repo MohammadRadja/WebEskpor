@@ -9,18 +9,25 @@
                 <p class="text-muted">Kelola data pembelian bibit tanaman</p>
             </div>
             <div>
-                <button class="btn btn-success" data-crud="add" data-url="{{ route('bibit.store') }}" data-method="POST"
-                    data-title="Tambah Bibit"
-                    data-fields='{
-        "id_tanaman": {"label": "Tanaman", "type": "select", "options": "tanamanList"},
-        "nama": {"label": "Nama Bibit"},
-        "tanggal_pembelian": {"label": "Tanggal Pembelian", "type": "date"},
-        "nama_penjual": {"label": "Nama Penjual"},
-        "harga_satuan": {"label": "Harga Satuan", "type": "number"},
-        "jumlah": {"label": "Jumlah Bibit", "type": "number"}
-    }'>
-                    <i class="fas fa-plus"></i> Tambah Bibit
-                </button>
+                {{-- Tombol Tambah hanya untuk role yang boleh mengelola --}}
+                @php
+                    $canManage = in_array(Auth::user()->role, ['manajer_kebun',]);
+                @endphp
+
+                @if ($canManage)
+                    <button class="btn btn-success" data-crud="add" data-url="{{ route('bibit.store') }}" data-method="POST"
+                        data-title="Tambah Bibit"
+                        data-fields='{
+                            "id_tanaman": {"label": "Tanaman", "type": "select", "options": "tanamanList"},
+                            "nama": {"label": "Nama Bibit"},
+                            "tanggal_pembelian": {"label": "Tanggal Pembelian", "type": "date"},
+                            "nama_penjual": {"label": "Nama Penjual"},
+                            "harga_satuan": {"label": "Harga Satuan", "type": "number"},
+                            "jumlah": {"label": "Jumlah Bibit", "type": "number"}
+                        }'>
+                        <i class="fas fa-plus"></i> Tambah Bibit
+                    </button>
+                @endif
             </div>
         </div>
 
@@ -88,22 +95,24 @@
                                             ];
                                         @endphp
 
-                                        <button class="btn btn-sm btn-outline-success" data-crud="edit"
-                                            data-url="{{ route('bibit.update', $b->id) }}" data-method="PATCH"
-                                            data-title="Edit Bibit" data-fields='@json($editFields)'>
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-outline-danger btn-sm" data-crud="delete"
-                                            data-method="DELETE" data-title="Hapus Bibit"
-                                            data-url="{{ route('bibit.destroy', $b->id) }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-
+                                        {{-- Tampilkan tombol edit/hapus jika bisa mengelola --}}
+                                        @if ($canManage)
+                                            <button class="btn btn-sm btn-outline-success" data-crud="edit"
+                                                data-url="{{ route('bibit.update', $b->id) }}" data-method="PATCH"
+                                                data-title="Edit Bibit" data-fields='@json($editFields)'>
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" data-crud="delete"
+                                                data-method="DELETE" data-title="Hapus Bibit"
+                                                data-url="{{ route('bibit.destroy', $b->id) }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-4 text-muted">
+                                    <td colspan="8" class="text-center py-4 text-muted">
                                         Belum ada data bibit.
                                     </td>
                                 </tr>
@@ -115,6 +124,7 @@
         </div>
     </div>
 @endsection
+
 @push('scripts')
     <script>
         window.tanamanList = @json($tanamanList);

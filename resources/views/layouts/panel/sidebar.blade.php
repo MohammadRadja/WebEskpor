@@ -97,6 +97,7 @@
                         'title' => 'Manajemen Produk',
                         'icon' => 'fa-box-open',
                         'items' => [['route' => 'produk.index', 'icon' => 'fa-box', 'label' => 'Produk']],
+
                     ])
 
                     <a href="{{ route('konten.index') }}"
