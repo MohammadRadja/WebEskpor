@@ -14,7 +14,7 @@ class BibitController extends Controller
 
     public function index()
     {
-        $bibit = Bibit::latest()->get();
+        $bibit = Bibit::latest()->orderBy('created_at', 'desc')->paginate(10);
         $tanamanList = Tanaman::all()
             ->map(
                 fn($p) => [

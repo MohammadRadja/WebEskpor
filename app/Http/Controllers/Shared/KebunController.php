@@ -11,7 +11,7 @@ class KebunController extends Controller
     public function index()
     {
         try {
-            $kebunList = Kebun::all();
+            $kebunList = Kebun::OrderBy('created_at', 'desc')->paginate(10);
             return view('dashboard.shared.kebun', compact('kebunList'));
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat memuat data kebun.');

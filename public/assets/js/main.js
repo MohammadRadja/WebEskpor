@@ -371,7 +371,7 @@
                     }
 
                     // Format Rupiah Input
-                    if (/harga/i.test(name)) {
+                    if (/harga/i.test(name) || /biaya_pengiriman/i.test(name)) {
                         if (input.value) {
                             input.value = formatRupiah(input.value);
                         }
@@ -381,7 +381,6 @@
                             const formatted = formatRupiah(rawValue);
 
                             e.target.value = formatted;
-
                             e.target.setSelectionRange(
                                 formatted.length,
                                 formatted.length
@@ -465,7 +464,7 @@
             }
 
             for (const [key, val] of formData.entries()) {
-                if (/harga/i.test(key)) {
+                if (/harga/i.test(key) || /biaya_pengiriman/i.test(key)) {
                     formData.set(key, val.replace(/[^0-9]/g, ""));
                 }
             }

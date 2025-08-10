@@ -38,6 +38,7 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light text-center">
                             <tr>
+                                <th>No</th>
                                 <th>Nama Kebun</th>
                                 <th>Lokasi</th>
                                 <th class="text-center">Aksi</th>
@@ -46,6 +47,10 @@
                         <tbody class="text-center">
                             @forelse($kebunList as $k)
                                 <tr>
+                                    <td>
+                                        {{ $loop->iteration + ($kebunList->currentPage() - 1) * $kebunList->perPage() }}
+                                    </td>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $k->nama }}</td>
                                     <td>{{ $k->lokasi }}</td>
                                     <td>
@@ -74,6 +79,13 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            {{-- Pagination --}}
+            <div class="card-footer bg-light py-2">
+                <div class="d-flex justify-content-center">
+                    {{ $kebunList->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
                 </div>
             </div>
         </div>

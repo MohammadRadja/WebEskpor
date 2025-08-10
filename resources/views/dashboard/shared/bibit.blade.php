@@ -40,6 +40,7 @@
                     <table class="table table-hover mb-0">
                         <thead class="bg-light">
                             <tr>
+                                <th>No</th>
                                 <th>Nama Tanaman</th>
                                 <th>Nama Bibit</th>
                                 <th>Tanggal Pembelian</th>
@@ -53,6 +54,9 @@
                         <tbody>
                             @forelse($bibit as $b)
                                 <tr>
+                                    <td>
+                                        {{ $loop->iteration + ($bibit->currentPage() - 1) * $bibit->perPage() }}
+                                    </td>
                                     <td>{{ $b->tanaman->nama }}</td>
                                     <td>{{ $b->nama }}</td>
                                     <td>{{ format_tanggal($b->tanggal_pembelian) }}</td>
@@ -119,6 +123,13 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            {{-- Pagination --}}
+            <div class="card-footer bg-light py-2">
+                <div class="d-flex justify-content-center">
+                    {{ $bibit->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
                 </div>
             </div>
         </div>

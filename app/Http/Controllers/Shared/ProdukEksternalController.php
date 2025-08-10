@@ -14,7 +14,7 @@ class ProdukEksternalController extends Controller
     public function index()
     {
         try {
-            $produkEksternal = ProdukEksternal::with('tanaman')->get();
+            $produkEksternal = ProdukEksternal::with('tanaman')->orderBy('created_at', 'desc')->paginate(10);
             $tanamanList = Tanaman::all()
                 ->map(
                     fn($p) => [

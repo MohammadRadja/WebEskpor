@@ -14,9 +14,9 @@
                 <button class="btn btn-success" data-crud="add" data-method="POST" data-title="Tambah Tanaman"
                     data-url="{{ route('tanaman.store') }}"
                     data-fields='{
-        "nama": {"label": "Nama Tanaman"},
-        "jenis": {"label": "Jenis", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]}
-    }'>
+                        "nama": {"label": "Nama Tanaman"},
+                        "jenis": {"label": "Jenis", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]}
+                    }'>
                     <i class="fas fa-plus me-1"></i> Tambah Tanaman
                 </button>
 
@@ -32,6 +32,7 @@
                     <table class="table table-hover mb-0">
                         <thead class="bg-light">
                             <tr>
+                                <th>No</th>
                                 <th>Nama Tanaman</th>
                                 <th>Jenis</th>
                                 <th>Stok Barang Jadi</th>
@@ -42,6 +43,9 @@
                         <tbody>
                             @forelse($tanaman as $t)
                                 <tr>
+                                    <td>
+                                        {{ $loop->iteration + ($tanaman->currentPage() - 1) * $tanaman->perPage() }}
+                                    </td>
                                     <td>{{ $t->nama }}</td>
                                     <td>{{ ucfirst($t->jenis) }}</td>
                                     <td>{{ format_stok($t->stok_barang_jadi) }}</td>
@@ -51,9 +55,9 @@
                                             data-title="Edit Tanaman" data-method="PATCH"
                                             data-url="{{ route('tanaman.update', $t->id) }}"
                                             data-fields='{
-                        "nama": {"label": "Nama Tanaman", "value": "{{ $t->nama }}"},
-                        "jenis": {"label": "Jenis", "value": "{{ $t->jenis }}", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]}
-                    }'>
+                                                "nama": {"label": "Nama Tanaman", "value": "{{ $t->nama }}"},
+                                                "jenis": {"label": "Jenis", "value": "{{ $t->jenis }}", "type": "select", "options": ["sayur", "buah", "rempah", "herbal", "biji", "kacang", "umbi", "hias"]}
+                                            }'>
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger" data-crud="delete"
@@ -70,6 +74,13 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            {{-- Pagination --}}
+            <div class="card-footer bg-light py-2">
+                <div class="d-flex justify-content-center">
+                    {{ $tanaman->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
                 </div>
             </div>
         </div>

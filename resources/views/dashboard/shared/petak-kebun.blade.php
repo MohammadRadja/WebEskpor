@@ -47,6 +47,7 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light text-center">
                             <tr>
+                                <th>No</th>
                                 <th>Nama Petakan</th>
                                 <th>Ukuran</th>
                                 <th>Kebun</th>
@@ -63,6 +64,9 @@
                         <tbody class="text-center">
                             @forelse($petakan as $p)
                                 <tr>
+                                    <td>
+                                        {{ $loop->iteration + ($petakan->currentPage() - 1) * $petakan->perPage() }}
+                                    </td>
                                     <td>{{ $p->nama }}</td>
                                     <td>{{ $p->ukuran }}</td>
                                     <td>{{ $p->kebun->nama ?? '-' }}</td>
@@ -116,6 +120,13 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            {{-- Pagination --}}
+            <div class="card-footer bg-light py-2">
+                <div class="d-flex justify-content-center">
+                    {{ $petakan->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
                 </div>
             </div>
         </div>

@@ -13,7 +13,7 @@ class ProdukController extends Controller
     public function index()
     {
         try {
-            $produk = Produk::with('tanaman')->get();
+            $produk = Produk::with('tanaman')->OrderBy('created_at', 'desc')->paginate(10);
             // List untuk Tambah Produk
             $tanamanListAdd = Tanaman::whereDoesntHave('produk')
                 ->get()

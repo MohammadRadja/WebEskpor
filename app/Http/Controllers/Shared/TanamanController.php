@@ -14,7 +14,7 @@ class TanamanController extends Controller
     public function index()
     {
         try {
-            $tanaman = Tanaman::all();
+            $tanaman = Tanaman::orderBy('created_at', 'desc')->paginate(10);
 
             return view('dashboard.shared.tanaman', compact('tanaman'));
         } catch (Exception $e) {

@@ -22,7 +22,9 @@ class TransaksiController extends Controller
     public function index()
     {
         try {
-            $transaksi = Transaksi::with(['pelanggan', 'detailTransaksi.produk'])->get();
+            $transaksi = Transaksi::with(['pelanggan', 'detailTransaksi.produk'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
             $pelangganList = User::where('role', 'pelanggan')
                 ->get()
                 ->map(function ($user) {
@@ -161,29 +163,28 @@ class TransaksiController extends Controller
                 Log::info('Store Transaksi - Buy Now:', $request->all());
                 // Jika Buy Now → buat detail dari produk langsung
                 $produk = Produk::findOrFail($request->produk_id);
-$subtotal = $produk->harga * $validated['jumlah'];
-$subquantity = 500 * $validated['jumlah']; // jumlah dalam satuan kecil (misal gram)
+                $subtotal = $produk->harga * $validated['jumlah'];
+                $subquantity = 500 * $validated['jumlah']; // jumlah dalam satuan kecil (misal gram)
 
-// ✅ Cek apakah stok mencukupi sebelum buat transaksi
-if ($produk->stok < $subquantity) {
-    $this->notify->error('Stok produk tidak mencukupi. Minimal pembelian adalah 500 satuan dan stok harus cukup.', 'Stok Tidak Cukup');
+                // ✅ Cek apakah stok mencukupi sebelum buat transaksi
+                if ($produk->stok < $subquantity) {
+                    $this->notify->error('Stok produk tidak mencukupi. Minimal pembelian adalah 500 satuan dan stok harus cukup.', 'Stok Tidak Cukup');
 
-    // Redirect ke halaman produk, atau sesuaikan
-    return redirect('/product')->with('stok_kurang', 'Stok produk tidak mencukupi. Silakan kurangi jumlah pembelian.');
-}
+                    // Redirect ke halaman produk, atau sesuaikan
+                    return redirect('/product')->with('stok_kurang', 'Stok produk tidak mencukupi. Silakan kurangi jumlah pembelian.');
+                }
 
-// ✅ Buat detail transaksi
-$transaksi->detailTransaksi()->create([
-    'id_produk' => $produk->id,
-    'jumlah' => $validated['jumlah'],
-    'harga_satuan' => $produk->harga,
-    'sub_total' => $subtotal,
-]);
+                // ✅ Buat detail transaksi
+                $transaksi->detailTransaksi()->create([
+                    'id_produk' => $produk->id,
+                    'jumlah' => $validated['jumlah'],
+                    'harga_satuan' => $produk->harga,
+                    'sub_total' => $subtotal,
+                ]);
 
-// ✅ Kurangi stok
-$produk->stok -= $subquantity;
-$produk->save();
-
+                // ✅ Kurangi stok
+                $produk->stok -= $subquantity;
+                $produk->save();
             }
 
             return redirect()->route('message.index');
@@ -245,9 +246,8 @@ $produk->save();
 
             $transaksi = Transaksi::findOrFail($id);
 
-            // Jika biaya_pengiriman diisi, tambahkan ke total_harga
+            // Hitung ulang total harga jika biaya pengiriman diisi
             if (isset($validated['biaya_pengiriman'])) {
-                // Jika biaya_pengiriman lama ada, kurangi dulu untuk menghindari double counting
                 $total_harga_sebelumnya = $transaksi->total_harga - ($transaksi->biaya_pengiriman ?? 0);
                 $validated['total_harga'] = $total_harga_sebelumnya + $validated['biaya_pengiriman'];
             }
@@ -255,13 +255,11 @@ $produk->save();
             $notifikasiPengiriman = false;
             $notifikasiSelesai = false;
 
-            // Jika no_resi diisi
             if (!empty($validated['no_resi'])) {
                 $validated['status'] = 'selesai';
                 $notifikasiSelesai = true;
             }
 
-            // Jika kedua field diisi, ubah status menjadi proses
             if (!empty($validated['biaya_pengiriman']) && !empty($validated['ekspedisi'])) {
                 $validated['status'] = 'proses';
                 $notifikasiPengiriman = true;
@@ -271,30 +269,59 @@ $produk->save();
 
             $notify = Notifications::where('id_transaksi', $transaksi->id)->latest()->first();
 
-            if ($notifikasiSelesai) {
-                if ($notify) {
-                    $notify->update([
-                        'type' => 'success',
-                        'title' => 'Pesanan Selesai',
-                        'message' => 'Pesanan Anda dengan transaksi #' . $transaksi->id . ' telah selesai dan sedang dalam perjalanan dengan nomor resi ' . $validated['no_resi'] . '.',
-                    ]);
-                }
-            } elseif ($notifikasiPengiriman) {
-                if ($notify) {
-                    $notify->update([
-                        'type' => 'info',
-                        'title' => 'Pengiriman Diproses',
-                        'message' => 'Biaya pengiriman dan ekspedisi untuk transaksi #' . $transaksi->id . ' telah ditentukan oleh admin. Silakan melanjutkan pembayaran agar pesanan Anda dapat segera diproses.',
-                    ]);
-                }
+            if ($notifikasiSelesai && $notify) {
+                $notify->update([
+                    'type' => 'success',
+                    'title' => 'Pesanan Selesai',
+                    'message' => 'Pesanan Anda dengan transaksi #' . $transaksi->id . ' telah selesai dan sedang dalam perjalanan dengan nomor resi ' . $validated['no_resi'] . '.',
+                ]);
+            } elseif ($notifikasiPengiriman && $notify) {
+                $notify->update([
+                    'type' => 'info',
+                    'title' => 'Pengiriman Diproses',
+                    'message' => 'Biaya pengiriman dan ekspedisi untuk transaksi #' . $transaksi->id . ' telah ditentukan oleh admin. Silakan melanjutkan pembayaran agar pesanan Anda dapat segera diproses.',
+                ]);
             }
 
+            // === Perbedaan utama: deteksi AJAX ===
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data transaksi berhasil diperbarui.',
+                    'data' => [
+                        'id' => $transaksi->id,
+                        'ekspedisi' => $transaksi->ekspedisi,
+                        'biaya_pengiriman' => $transaksi->biaya_pengiriman,
+                        'biaya_pengiriman_format' => rupiah($transaksi->biaya_pengiriman),
+                        'no_resi' => $transaksi->no_resi,
+                        'status' => $transaksi->status,
+                    ],
+                ]);
+            }
+
+            // Jika request biasa, redirect
             return redirect()->route('transaksi.index')->with('success', 'Biaya pengiriman & No Resi berhasil diperbarui.');
         } catch (ValidationException $e) {
-            Log::error('Gagal memperbarui transaksi: ' . $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'errors' => $e->errors(),
+                    ],
+                    422,
+                );
+            }
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            Log::error('Gagal memperbarui transaksi: ' . $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Gagal memperbarui transaksi: ' . $e->getMessage(),
+                    ],
+                    500,
+                );
+            }
             return redirect()
                 ->back()
                 ->with('error', 'Gagal memperbarui transaksi: ' . $e->getMessage());

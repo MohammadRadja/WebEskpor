@@ -41,6 +41,7 @@
                     <table class="table table-hover mb-0">
                         <thead class="bg-light">
                             <tr>
+                                <th>No</th>
                                 <th>Supplier</th>
                                 <th>Kontak</th>
                                 <th>Tanaman</th>
@@ -56,6 +57,9 @@
                         <tbody>
                             @forelse($produkEksternal as $pe)
                                 <tr>
+                                    <td>
+                                        {{ $loop->iteration + ($produkEksternal->currentPage() - 1) * $produkEksternal->perPage() }}
+                                    </td>
                                     <td>{{ $pe->nama_supplier }}</td>
                                     <td>{{ $pe->kontak }}</td>
                                     <td>{{ $pe->tanaman->nama ?? '-' }}</td>
@@ -98,6 +102,13 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            {{-- Pagination --}}
+            <div class="card-footer bg-light py-2">
+                <div class="d-flex justify-content-center">
+                    {{ $produkEksternal->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
                 </div>
             </div>
         </div>
