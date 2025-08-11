@@ -41,6 +41,32 @@ class TransaksiController extends Controller
         }
     }
 
+    public function detail($id)
+    {
+        $transaksi = Transaksi::with(['pelanggan', 'detailTransaksi.produk'])->find($id);
+
+        if (!$transaksi) {
+            return response()->json(['message' => 'Data transaksi tidak ditemukan'], 404);
+        }
+
+        return response()->json([
+            'pelanggan' => $transaksi->pelanggan->username,
+            'telepon' => $transaksi->telepon,
+            'alamat' => $transaksi->alamat,
+            'negara' => $transaksi->negara,
+            'status' => $transaksi->status,
+            'items' => $transaksi->detailTransaksi->map(function ($d) {
+                return [
+                    'produk' => $d->produk->nama,
+                    'jumlah' => $d->jumlah,
+                    'berat' => format_stok($d->jumlah * 500),
+                    'harga_satuan' => rupiah($d->harga_satuan),
+                    'subtotal' => rupiah($d->sub_total),
+                ];
+            }),
+        ]);
+    }
+
     // Redirect Sukses Xendit
     public function checkoutSuccess(Request $request)
     {

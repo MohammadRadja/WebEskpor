@@ -287,99 +287,97 @@
         const modalTitle = document.getElementById("modalTitle");
         const modalBody = document.getElementById("modalBody");
 
-        if (!modalEl || !modalForm || !modalTitle || !modalBody) {
-            return;
-        }
+        if (!modalEl || !modalForm || !modalTitle || !modalBody) return;
 
         let currentUrl = "";
         let currentMethod = "POST";
         const modal = new bootstrap.Modal(modalEl);
 
-        document.body.addEventListener("click", (e) => {
-            const btn = e.target.closest("[data-crud]");
-            if (!btn) return;
+        /** === Helpers === */
+        const createElement = (tag, className, textOrHTML, isHTML = false) => {
+            const el = document.createElement(tag);
+            if (className) el.className = className;
+            if (textOrHTML) {
+                isHTML
+                    ? (el.innerHTML = textOrHTML)
+                    : (el.textContent = textOrHTML);
+            }
+            return el;
+        };
 
-            const action = btn.dataset.crud;
-            const url = btn.dataset.url;
-            const title = btn.dataset.title || "Form";
-            const method = btn.dataset.method || "POST";
-            const fieldsRaw = btn.dataset.fields;
+        const buildOptions = (select, options, selectedValue) => {
+            options.forEach((opt) => {
+                const option = document.createElement("option");
+                const val = opt.value ?? opt;
+                const label = opt.label ?? opt;
+                option.value = val;
+                option.textContent = label;
+                if (val == selectedValue) option.selected = true;
+                select.appendChild(option);
+            });
+        };
 
-            if (action === "add" || action === "edit") {
-                modalTitle.textContent = title;
-                modalBody.innerHTML = "";
-                currentUrl = url;
-                currentMethod = method;
+        const parseFields = (fieldsRaw) => {
+            try {
+                return JSON.parse(fieldsRaw) || {};
+            } catch {
+                return {};
+            }
+        };
 
-                let fields = {};
-                try {
-                    fields = JSON.parse(fieldsRaw);
-                } catch (err) {
-                    return;
-                }
+        const buildFormFields = (fields) => {
+            modalBody.innerHTML = "";
+            Object.entries(fields).forEach(([name, config]) => {
+                const wrapper = createElement("div", "mb-3");
 
-                Object.entries(fields).forEach(([name, config]) => {
-                    const wrapper = document.createElement("div");
-                    wrapper.className = "mb-3";
-
-                    const label = document.createElement("label");
-                    label.className = "form-label";
-                    label.textContent = config.label;
-
+                if (/alamat/i.test(name) && config.type === "detail") {
+                    wrapper.appendChild(
+                        createElement(
+                            "div",
+                            "form-control-plaintext",
+                            config.value ?? "",
+                            true
+                        )
+                    );
+                } else {
+                    if (config.label) {
+                        wrapper.appendChild(
+                            createElement(
+                                "label",
+                                "form-label fw-bold",
+                                config.label
+                            )
+                        );
+                    }
                     let input;
-                    if (config.type === "select" && config.options) {
+                    if (config.type === "select") {
                         input = document.createElement("select");
                         input.className = "form-control";
-                        input.name = name;
-
-                        let optionList = [];
-
-                        if (Array.isArray(config.options)) {
-                            optionList = config.options;
-                        } else if (
-                            typeof config.options === "string" &&
-                            window[config.options]
-                        ) {
-                            optionList = window[config.options];
-                        }
-
-                        optionList.forEach((opt) => {
-                            const option = document.createElement("option");
-                            const val = opt.value ?? opt;
-                            const label = opt.label ?? opt;
-
-                            option.value = val;
-                            option.textContent = label;
-
-                            if (val == config.value) {
-                                option.selected = true;
-                            }
-
-                            input.appendChild(option);
-                        });
+                        buildOptions(
+                            input,
+                            Array.isArray(config.options)
+                                ? config.options
+                                : window[config.options] || [],
+                            config.value
+                        );
                     } else if (config.type === "textarea") {
-                        input = document.createElement("textarea");
-                        input.className = "form-control";
+                        input = createElement("textarea", "form-control");
                         input.name = name;
-                        input.textContent = config.value || "";
+                        input.value = config.value || "";
                     } else {
-                        input = document.createElement("input");
+                        input = createElement("input", "form-control");
                         input.type = config.type || "text";
-                        input.className = "form-control";
                         input.name = name;
                         input.value = config.value || "";
                     }
 
-                    // Format Rupiah Input
                     if (/harga/i.test(name) || /biaya_pengiriman/i.test(name)) {
-                        if (input.value) {
+                        if (input.value)
                             input.value = formatRupiah(input.value);
-                        }
-
                         input.addEventListener("input", (e) => {
-                            let rawValue = e.target.value.toString();
-                            const formatted = formatRupiah(rawValue);
-
+                            const formatted = formatRupiah(
+                                e.target.value.toString()
+                            );
                             e.target.value = formatted;
                             e.target.setSelectionRange(
                                 formatted.length,
@@ -388,80 +386,112 @@
                         });
                     }
 
-                    wrapper.append(label, input);
-                    modalBody.appendChild(wrapper);
-                });
+                    if (config.type === "detail") input.readOnly = true;
+                    wrapper.appendChild(input);
+                }
+                modalBody.appendChild(wrapper);
+            });
+        };
 
-                const submitBtn = modalForm.querySelector(
-                    "button[type='submit']"
-                );
-                submitBtn.textContent = "Simpan";
-                submitBtn.classList.remove("btn-danger");
-                submitBtn.classList.add("btn-success");
+        /** === Action Handlers Modal === */
+        const addEditHandler = (btn, action) => {
+            modalTitle.textContent = btn.dataset.title || "Form";
+            currentUrl = btn.dataset.url;
+            currentMethod = btn.dataset.method || "POST";
+            const fields = parseFields(btn.dataset.fields);
 
-                console.log("[Modal Opened] Ready for form submission.");
-                modal.show();
-            }
+            Object.values(fields).forEach((f) => (f.type = f.type || "text"));
+            buildFormFields(fields);
 
-            if (action === "delete") {
-                Swal.fire({
-                    title: "Yakin ingin menghapus?",
-                    text: "Data yang dihapus tidak dapat dikembalikan.",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#d33",
-                    cancelButtonColor: "#6c757d",
-                    confirmButtonText: "Ya, hapus",
-                    cancelButtonText: "Batal",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        console.log("[Delete Request] Sending DELETE to", url);
-                        fetch(url, {
-                            method: "POST",
-                            headers: {
-                                "X-CSRF-TOKEN": document.querySelector(
-                                    'meta[name="csrf-token"]'
-                                ).content,
-                                "Content-Type": "application/json",
-                                "X-Requested-With": "XMLHttpRequest",
-                            },
-                            body: JSON.stringify({ _method: "DELETE" }),
-                        })
-                            .then((res) => {
-                                if (!res.ok) throw res;
-                                return res.text();
-                            })
-                            .then(() => {
-                                console.log("[Delete Success]");
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Berhasil",
-                                    text: "Data berhasil dihapus.",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                                setTimeout(() => location.reload(), 500);
-                            })
-                            .catch((err) => {
-                                console.error("[Delete Error]", err);
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Gagal",
-                                    text: "Terjadi kesalahan saat menghapus data.",
-                                });
-                            });
-                    }
-                });
+            const submitBtn = modalForm.querySelector("button[type='submit']");
+            submitBtn.textContent = "Simpan";
+            submitBtn.classList.replace("btn-danger", "btn-success");
+            submitBtn.style.display = "";
+            modal.show();
+        };
+
+        const detailHandler = (btn) => {
+            modalTitle.textContent = btn.dataset.title || "Detail";
+            const fields = parseFields(btn.dataset.fields);
+            Object.values(fields).forEach((f) => (f.type = "detail"));
+            buildFormFields(fields);
+            modalForm.querySelector("button[type='submit']").style.display =
+                "none";
+            modal.show();
+        };
+
+        const deleteHandler = (btn) => {
+            Swal.fire({
+                title: "Yakin ingin menghapus?",
+                text: "Data yang dihapus tidak dapat dikembalikan.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Ya, hapus",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (!result.isConfirmed) return;
+                fetch(btn.dataset.url, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector(
+                            'meta[name="csrf-token"]'
+                        ).content,
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    body: JSON.stringify({ _method: "DELETE" }),
+                })
+                    .then((res) => {
+                        if (!res.ok) throw res;
+                        return res.text();
+                    })
+                    .then(() => {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Berhasil",
+                            text: "Data berhasil dihapus.",
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
+                        setTimeout(() => location.reload(), 500);
+                    })
+                    .catch(() => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Gagal",
+                            text: "Terjadi kesalahan saat menghapus data.",
+                        });
+                    });
+            });
+        };
+
+        /** === Event Listeners Modal === */
+        document.body.addEventListener("click", (e) => {
+            const btn = e.target.closest("[data-crud]");
+            if (!btn) return;
+
+            const action = btn.dataset.crud;
+            switch (action) {
+                case "add":
+                case "edit":
+                    addEditHandler(btn, action);
+                    break;
+                case "detail":
+                    detailHandler(btn);
+                    break;
+                case "delete":
+                    deleteHandler(btn);
+                    break;
             }
         });
 
-        modalForm.addEventListener("submit", async function (e) {
+        modalForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-
             const formData = new FormData(modalForm);
-            if (currentMethod !== "POST") {
+            if (currentMethod !== "POST")
                 formData.append("_method", currentMethod);
-            }
 
             for (const [key, val] of formData.entries()) {
                 if (/harga/i.test(key) || /biaya_pengiriman/i.test(key)) {
@@ -481,27 +511,17 @@
                     body: formData,
                 });
 
-                const contentType = res.headers.get("Content-Type") || "";
-
                 if (!res.ok) {
-                    if (
-                        res.status === 422 &&
-                        contentType.includes("application/json")
-                    ) {
+                    if (res.status === 422) {
                         const errorData = await res.json();
                         const errorMessages = Object.values(errorData.errors)
                             .flat()
                             .join("<br>");
-                        console.warn("[Validation Failed]", errorData.errors);
                         throw { type: "validation", message: errorMessages };
-                    } else {
-                        const errorText = await res.text();
-                        console.error("[Server Error]", errorText);
-                        throw { type: "server", message: errorText };
                     }
+                    throw { type: "server", message: await res.text() };
                 }
 
-                console.log("[Form Success]");
                 modal.hide();
                 Swal.fire({
                     icon: "success",
@@ -515,19 +535,12 @@
                 });
                 setTimeout(() => location.reload(), 500);
             } catch (err) {
-                if (err.type === "validation") {
-                    Swal.fire({
-                        icon: "warning",
-                        title: "Validasi Gagal",
-                        html: err.message,
-                    });
-                } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Gagal",
-                        text: err.message,
-                    });
-                }
+                Swal.fire({
+                    icon: err.type === "validation" ? "warning" : "error",
+                    title:
+                        err.type === "validation" ? "Validasi Gagal" : "Gagal",
+                    html: err.message,
+                });
             }
         });
     }

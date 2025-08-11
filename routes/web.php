@@ -100,7 +100,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/petak-kebun/{id}', [PetakKebunController::class, 'destroy'])->name('petakan.destroy');
 
     // Transaksi
-    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+    Route::get('/transaksi/{id}/detail', [TransaksiController::class, 'detail'])->name('transaksi.detail');
     Route::resource('/transaksi', TransaksiController::class);
     Route::post('/checkout/xendit', [TransaksiController::class, 'checkoutXendit'])->name('checkout.xendit');
     // Checkout Success & Failed

@@ -53,7 +53,18 @@
                                     </td>
                                     <td>{{ $t->pelanggan->username }}</td>
                                     <td>{{ $t->telepon }}</td>
-                                    <td>{{ $t->alamat }}</td>
+                                    <td>
+                                        {{ limit_teks($t->alamat, 50) }}
+                                        @if (strlen(strip_tags($t->alamat)) > 50)
+                                            <a href="#" class="text-primary ms-1" data-crud="detail"
+                                                data-title="Alamat Lengkap"
+                                                data-fields='{
+                                                    "alamat": { "value": @json(nl2br(e($t->alamat))) }
+                                                }'>
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </a>
+                                        @endif
+                                    </td>
                                     <td>{{ $t->negara }}</td>
                                     <td>{{ $t->jumlah }}</td>
                                     <td>{{ format_stok($t->jumlah * 500) }}</td>
@@ -77,9 +88,17 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-1">
-                                            {{-- Detail --}}
-                                            <button class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                                data-bs-target="#detailModal{{ $t->id }}" title="Lihat Detail">
+                                            {{-- Detail Transaksi --}}
+                                            <button type="button" class="btn btn-sm btn-info" data-crud="detail"
+                                                data-title="Detail Transaksi"
+                                                data-fields='{
+                                                    "id_produk": { "label": "Nama Produk", "value": "{{ $t->detailTransaksi->first()->produk->nama ?? '-' }}" },
+                                                    "deskripsi": { "label": "Deskripsi", "value": "{{ $t->detailTransaksi->first()->produk->deskripsi ?? '-' }}" },
+                                                    "jumlah": { "label": "Jumlah", "value": "{{ $t->detailTransaksi->first()->jumlah ?? '-' }}" },
+                                                    "berat": { "label": "Berat", "value": "{{ format_stok($t->detailTransaksi->first()->jumlah * 500) ?? '-' }}" },
+                                                    "harga_satuan": { "label": "Harga Barang Satuan", "value": "{{ $t->detailTransaksi->first()?->harga_satuan !== null ? rupiah($t->detailTransaksi->first()->harga_satuan) : '-' }}" },
+                                                    "sub_total": { "label": "Sub Total", "value": "{{ $t->detailTransaksi->first()?->sub_total !== null ? rupiah($t->detailTransaksi->first()->sub_total) : '-' }}" }
+                                                }'>
                                                 <i class="fas fa-info-circle"></i>
                                             </button>
 
@@ -88,22 +107,13 @@
                                                 <button type="button" class="btn btn-sm btn-warning" data-crud="edit"
                                                     data-title="Isi Biaya Pengiriman" data-method="PATCH"
                                                     data-url="{{ route('transaksi.update', $t->id) }}"
-                                                    data-fields='{
-                                                        "ekspedisi": {
-                                                            "label": "Nama Ekspedisi",
-                                                            "type": "select",
-                                                            "options": [
-                                                                "JNE", "POS Indonesia", "TIKI", "SiCepat", "J&T Express",
-                                                                "Ninja Xpress", "Lion Parcel", "Wahana", "AnterAja",
-                                                                "DHL", "FedEx", "UPS", "TNT Express", "Aramex"
-                                                            ],
-                                                            "value": "{{ $t->ekspedisi }}"
-                                                        },
-                                                        "biaya_pengiriman": {
-                                                            "label": "Biaya Pengiriman",
-                                                            "value": "{{ $t->biaya_pengiriman }}"
-                                                        }
-                                                    }'
+                                                    data-fields='{ "ekspedisi"
+                                                : { "label" : "Nama Ekspedisi" , "type" : "select" , "options" : [ "JNE"
+                                                , "POS Indonesia" , "TIKI" , "SiCepat" , "J&T Express" , "Ninja Xpress"
+                                                , "Lion Parcel" , "Wahana" , "AnterAja" , "DHL" , "FedEx" , "UPS"
+                                                , "TNT Express" , "Aramex" ], "value" : "{{ $t->ekspedisi }}"
+                                                }, "biaya_pengiriman" : { "label" : "Biaya Pengiriman" , "value"
+                                                : "{{ $t->biaya_pengiriman }}" } }'
                                                     title="Isi Biaya Pengiriman">
                                                     <i class="fas fa-shipping-fast"></i>
                                                 </button>
@@ -146,50 +156,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal Detail Transaksi -->
-    @foreach ($transaksi as $t)
-        <div class="modal fade" id="detailModal{{ $t->id }}" tabindex="-1"
-            aria-labelledby="detailModalLabel{{ $t->id }}" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header bg-dark text-white">
-                        <h5 class="modal-title text-success">
-                            <i class="fas fa-info-circle me-2"></i>Detail Transaksi - {{ $t->pelanggan->username }}
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-sm">
-                                <thead class="table-light text-center">
-                                    <tr>
-                                        <th>Produk</th>
-                                        <th>Jumlah</th>
-                                        <th>Berat</th>
-                                        <th>Harga Satuan</th>
-                                        <th>Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-center">
-                                    @foreach ($t->detailTransaksi as $d)
-                                        <tr>
-                                            <td>{{ $d->produk->nama }}</td>
-                                            <td>{{ $d->jumlah }}</td>
-                                            <td>{{ format_stok($d->jumlah * 500) }}</td>
-                                            <td>{{ rupiah($d->harga_satuan) }}</td>
-                                            <td>{{ rupiah($d->sub_total) }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endforeach
 @endsection
