@@ -90,8 +90,18 @@
                 <i class="fas fa-chart-line me-2"></i> Statistik Keuangan (6 Bulan Terakhir)
             </div>
             <div class="card-body">
-                <canvas id="chartKeuangan" height="120" data-chart="{{ json_encode($chartData) }}">
+                <canvas id="chartKeuanganBulanan" height="120" data-chart='@json($chartKeuanganBulanan)'">
                 </canvas>
+            </div>
+        </div>
+
+          <!-- Chart Statistik Keuangan tahunan -->
+        <div class="card bg-white shadow-sm mb-4">
+            <div class="card-header bg-primary text-white fw-bold">
+                <i class="fas fa-chart-line me-2"></i> Statistik Keuangan Tahunan
+            </div>
+            <div class="card-body">
+                <canvas id="chartKeuanganTahunan" height="120" data-chart='@json($ChartKeuanganTahunan)'> </canvas>
             </div>
         </div>
 

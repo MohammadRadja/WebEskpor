@@ -31,7 +31,7 @@ class TanamanController extends Controller
 
             $request->validate([
                 'nama' => 'required|string',
-                'jenis' => 'required|in:sayur,buah,rempah,lainnya',
+                'jenis' => 'required|in:sayur,buah,rempah,herbal,lainnya',
                 'stok_barang_jadi' => 'nullable|integer',
                 'stok_bibit' => 'nullable|integer',
             ]);
@@ -56,7 +56,7 @@ class TanamanController extends Controller
         try {
             $request->validate([
                 'nama' => 'required|string',
-                'jenis' => 'required|in:sayur,buah,rempah,lainnya',
+                'jenis' => 'required|in:sayur,buah,rempah,herbal,lainnya',
                 'stok_barang_jadi' => 'nullable|integer',
                 'stok_bibit' => 'nullable|integer',
             ]);

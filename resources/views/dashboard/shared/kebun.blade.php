@@ -50,7 +50,6 @@
                                     <td>
                                         {{ $loop->iteration + ($kebunList->currentPage() - 1) * $kebunList->perPage() }}
                                     </td>
-                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $k->nama }}</td>
                                     <td>{{ $k->lokasi }}</td>
                                     <td>

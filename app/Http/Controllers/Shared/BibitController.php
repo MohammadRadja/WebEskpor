@@ -26,42 +26,53 @@ class BibitController extends Controller
         return view('dashboard.shared.bibit', compact('bibit', 'tanamanList'));
     }
 
-    public function store(Request $request)
-    {
-        $this->authorize('create', Bibit::class); // Cek hak akses
+   public function store(Request $request)
+{
+    $this->authorize('create', Bibit::class);
 
-        $request->validate([
-            'id_tanaman' => 'required|exists:tanaman,id',
-            'nama' => 'required|string',
-            'tanggal_pembelian' => 'required|date',
-            'nama_penjual' => 'required|string',
-            'harga_satuan' => 'required|numeric',
-            'jumlah' => 'required|integer',
-        ]);
+    // Hilangkan titik ribuan sebelum validasi
+    $request->merge([
+        'harga_satuan' => str_replace('.', '', $request->harga_satuan)
+    ]);
 
-        Bibit::create($request->all());
+    $request->validate([
+        'id_tanaman' => 'required|exists:tanaman,id',
+        'nama' => 'required|string',
+        'tanggal_pembelian' => 'required|date',
+        'nama_penjual' => 'required|string',
+        'harga_satuan' => 'required|numeric',
+        'jumlah' => 'required|integer',
+    ]);
 
-        return redirect()->route('bibit.index')->with('success', 'Data bibit berhasil ditambahkan.');
-    }
+    Bibit::create($request->all());
 
-    public function update(Request $request, $id)
-    {
-        $bibit = Bibit::findOrFail($id);
-        $this->authorize('update', $bibit); // Cek hak akses
+    return redirect()->route('bibit.index')->with('success', 'Data bibit berhasil ditambahkan.');
+}
 
-        $request->validate([
-            'id_tanaman' => 'required|exists:tanaman,id',
-            'nama' => 'required|string',
-            'tanggal_pembelian' => 'required|date',
-            'nama_penjual' => 'required|string',
-            'harga_satuan' => 'required|numeric',
-            'jumlah' => 'required|integer',
-        ]);
+public function update(Request $request, $id)
+{
+    $bibit = Bibit::findOrFail($id);
+    $this->authorize('update', $bibit);
 
-        $bibit->update($request->all());
+    // Hilangkan titik ribuan sebelum validasi
+    $request->merge([
+        'harga_satuan' => str_replace('.', '', $request->harga_satuan)
+    ]);
 
-        return redirect()->route('bibit.index')->with('success', 'Data bibit berhasil diperbarui.');
-    }
+    $request->validate([
+        'id_tanaman' => 'required|exists:tanaman,id',
+        'nama' => 'required|string',
+        'tanggal_pembelian' => 'required|date',
+        'nama_penjual' => 'required|string',
+        'harga_satuan' => 'required|numeric',
+        'jumlah' => 'required|integer',
+    ]);
+
+    $bibit->update($request->all());
+
+    return redirect()->route('bibit.index')->with('success', 'Data bibit berhasil diperbarui.');
+}
+
 
     public function destroy($id)
     {

@@ -360,3 +360,29 @@
 .object-fit-cover {
     object-fit: cover;
 }
+
+/* Scroll Top  */
+.scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+    background-color: #198754;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 9999;         /* Supaya selalu di atas konten lain */
+}
+
+.scroll-top.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}

@@ -4,14 +4,14 @@
 
 @section('content')
     {{-- Hero Section --}}
-    <x-hero-section title="About Us" background="{{ asset('assets/img/page-title-bg.webp') }}" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'About Us']]" />
+    <x-hero-section title="Tentang Kami" background="{{ asset_or_default('assets/img/page-title-bg.webp') }}" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'Tentang Kami']]" />
 
     <!-- Company Profile -->
     <section class="section py-5 bg-white">
         <div class="container">
             <div class="row gy-4 justify-content-between align-items-center">
                 <div class="col-lg-6 order-lg-2" data-aos="zoom-out" data-aos-delay="100">
-                    <img src="{{ asset('assets/img/' . $profil->gambar) }}" alt="{{ $profil->slug }}"
+                    <img src="{{ asset_or_default('assets/img/' . $profil->gambar) }}" alt="{{ $profil->slug }}"
                         class="img-fluid rounded shadow-sm" />
                 </div>
                 <div class="col-lg-5 order-lg-1" data-aos="fade-right" data-aos-delay="200">

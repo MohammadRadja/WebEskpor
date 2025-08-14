@@ -280,6 +280,15 @@
         return "Rp " + rupiah;
     }
 
+    function formatRupiahChart(angka) {
+        // Validasi Angka
+        if (angka == null || isNaN(angka)) return "Rp 0";
+
+        // Format Angka
+        return "Rp " + Number(angka).toLocaleString("id-ID", { minimumFractionDigits: 0 });
+    }
+
+
     /** === UNIVERSAL MODAL CRUD === */
     function initUniversalModal() {
         const modalEl = document.getElementById("universalModal");
@@ -352,6 +361,7 @@
                     let input;
                     if (config.type === "select") {
                         input = document.createElement("select");
+                        input.name = name;
                         input.className = "form-control";
                         buildOptions(
                             input,
@@ -578,91 +588,83 @@
         }
     }
 
-    /** === CHART KEUANGAN === */
-    function initChartKeuangan() {
-        const chartEl = document.getElementById("chartKeuangan");
+    /** === HELPER CHART === */
+    // Fungsi format rupiah
+    function formatRupiahChart(angka) {
+        if (angka == null || isNaN(angka)) return "Rp 0";
+        return "Rp " + Number(angka).toLocaleString("id-ID", { minimumFractionDigits: 0 });
+    }
+
+
+    // Opsi Chart umum
+    const chartOptions = {
+        responsive: true,
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem) {
+                    return formatRupiahChart(tooltipItem.yLabel);
+                }
+            }
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value) {
+                        return formatRupiahChart(value);
+                    }
+                }
+            }]
+        }
+    };
+
+    /** === CHART KEUANGAN BULANAN === */
+    function initChartKeuanganBulanan() {
+        const chartEl = document.getElementById("chartKeuanganBulanan");
         if (!chartEl) return;
 
-        const rawData = chartEl.dataset.chart;
-        if (!rawData) return;
+        const chartData = JSON.parse(chartEl.dataset.chart || "[]");
+        const labels = chartData.map(d => d.bulan);
+        const pendapatan = chartData.map(d => parseFloat(d.pendapatan) || 0);
+        const pengeluaran = chartData.map(d => parseFloat(d.pengeluaran) || 0);
+        const bersih = chartData.map(d => parseFloat(d.bersih) || 0);
 
-        let chartData;
-        try {
-            chartData = JSON.parse(rawData);
-        } catch (e) {
-            console.error("[Chart Error] Gagal parse data chart:", e);
-            return;
-        }
-
-        const labels = chartData.map((d) => d.bulan);
-        const pendapatan = chartData.map((d) => d.pendapatan);
-        const pengeluaran = chartData.map((d) => d.pengeluaran);
-        const bersih = chartData.map((d) => d.bersih);
-
-        const ctx = chartEl.getContext("2d");
-        new Chart(ctx, {
-            type: "line",
+        new Chart(chartEl.getContext("2d"), {
+            type: 'line',
             data: {
                 labels: labels,
                 datasets: [
-                    {
-                        label: "Pendapatan",
-                        data: pendapatan,
-                        borderColor: "green",
-                        backgroundColor: "rgba(0,128,0,0.05)",
-                        fill: false,
-                        tension: 0.3,
-                        borderWidth: 3,
-                        pointRadius: 4,
-                    },
-                    {
-                        label: "Pengeluaran",
-                        data: pengeluaran,
-                        borderColor: "red",
-                        backgroundColor: "rgba(255,0,0,0.05)",
-                        fill: false,
-                        tension: 0.3,
-                        borderWidth: 3,
-                        pointRadius: 4,
-                    },
-                    {
-                        label: "Pendapatan Bersih",
-                        data: bersih,
-                        borderColor: "blue",
-                        backgroundColor: "rgba(0,0,255,0.05)",
-                        fill: false,
-                        tension: 0.3,
-                        borderWidth: 3,
-                        pointRadius: 4,
-                    },
-                ],
+                    { label: "Pendapatan", data: pendapatan, borderColor: "green", backgroundColor: "rgba(0,128,0,0.05)", fill: false, borderWidth: 2 },
+                    { label: "Pengeluaran", data: pengeluaran, borderColor: "red", backgroundColor: "rgba(255,0,0,0.05)", fill: false, borderWidth: 2 },
+                    { label: "Pendapatan Bersih", data: bersih, borderColor: "blue", backgroundColor: "rgba(0,0,255,0.05)", fill: false, borderWidth: 2 },
+                ]
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function (ctx) {
-                                let val = ctx.raw ?? 0;
-                                return (
-                                    "Rp " + Number(val).toLocaleString("id-ID")
-                                );
-                            },
-                        },
-                    },
-                },
-                scales: {
-                    y: {
-                        ticks: {
-                            callback: function (val) {
-                                return (
-                                    "Rp " + Number(val).toLocaleString("id-ID")
-                                );
-                            },
-                        },
-                    },
-                },
+            options: chartOptions
+        });
+    }
+
+    /** === CHART KEUANGAN TAHUNAN === */
+    function initChartKeuanganTahunan() {
+        const chartEl = document.getElementById("chartKeuanganTahunan");
+        if (!chartEl) return;
+
+        const chartData = JSON.parse(chartEl.dataset.chart || "[]");
+        const labels = chartData.map(d => d.tahun);
+        const pendapatan = chartData.map(d => parseFloat(d.pendapatan) || 0);
+        const pengeluaran = chartData.map(d => parseFloat(d.pengeluaran) || 0);
+        const bersih = chartData.map(d => parseFloat(d.bersih) || 0);
+
+        new Chart(chartEl.getContext("2d"), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: "Pendapatan", data: pendapatan, backgroundColor: "rgba(0,128,0,0.6)" },
+                    { label: "Pengeluaran", data: pengeluaran, backgroundColor: "rgba(255,0,0,0.6)" },
+                    { label: "Pendapatan Bersih", data: bersih, backgroundColor: "rgba(0,0,255,0.6)" },
+                ]
             },
+            options: chartOptions
         });
     }
 
@@ -809,9 +811,10 @@
         initUniversalModal();
         initSummernote();
         initSidebarToggle();
-        initChartKeuangan();
         initChartPanenTanaman();
         initPengirimanKetentuan();
+        initChartKeuanganBulanan();
+        initChartKeuanganTahunan();
     });
 
     document.addEventListener("scroll", toggleScrolled);

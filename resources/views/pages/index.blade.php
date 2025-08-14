@@ -6,7 +6,7 @@
         <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
 
             <div class="carousel-item active">
-                <img src="{{ asset('assets/img/perkebunan1.jpg') }}" alt="">
+                <img src="{{ asset_or_default('assets/img/perkebunan1.jpg') }}" alt="">
                 <div class="carousel-container">
                     <h2>Hasil Ladang Terpilih, Menjawab Kebutuhan Pasar Dunia</h2>
                     <p>PT Prima Andalas — Pilar Kepercayaan dalam Menyediakan Hasil
@@ -25,7 +25,7 @@
             </div><!-- End Carousel Item -->
 
             <div class="carousel-item">
-                <img src="{{ asset('assets/img/hero_3.jpg') }}" alt="">
+                <img src="{{ asset_or_default('assets/img/hero_3.jpg') }}" alt="">
                 <div class="carousel-container">
                     <h2>Menyediakan Hasil Panen Segar Setiap Hari</h2>
                     <p>Kesegaran hasil panen setiap hari, untuk kebutuhan pasar yang terpercaya.</p>
@@ -201,7 +201,7 @@
                 @forelse ($product as $item)
                     <div class="col-md-6 col-lg-3 mb-4">
                         <div class="card h-100 shadow-sm">
-                            <img src="{{ asset('assets/img/default.png') }}" class="card-img-top"
+                            <img src="{{ asset_or_default($item->gambar ?? 'assets/img/default.png') }}"
                                 alt="{{ $item->nama }}" style="height: 180px; object-fit: cover;">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">{{ $item->nama }}</h5>
@@ -248,7 +248,7 @@
                                 </div>
                                 <div class="modal-body row">
                                     <div class="col-md-5 mb-3 mb-md-0">
-                                        <img src="{{ asset($item->gambar ?? 'assets/img/default.png') }}"
+                                        <img src="{{ asset_or_default($item->gambar) }}"
                                             class="card-img-top" alt="{{ $item->nama }}">
 
                                     </div>

@@ -232,6 +232,50 @@ h6 {
     opacity: 0;
   }
 }
+/* ===========================
+   Table Global Style
+   =========================== */
+
+.table-custom {
+    border-collapse: collapse !important;
+    border: 1px solid #dee2e6;
+    width: 100%;
+}
+
+.table-custom th,
+.table-custom td {
+    vertical-align: middle !important;
+    padding: 0.75rem 1rem;
+    border: 1px solid #dee2e6;
+}
+
+.table-custom thead th {
+    background-color: #198754; /* Hijau Bootstrap */
+    color: white;
+    font-weight: 600;
+}
+
+.table-custom tbody tr:nth-of-type(odd) {
+    background-color: #f9fcf8; /* Hijau muda */
+}
+
+.table-custom tbody tr:hover {
+    background-color: #f1f8f4;
+}
+
+.table-custom .text-center {
+    text-align: center;
+}
+
+.table-custom .badge {
+    font-size: 0.85rem;
+    padding: 0.5em 0.75em;
+}
+
+.table-custom .btn {
+    padding: 0.25rem 0.5rem;
+}
+
 
 /*--------------------------------------------------------------
 # Global Header

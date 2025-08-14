@@ -16,6 +16,36 @@
             </div>
         </div>
 
+        @php
+    $statusOptions = [
+        '' => 'Semua',
+        'menunggu' => 'Menunggu',
+        'proses' => 'Proses',
+        'selesai' => 'Selesai',
+    ];
+
+    $currentStatus = request('status', '');
+@endphp
+
+<div class="mb-3 d-flex gap-2">
+    <div class="dropdown">
+        <button class="btn btn-success dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ $statusOptions[$currentStatus] ?? 'Semua' }}
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+            @foreach($statusOptions as $value => $label)
+                <li>
+                    <a class="dropdown-item {{ $currentStatus === $value ? 'active' : '' }}"
+                       href="{{ route('transaksi.index', $value ? ['status' => $value] : []) }}">
+                        {{ $label }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</div>
+
+
         <!-- Tabel Transaksi -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
@@ -26,7 +56,8 @@
 
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover table-sm align-middle mb-0">
+                    {{-- <table class="table table-hover table-sm align-middle mb-0"> --}}
+                        <table class="table table-custom mb-0">
                         <thead class="bg-light text-center">
                             <tr>
                                 <th>No</th>
@@ -54,8 +85,8 @@
                                     <td>{{ $t->pelanggan->username }}</td>
                                     <td>{{ $t->telepon }}</td>
                                     <td>
-                                        {{ limit_teks($t->alamat, 50) }}
-                                        @if (strlen(strip_tags($t->alamat)) > 50)
+                                        {{ limit_teks($t->alamat, 10) }}
+                                        @if (strlen(strip_tags($t->alamat)) > 10)
                                             <a href="#" class="text-primary ms-1" data-crud="detail"
                                                 data-title="Alamat Lengkap"
                                                 data-fields='{
@@ -104,37 +135,67 @@
 
                                             {{-- Biaya Pengiriman --}}
                                             @if ($t->status === 'menunggu' && in_array($t->jenis_pengiriman, ['ditanggung_penjual', 'ditanggung_bersama']))
-                                                <button type="button" class="btn btn-sm btn-warning" data-crud="edit"
-                                                    data-title="Isi Biaya Pengiriman" data-method="PATCH"
-                                                    data-url="{{ route('transaksi.update', $t->id) }}"
-                                                    data-fields='{ "ekspedisi"
-                                                : { "label" : "Nama Ekspedisi" , "type" : "select" , "options" : [ "JNE"
-                                                , "POS Indonesia" , "TIKI" , "SiCepat" , "J&T Express" , "Ninja Xpress"
-                                                , "Lion Parcel" , "Wahana" , "AnterAja" , "DHL" , "FedEx" , "UPS"
-                                                , "TNT Express" , "Aramex" ], "value" : "{{ $t->ekspedisi }}"
-                                                }, "biaya_pengiriman" : { "label" : "Biaya Pengiriman" , "value"
-                                                : "{{ $t->biaya_pengiriman }}" } }'
-                                                    title="Isi Biaya Pengiriman">
-                                                    <i class="fas fa-shipping-fast"></i>
-                                                </button>
+                                              <button type="button" class="btn btn-sm btn-warning"
+                                                data-crud="edit"
+                                                data-title="Isi Biaya Pengiriman"
+                                                data-method="PATCH"
+                                                data-url="{{ route('transaksi.update', $t->id) }}"
+                                               data-fields='{
+                                                "ekspedisi": {
+                                                    "label": "Nama Ekspedisi",
+                                                    "type": "select",
+                                                    "options": [
+                                                        "JNE",
+                                                        "POS Indonesia",
+                                                        "TIKI",
+                                                        "SiCepat",
+                                                        "J&T Express",
+                                                        "Ninja Xpress",
+                                                        "Lion Parcel",
+                                                        "Wahana",
+                                                        "AnterAja"
+                                                    ],
+                                                    "value": "{{ $t->ekspedisi }}"
+                                                },
+                                                "biaya_pengiriman": {
+                                                    "label": "Biaya Pengiriman",
+                                                    "value": "{{ $t->biaya_pengiriman }}"
+                                                }
+                                            }'
+
+                                                title="Isi Biaya Pengiriman">
+                                                <i class="fas fa-shipping-fast"></i>
+                                            </button>
+
                                             @endif
 
                                             {{-- Nomor Resi --}}
-                                            @if ($t->status === 'dibayar' && in_array($t->jenis_pengiriman, ['ditanggung_penjual', 'ditanggung_bersama']))
-                                                <button type="button" class="btn btn-sm btn-primary" data-crud="edit"
-                                                    data-title="Isi Nomor Resi" data-method="PATCH"
-                                                    data-url="{{ route('transaksi.update', $t->id) }}"
-                                                    data-fields='{
-                                                        "no_resi": {
-                                                            "label": "Nomor Resi",
-                                                            "type": "text",
-                                                            "value": "{{ $t->no_resi }}"
-                                                        }
-                                                    }'
-                                                    title="Isi Nomor Resi">
-                                                    <i class="fas fa-barcode"></i>
-                                                </button>
-                                            @endif
+                                           @if ($t->status === 'dibayar' && in_array($t->jenis_pengiriman, ['ditanggung_penjual', 'ditanggung_bersama']))
+                                        <button type="button" class="btn btn-sm btn-primary" data-crud="edit"
+                                            data-title="Isi Nomor Resi" data-method="PATCH"
+                                            data-url="{{ route('transaksi.update', $t->id) }}"
+                                            data-fields='{
+                                                "ekspedisi": {
+                                                    "label": "Nama Ekspedisi",
+                                                    "type": "text",
+                                                    "value": "{{ $t->ekspedisi }}"
+                                                },
+                                                "tanggal_ekspedisi": {
+                                                    "label": "Tanggal Input Ekspedisi",
+                                                    "type": "text",
+                                                    "value": "{{ $t->created_at->format("d-m-Y H:i") }}"
+                                                },
+                                                "no_resi": {
+                                                    "label": "Nomor Resi",
+                                                    "type": "text",
+                                                    "value": "{{ $t->no_resi }}"
+                                                }
+                                            }'
+                                            title="Isi Nomor Resi">
+                                            <i class="fas fa-barcode"></i>
+                                        </button>
+                                    @endif
+
                                         </div>
                                     </td>
                                 </tr>

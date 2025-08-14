@@ -104,7 +104,7 @@
                                                             @php $media = json_decode($k->media, true); @endphp
                                                             @if (isset($media['images']))
                                                                 @foreach ($media['images'] as $img)
-                                                                    <img src="{{ asset('uploads/' . $img) }}"
+                                                                    <img src="{{ asset_or_default('uploads/' . $img) }}"
                                                                         class="img-thumbnail me-2 mb-2"
                                                                         style="height: 60px;">
                                                                 @endforeach

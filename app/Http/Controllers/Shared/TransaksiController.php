@@ -9,37 +9,47 @@ use Illuminate\Validation\ValidationException;
 use App\Models\Transaksi;
 use App\Models\Produk;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 use App\Services\DatabaseNotify;
 use Xendit\Configuration;
 use Xendit\Invoice\InvoiceApi;
 use App\Models\Notifications;
+use Illuminate\Support\Facades\Log;
+
 
 class TransaksiController extends Controller
 {
     public function __construct(protected DatabaseNotify $notify) {}
 
-    public function index()
-    {
-        try {
-            $transaksi = Transaksi::with(['pelanggan', 'detailTransaksi.produk'])
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
-            $pelangganList = User::where('role', 'pelanggan')
-                ->get()
-                ->map(function ($user) {
-                    return [
-                        'value' => $user->id,
-                        'label' => $user->username,
-                    ];
-                })
-                ->values();
+   public function index(Request $request)
+{
+    try {
+        $query = Transaksi::with(['pelanggan', 'detailTransaksi.produk']);
 
-            return view('dashboard.shared.transaksi', compact('transaksi', 'pelangganList'));
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal memuat data transaksi.');
+        // Filter berdasarkan status jika ada
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
+
+        $transaksi = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->appends($request->only('status')); // biar parameter tetap ada saat pindah halaman
+
+        $pelangganList = User::where('role', 'pelanggan')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'value' => $user->id,
+                    'label' => $user->username,
+                ];
+            })
+            ->values();
+
+        return view('dashboard.shared.transaksi', compact('transaksi', 'pelangganList'));
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal memuat data transaksi.');
     }
+}
 
     public function detail($id)
     {
@@ -347,10 +357,13 @@ class TransaksiController extends Controller
                     ],
                     500,
                 );
+
             }
+            Log::error('Gagal memperbarui transaksi: ' . $e->getMessage());
             return redirect()
                 ->back()
                 ->with('error', 'Gagal memperbarui transaksi: ' . $e->getMessage());
         }
     }
+
 }

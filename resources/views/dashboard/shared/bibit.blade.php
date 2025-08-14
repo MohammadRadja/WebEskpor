@@ -88,7 +88,7 @@
                                                 ],
                                                 'harga_satuan' => [
                                                     'label' => 'Harga Satuan',
-                                                    'type' => 'number',
+                                                    'type' => 'text',
                                                     'value' => $b->harga_satuan,
                                                 ],
                                                 'jumlah' => [

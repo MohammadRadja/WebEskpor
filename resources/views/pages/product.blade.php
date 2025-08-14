@@ -4,7 +4,7 @@
     @php use Illuminate\Support\Str; @endphp
 
     {{-- Hero Section --}}
-    <x-hero-section title="Product" background="assets/img/page-title-bg.webp" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'Product']]" />
+    <x-hero-section title="Produk" background="assets/img/page-title-bg.webp" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'Produk']]" />
 
     <!-- Product Section -->
     <section class="py-5 bg-light">
@@ -23,7 +23,7 @@
                 @forelse ($product as $item)
                     <div class="col-md-6 col-lg-3 mb-4">
                         <div class="card h-100 shadow-sm">
-                            <img src="{{ asset($item->gambar ?? 'assets/img/default.png') }}" class="card-img-top"
+                            <img src="{{ asset_or_default($item->gambar) }}" class="card-img-top"
                                 alt="{{ $item->nama }}">
 
                             {{-- style="height: 180px; object-fit: cover;"> --}}
@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="modal-body row">
                                     <div class="col-md-5 mb-3 mb-md-0">
-                                        <img src="{{ asset($item->gambar ?? 'assets/img/default.png') }}"
+                                        <img src="{{ asset_or_default($item->gambar) }}"
                                             class="card-img-top" alt="{{ $item->nama }}">
 
                                     </div>

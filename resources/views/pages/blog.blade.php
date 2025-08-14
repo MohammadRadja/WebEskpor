@@ -3,7 +3,7 @@
 @section('content')
 
     {{-- Hero Section --}}
-    <x-hero-section title="Berita" background="{{ asset('assets/img/page-title-bg.webp') }}" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'Berita']]" />
+    <x-hero-section title="Berita" background="{{ asset_or_default('assets/img/page-title-bg.webp') }}" :breadcrumbs="[['label' => 'Home', 'url' => '/'], ['label' => 'Berita']]" />
 
     <!-- Blog Section -->
     <section class="py-5 bg-light">
@@ -27,8 +27,13 @@
                                     <a href="{{ $item->tautan }}" class="text-decoration-none text-dark"
                                         @if ($isExternal) target="_blank" rel="noopener noreferrer" @endif>
                                         <div class="ratio ratio-16x9">
-                                            <img src="{{ asset_or_default('assets/img/blog/' . $item->gambar) }}"
-                                                class="card-img-top object-fit-cover" alt="{{ $item->slug }}">
+                                        <img
+                                            src="{{ asset_or_default($item->gambar) }}"
+                                            alt="Gambar Konten"
+                                            class="img-fluid d-block mx-auto"
+                                            style="max-width: 500px; object-fit: contain; border-radius: 8px;"
+                                        >
+
                                         </div>
                                         <div class="card-body d-flex flex-column">
                                             <h5 class="fw-semibold mb-2">{{ $item->kutipan }}</h5>
